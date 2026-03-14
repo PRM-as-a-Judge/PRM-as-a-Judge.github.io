@@ -16,6 +16,12 @@
   <style>
     body {
       font-family: "Google Sans", "Noto Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 20% 0%, #1f2436 0%, rgba(31, 36, 54, 0) 45%),
+        radial-gradient(circle at 85% 10%, #1c3044 0%, rgba(28, 48, 68, 0) 40%),
+        #0b0f17;
+      color: #e7edf7;
+      min-height: 100vh;
     }
 
     .hero {
@@ -28,9 +34,30 @@
       line-height: 1.4;
     }
 
+    .title-with-logo {
+      display: flex;
+      width: 100%;
+      align-items: flex-start;
+      gap: 1rem;
+      justify-content: center;
+      padding-left: 0;
+    }
+
+    .title-logo {
+      height: 3.6rem;
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .title-text {
+      display: block;
+      text-align: left;
+    }
+
     .section {
       padding-top: 2.5rem;
       padding-bottom: 2.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .link-block {
@@ -51,6 +78,62 @@
       white-space: pre;
       overflow-x: auto;
       font-size: 0.85rem;
+      background: rgba(255, 255, 255, 0.06);
+      color: #e7edf7;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+    }
+
+    .navbar {
+      background: rgba(9, 13, 22, 0.78);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .navbar-item,
+    .navbar-item .icon,
+    .navbar-item .has-text-weight-semibold {
+      color: #f4f8ff !important;
+    }
+
+    .title,
+    .subtitle,
+    .content,
+    .publication-authors,
+    .author-block {
+      color: #e7edf7 !important;
+    }
+
+    .author-block a,
+    .content a {
+      color: #82b3ff;
+    }
+
+    .author-block a:hover,
+    .content a:hover {
+      color: #a6cbff;
+    }
+
+    .abstract-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 1.25rem 1.4rem;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .button.is-dark {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+      color: #f4f8ff !important;
+    }
+
+    .button.is-dark:hover {
+      background: rgba(255, 255, 255, 0.18) !important;
     }
   </style>
 </head>
@@ -89,11 +172,11 @@
         <div class="container is-max-desktop">
             <div class="columns is-centered">
                 <div class="column has-text-centered">
-                    <img src="assets/images/logo-clip.jpg" alt="LOGO" width="200">
-                    <h1 class="title is-2 publication-title" style="display: flex; align-items: center; padding-left: 40px;">
+                    <h1 class="title is-2 publication-title title-with-logo">
                         <!-- <img src="assets/images/dpm_logo.png" alt="Logo"
                              style="height: 3rem; margin-left: -80px; margin-right: 0px; flex-shrink: 0;"> -->
-                        <span style="display: inline-block;">
+                        <img src="assets/images/logo-clip.jpg" alt="LOGO" class="title-logo">
+                        <span class="title-text">
                           PRM-as-a-Judge: Your Process Reward Model is Inherently a Fine-Grained Evaluator
                         </span>
                     </h1>
@@ -106,7 +189,7 @@
                   <a target="_blank" href="https://yuheng2000.github.io/">Yuheng Ji</a><sup>1,2,3*&dagger;</sup>,
               </span>
               <span class="author-block">
-                  <a target="_blank"">Yuyang Liu</a><sup>1,2*</sup>,
+                  <a target="_blank" href="https://prm-as-a-judge.github.io/">Yuyang Liu</a><sup>1,2*</sup>,
               </span>
               <span class="author-block">
                   <a target="_blank" href="https://tanhuajie.github.io/">Huajie Tan</a><sup>3,4*;</sup>,
@@ -208,7 +291,7 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered has-text-centered">
         <div class="column is-full">
-          <div class="content has-text-justified">
+          <div class="content has-text-justified abstract-card">
             <div class="column has-text-centered">
               <h2 class="title is-3">Abstract</h2>
             </div>
