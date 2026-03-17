@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>PRM-as-a-Judge: Moving Beyond the "Pass/Fail" Mirage in Robotics</title>
+  <meta name="description"
+        content="PRM-as-a-Judge: A dense evaluation paradigm that turns trajectory videos into a goldmine of progress signals.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+  <style>
+    body {
+      font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #fafafa;
+      color: #1a1a1a;
+      line-height: 1.7;
+    }
+
+    .site-nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      max-width: 860px;
+      margin: 0 auto;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .site-nav a {
+      color: #666;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .site-nav a:hover {
+      color: #1a1a1a;
+    }
+
+    .site-nav a.active {
+      color: #1a1a1a;
+      font-weight: 500;
+    }
+
+    .blog-container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .blog-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .blog-title {
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.85rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 1rem;
+    }
+
+    .title-with-logo {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .title-logo {
+      height: 3.2rem;
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .title-text {
+      display: block;
+    }
+
+    .blog-meta {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-meta a {
+      color: #666;
+      text-decoration: none;
+    }
+
+    .blog-meta a:hover {
+      color: #333;
+      text-decoration: underline;
+    }
+
+    .blog-meta .icon {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+
+    .blog-byline {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    .gist-box {
+      background: #f5f5f5;
+      border-left: 4px solid #333;
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+      font-style: italic;
+      color: #333;
+    }
+
+    .blog-section {
+      font-family: "STIX Two Text", "Times New Roman", Times, serif;
+      text-align: justify;
+    }
+
+    .blog-section h2 {
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+      text-align: left;
+    }
+
+    .blog-section h3 {
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 1.75rem;
+      margin-bottom: 0.75rem;
+      color: #1a1a1a;
+      text-align: left;
+    }
+
+    .blog-section p {
+      margin-bottom: 1rem;
+    }
+
+    .blog-section ul {
+      margin: 1rem 0 1rem 1.5rem;
+    }
+
+    .blog-section li {
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-section .citation-block {
+      background: #f5f5f5;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+
+    .blog-section .citation-block code {
+      background: none;
+      padding: 0;
+    }
+
+    .blog-figure {
+      margin: 2rem 0;
+    }
+
+    .blog-figure img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid #e8e8e8;
+    }
+
+    .blog-figcaption {
+      font-size: 0.9rem;
+      color: #555;
+      margin-top: 0.75rem;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .math-inline {
+      display: block;
+      text-align: center;
+      font-family: "STIX Two Text", "Times New Roman", Times, serif;
+      font-size: 0.95rem;
+      color: #1a1a1a;
+      background: #f8f8f8;
+      padding: 0.4rem 0.75rem;
+      margin: 0.2rem 0;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+
+    .formula-block {
+      margin: 0.3rem 0;
+    }
+
+    .chart-wrapper {
+      margin: 2rem 0;
+      padding: 1rem;
+      background: #fafafa;
+      border-radius: 8px;
+      border: 1px solid #e8e8e8;
+    }
+
+    .chart-wrapper .chart-title {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      font-family: "STIX Two Text", "Times New Roman", serif;
+    }
+
+    .interactive-case {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      background: #fafafa;
+      border-radius: 10px;
+      border: 1px solid #e8e8e8;
+    }
+
+    .interactive-case .video-chart-wrap {
+      position: relative;
+      width: 100%;
+      margin: 0 auto;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 3px solid rgba(255,255,255,0.5);
+      transition: border-color 0.15s ease;
+    }
+
+    .interactive-case .case-video {
+      width: 100%;
+      display: block;
+      background: #000;
+      border-radius: 6px;
+    }
+
+    .interactive-case .video-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      padding: 0.5rem 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .interactive-case .video-chart-wrap:hover .video-controls {
+      opacity: 1;
+    }
+
+    .interactive-case .video-controls .btn-icon {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .interactive-case .video-controls .progress-wrap {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .interactive-case .video-controls .progress-wrap .progress-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: #5C6BC0;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.05s linear;
+    }
+
+    .interactive-case .video-controls .time-display {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.9);
+      font-variant-numeric: tabular-nums;
+      min-width: 4rem;
+    }
+
+    .interactive-case .video-controls .vol-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .interactive-case .video-controls .vol-wrap .btn-icon {
+      width: 22px;
+      height: 22px;
+      font-size: 0.75rem;
+    }
+
+    .interactive-case .video-controls .vol-wrap input[type="range"] {
+      width: 48px;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+    }
+
+    .interactive-case .video-controls .vol-wrap input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .interactive-case .chart-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+
+    .interactive-case .case-chart {
+      width: 100%;
+      height: 100%;
+    }
+
+    .interactive-case .case-slider-wrap {
+      margin-top: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .interactive-case .case-slider-wrap input[type="range"] {
+      flex: 1;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #e0e0e0;
+      border-radius: 3px;
+    }
+
+    .interactive-case .case-slider-wrap input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #5C6BC0;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .interactive-case .case-slider-wrap .time-label {
+      font-size: 0.85rem;
+      color: #666;
+      min-width: 4rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .interactive-case .case-metrics {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .interactive-case .metric-card {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      padding: 0.6rem 0.75rem;
+      text-align: center;
+    }
+
+    .interactive-case .metric-card .metric-name {
+      font-size: 0.75rem;
+      color: #666;
+      margin-bottom: 0.2rem;
+    }
+
+    .interactive-case .metric-card .metric-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      font-family: "STIX Two Text", "Times New Roman", serif;
+    }
+
+    .link-block {
+      margin-right: 1rem;
+      display: inline-block;
+    }
+
+    .button.is-outlined {
+      border-color: #333;
+      color: #333;
+    }
+
+    .button.is-outlined:hover {
+      background: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <a href="blog.html" class="active">Blog</a>
+    <a href="leaderboard.html">Leaderboard</a>
+  </nav>
+
+  <article class="blog-container">
+    <header class="blog-header">
+      <h1 class="blog-title title-with-logo">
+        <img src="assets/images/logo-clip.jpg" alt="PRM-as-a-Judge" class="title-logo">
+        <span class="title-text">
+          PRM-as-a-Judge: Moving Beyond the "Pass/Fail" Mirage in Robotics
+        </span>
+      </h1>
+
+      <p class="blog-meta">Published March 2026</p>
+      <p class="blog-meta">
+        <a href="#"><span class="icon"><i class="fas fa-file-pdf"></i></span> Report (arXiv)</a>
+      </p>
+      <p class="blog-meta">
+        <a href="#"><span class="icon"><i class="fab fa-github"></i></span> Repository (GitHub)</a>
+      </p>
+      <p class="blog-byline">By PRM-as-a-Judge Team</p>
+    </header>
+
+    <div class="gist-box">
+      <strong>The Gist:</strong> In the marathon of long-horizon robotics, a binary "Pass/Fail" is a pretty blunt instrument. It tells you if the robot crossed the finish line, but it's silent on whether it ran like a pro or stumbled the whole way. We're introducing PRM-as-a-Judge: a dense evaluation paradigm that turns trajectory videos into a goldmine of progress signals. Using our OPD (Outcome-Process-Diagnosis) system, we break down every attempt into three layers to answer the million-dollar questions: How far did it go, how gracefully did it move, and exactly where/why did the wheels fall off?
+    </div>
+
+    <div class="blog-section content">
+      <h2>1. Why Success Rate is No Longer the Full Story</h2>
+      <p>
+        As robotic manipulation graduates from simple "pick-and-place" to complex, contact-rich marathons, relying solely on Success Rate is like trying to judge a symphony by its final note. It's a classic case of throwing the baby out with the bathwater.
+      </p>
+      <p>
+        The "Success/Failure" binary creates two massive blind spots:
+      </p>
+      <ul>
+        <li><strong>Resolution Gap:</strong> Not all failures are created equal. A robot that misses the goal by a hair's breadth at the 99% mark gets the same "zero" as a robot that freezes the second the clock starts. Without better resolution, we can't tell which policy is actually closer to cracking the code.</li>
+        <li><strong>Diagnostic Opacity:</strong> Success Rate doesn't distinguish a "flawless victory", efficient and steady, from a "janky success" achieved through trial, error, and sheer luck. When the devil is in the details of contact dynamics and recovery, a single bit of information just doesn't cut it.</li>
+      </ul>
+
+      <figure class="blog-figure">
+        <img src="assets/images/figure1.png" alt="Same label, different reality">
+        <figcaption class="blog-figcaption">
+          Same label, different reality. A "Failure" can hide a 99% progress milestone, while a "Success" might mask a trajectory of instability and redundant back-and-forth.
+        </figcaption>
+      </figure>
+
+      <h2>2. From Outcome to Audit</h2>
+      <p>
+        To recover the information lost in binary labels, we shift our focus from the finish line to the entire race. For long-horizon tasks, the real difference between models lies in how deep they get into a task, how stable they stay, and exactly where they fail. In the real world, we don't have "privileged" data like exact object positions or contact forces given by simulators.
+      </p>
+      <p>
+        Our solution is to use the evolution of visual states as a proxy for physical progress. We assign a task-conditioned progress potential Φ(s)∈[0,1] to every state. This turns a simple video into a continuous progress curve that we can compare, break down, and diagnose.
+      </p>
+
+      <figure class="blog-figure">
+        <img src="assets/images/figure2.png" alt="What makes a model a qualified judge">
+        <figcaption class="blog-figcaption">
+          Figure 2: Progress potential and evaluator axioms.
+        </figcaption>
+      </figure>
+
+      <h2>3. What Makes a Model a Qualified Judge?</h2>
+      <p>
+        What are the "ground rules" for a dense evaluator? We believe it must satisfy two axioms:
+      </p>
+      <ul>
+        <li><strong>Macro-Consistency (The Big Picture):</strong> Local progress checks must add up to a coherent story for the entire episode. Mathematically, for any intermediate time t<sub>1</sub>, the evaluator must satisfy:
+          <br><code class="math-inline">S(o<sub>t0</sub>,o<sub>t2</sub>) = S(o<sub>t0</sub>,o<sub>t1</sub>) + S(o<sub>t1</sub>,o<sub>t2</sub>)</code>
+          <br>This means progress is additive and independent of how you slice the timeline. If a metric drifts depending on the sampling rate, you don't have a reliable audit—you have a mess.</li>
+        <li><strong>Micro-Resolution (The Sharp Eye):</strong> A judge has to be sensitive to tiny, task-relevant shifts in physical state. If it can't distinguish between a minor victory, a slight slip-up, or just standing still, its response flatlines into a useless constant, and the "dense" part of the evaluation loses its diagnostic teeth.</li>
+      </ul>
+      <p>
+        We chose Process Reward Models (PRMs) because they naturally learn a task-conditioned progress potential Φ(s)∈[0,1], which maps every state to its relative position on the road to completion. By defining the net progress between two states as the difference in their potentials:
+      </p>
+      <div class="formula-block"><code class="math-inline">S(o<sub>i</sub>,o<sub>j</sub>) = Φ(s<sub>j</sub>) − Φ(s<sub>i</sub>)</code></div>
+      <p>
+        Macro-consistency is guaranteed by design—every local nudge is automatically measured on the same global scale. At the same time, because PRMs are trained with dense supervision on "how much further to go," they develop the high-resolution vision needed to spot the subtle physical evolutions that actually matter.
+      </p>
+
+      <h2>4. OPD: Deconstructing a Single Execution into Three-Tier Signals</h2>
+      <p>
+        Building upon the progress potential Φ, we further construct the OPD (Outcome-Process-Diagnosis) metric system to transform an execution trajectory into interpretable three-tier auditing signals.
+      </p>
+      <ul>
+        <li><strong>Outcome: How far did it get?</strong> The outcome layer characterizes the trajectory's depth of advancement within the task space.
+          <br><code class="math-inline">MC(τ) = max{q ∈ {0, 0.25, 0.5, 0.75, 1} ∣ ∃t, Φ(s<sub>t</sub>) ≥ q}</code>
+          <br>MC (Milestone Coverage) indicates the furthest stage a trajectory reached. It discretizes continuous progress into key milestones to distinguish between an "early collapse" and "failing at the last mile." Physically, it describes the reachability of task stages. When MC = 1, the trajectory has reached the final completion stage; in this sense, it is equivalent to success at the outcome layer.
+          <br><code class="math-inline">MP(τ) = max<sub>t∈[0,T]</sub> Φ(s<sub>t</sub>)</code>
+          <br>MP (Max Progress) represents the peak progress value achieved across the entire trajectory. Unlike MC, which emphasizes "which level was reached," MP more directly depicts the trajectory's capability boundary in the continuous progress space: the absolute highest point reached during the execution.</li>
+        <li><strong>Process: How well did it go?</strong> The process layer characterizes the execution quality of the trajectory itself, rather than merely focusing on ultimate completion.
+          <br><code class="math-inline">PPL(τ) = Φ(s<sub>T</sub>) · (Φ(s<sub>T</sub>) − Φ(s<sub>0</sub>)) / Σ<sub>t=1</sub><sup>T</sup> |Φ(s<sub>t</sub>) − Φ(s<sub>t−1</sub>)|</code>
+          <br>PPL (Path-weighted Progress Length) measures execution efficiency and trajectory monotonicity. The numerator is the net progress, and the denominator is the total potential energy variation along the entire trajectory. The preceding soft-gating term Φ(s<sub>T</sub>) penalizes attempts that are not truly completed. Physically, a higher PPL means the robot takes fewer detours, engages in less back-and-forth trial-and-error, and is closer to "advancing toward the goal smoothly and monotonically."</li>
+        <li><strong>Diagnosis: Why did it fail?</strong> The diagnosis layer goes beyond merely judging success or failure; it further deconstructs the underlying physical mechanisms of failure.
+          <br><code class="math-inline">CRA(τ) = (1/T) Σ<sub>t=0</sub><sup>T</sup> max(0, max<sub>k≤t</sub> Φ(s<sub>k</sub>) − Φ(s<sub>t</sub>))</code>
+          <br>CRA (Cumulative Regret Area) measures the area of regression of the current state relative to the historically best state. It reflects how long and by how much the robot drops back after achieving its peak progress. Physically, it corresponds to instability, regression, and the cost of trial-and-error.
+          <br><code class="math-inline">STR(τ) = (1/T) Σ<sub>t=1</sub><sup>T</sup> 1(|Φ(s<sub>t</sub>) − Φ(s<sub>t−1</sub>)| &lt; ε)</code>
+          <br>STR (Stagnation Ratio) measures the proportion of time the trajectory spends in a state of virtually no substantive progress. It does not measure "regression," but rather a "lack of movement"—such as hesitation, stuttering, or prolonged local ineffective interactions. Physically, it corresponds to stagnation and decision latency.</li>
+      </ul>
+      <p>
+        These five metrics collectively address five critical questions: how far did it get, what was its peak progress, how smooth was the path, how severe were the regressions, and how long did it stagnate. Together, they form a highly interpretable audit report for a single execution.
+      </p>
+
+      <h2>5. RoboPulse: The "Physical Microscope" for Evaluator Verification</h2>
+      <p>
+        To verify whether an evaluator possesses true microscopic resolution, we constructed the RoboPulse benchmark. It simplifies evaluation into a pairwise judgment task: given a task description and two states from the same trajectory, the evaluator must determine if the latter state represents "Progress" or "Regression." This design bypasses the need for absolute progress labeling and focuses on the core capability: can the evaluator reliably distinguish directionality when physical changes are minute?
+      </p>
+      <ul>
+        <li><strong>Dataset Scale:</strong> RoboPulse comprises 1,800 pairwise judgment samples derived from 1,622 episodes across 816 tasks.</li>
+        <li><strong>Diversity:</strong> Data sources include real-world robots, simulations, UMI, and human first-person perspectives.</li>
+        <li><strong>Granularity:</strong> Samples are categorized into Small / Medium / Large relative progress spans to systematically test the evaluator's physical resolution across different scales.</li>
+      </ul>
+      <p><strong>Experimental Results:</strong></p>
+      <p>
+        Evaluators based on PRM (Process Reward Models) demonstrate an overwhelming advantage. Taking Robo-Dopamine as an example, it achieves an overall accuracy of 0.83, maintaining 0.80 even in the most challenging "Small-hop" interval.
+      </p>
+      <p>
+        In contrast, general large models like Gemini and Qwen3-VL-8B only reach overall accuracies of 0.66 and 0.59, respectively. On "Small-hop" judgments, Gemini and GPT-5.2 perform at 0.54 and 0.47—nearly equivalent to random guessing. This proves that the core strength of PRM lies not in coarse semantic understanding, but in the acute capture of the physical evolution process.Once a judge possesses verifiable microscopic resolution, it can be further applied to the systematic analysis of real-world policy trajectories.
+      </p>
+
+      <div class="chart-wrapper">
+        <div class="chart-title">Pairwise Progress-Judgement Accuracy on RoboPulse under different comparison scales</div>
+        <div id="robopulse-chart" style="width:100%; height:280px;"></div>
+      </div>
+
+      <h2>6. Dense Trajectory Auditing Reveals Strategic Discrepancies</h2>
+      <p>
+        After constructing and verifying our judge, we applied PRM-as-a-Judge to a systematic audit of real-world policy trajectories. Specifically, we selected 7 manipulation tasks with distinct long-horizon features from RoboTwin 2.0 and performed a unified evaluation of 5 representative baseline policies.
+      </p>
+      <p>
+        By leveraging the trajectory-level signals provided by OPD, we move beyond simply comparing "whether a model completed a task" to a systematic analysis of progression depth, success quality, and failure mechanisms.
+      </p>
+
+      <h3>6.1 Phased Reachability and Failure Localization</h3>
+      <p>
+        For long-horizon tasks, binary success rates fail to characterize the progression depth at different stages, often masking the exact point of failure and the true strategic differences between policies. Using the outcome-layer metrics MC and MP, we can directly analyze how far each strategy actually pushed through the task.
+      </p>
+      <ul>
+        <li><strong>Example (Blocks Ranking RGB):</strong> Most strategies show high reachability in the early stages; the MC@25 for ACT, DP, RDT, π<sub>0</sub>, and OpenVLA-OFT reached 84, 94, 100, 96, and 98, respectively.</li>
+        <li><strong>The "Last Mile" Gap:</strong> However, at the final completion stage, MC@100 drops to 2, 0, 0, 8, and 0. This indicates that many rollouts are not a "total failure to learn," but rather failures that occur specifically in the late stages.</li>
+      </ul>
+      <p>
+        More importantly, dense auditing distinguishes between strategies that "fail the same way but at different locations." In Blocks Ranking RGB, π<sub>0</sub> achieves an MC@75 of 40, while OpenVLA-OFT only reaches 6. Although both ultimately fail, the former's failures occur much closer to the finish line, whereas the latter is prone to collapsing at a much earlier stage.Measuring progression depth only addresses a fraction of the execution process; it remains necessary to further analyze whether successful trajectories exhibit consistent execution quality.
+      </p>
+      <figure class="blog-figure">
+        <img src="assets/images/Outcome.png" alt="Outcome layer metrics">
+        <figcaption class="blog-figcaption">Outcome-layer metrics (MC, MP) for phased reachability analysis.</figcaption>
+      </figure>
+
+      <h3>6.2 Execution Quality Under Success Conditions</h3>
+      <p>
+        Reaching the goal does not imply identical execution quality. To further analyze how a model succeeds, we calculated process and diagnosis metrics specifically on successful samples.
+      </p>
+      <ul>
+        <li><strong>In Handover Mic:</strong> DP (Diffusion Policy) success samples exhibit significantly higher path efficiency and lower regression costs: its success-conditioned PPL reaches 94.9 with a CRA of only 0.26.</li>
+        <li><strong>Comparison:</strong> Conversely, OpenVLA-OFT shows a CRA of 2.55, indicating its success is often accompanied by redundant corrections and repetitive adjustments.</li>
+      </ul>
+      <p>
+        This reveals a stable "strategy-layer" phenomenon: execution precision and overall reliability are not always aligned. While DP produces the highest execution quality when it succeeds, its overall completion rate is not dominant. Some strategies, once successful, demonstrate extreme precision, but this high-quality performance may not stably cover a wider range of rollouts.
+      </p>
+      <figure class="blog-figure">
+        <img src="assets/images/Process.png" alt="Process layer metrics">
+        <figcaption class="blog-figcaption">Process-layer metrics (PPL) for execution quality under success conditions.</figcaption>
+      </figure>
+
+      <h3>6.3 Failure Mechanisms and Strategy Fingerprinting</h3>
+      <p>
+        Beyond locating where a failure occurs, dense auditing analyzes how a failure forms. Using CRA and STR, we can deconstruct "failure" from a single label into distinct physical mechanisms.
+      </p>
+      <ul>
+        <li><strong>Instability vs. Stagnation:</strong> In Place Bread Basket, OpenVLA-OFT achieves an MP of 92.61 but suffers a high CRA of 26.25, indicating late-stage instability and severe regression. In contrast, ACT has a lower MP of 73.11 but a high STR of 65.38, pointing to an early-stage, stagnation-led failure.</li>
+        <li><strong>The "Failure Fingerprint":</strong> While both are recorded as failures, their mechanisms differ: the former "drops the ball" just as it nears completion, while the latter stays trapped in ineffective interactions.</li>
+      </ul>
+      <p>
+        These failure fingerprints provide clear directions for optimization: Stagnation-type failures suggest a need for improved contact maintenance and end-effector stability, while Regression-type failures indicate a need for enhanced error absorption and closed-loop correction capabilities.
+      </p>
+      <figure class="blog-figure">
+        <img src="assets/images/Diagnosis.png" alt="Diagnosis layer metrics">
+        <figcaption class="blog-figcaption">Diagnosis-layer metrics (CRA, STR) for failure mechanism fingerprinting.</figcaption>
+      </figure>
+
+      <h2>7. Interactive Case</h2>
+      <p>
+        Explore a dense trajectory audit in real time. Drag the progress bar to scrub through the video and observe how the reward curve and OPD metrics evolve frame by frame.
+      </p>
+
+      <div class="interactive-case">
+        <div class="video-chart-wrap" id="video-wrap">
+          <video class="case-video" id="case-video" src="assets/videos/blocks_ranking_rgb_ACT_episode11_Success_head_049.mp4" preload="metadata"></video>
+          <div class="video-controls">
+            <button class="btn-icon" id="play-btn" aria-label="Play">▶</button>
+            <div class="progress-wrap" id="progress-wrap">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <span class="time-display" id="ctrl-time">0:00 / 0:00</span>
+            <div class="vol-wrap">
+              <button class="btn-icon" id="mute-btn" aria-label="Mute">🔊</button>
+              <input type="range" id="vol-slider" min="0" max="100" value="100">
+            </div>
+          </div>
+          <div class="chart-overlay">
+            <div id="case-chart" class="case-chart"></div>
+          </div>
+        </div>
+        <div class="case-slider-wrap">
+          <input type="range" id="case-slider" min="0" max="100" value="0" step="0.1">
+          <span class="time-label" id="case-time">0:00 / 0:00</span>
+        </div>
+        <div class="case-metrics" id="case-metrics">
+          <div class="metric-card"><div class="metric-name">MC</div><div class="metric-value" id="m-mc">—</div></div>
+          <div class="metric-card"><div class="metric-name">MP</div><div class="metric-value" id="m-mp">—</div></div>
+          <div class="metric-card"><div class="metric-name">PPL</div><div class="metric-value" id="m-ppl">—</div></div>
+          <div class="metric-card"><div class="metric-name">CRA</div><div class="metric-value" id="m-cra">—</div></div>
+          <div class="metric-card"><div class="metric-name">STR</div><div class="metric-value" id="m-str">—</div></div>
+        </div>
+      </div>
+
+      <h2>Author Team</h2>
+
+      <h3>Core Team</h3>
+      <p>
+        We are proud to note that all core team members contributed equally to the success of this project.
+      </p>
+      <ul>
+        <li><a href="https://yuheng2000.github.io/" target="_blank">Yuheng Ji</a> (Team Leader)</li>
+        <li>Yuyang Liu</li>
+        <li><a href="https://tanhuajie.github.io/" target="_blank">Huajie Tan</a></li>
+      </ul>
+
+      <h3>Other Contributors</h3>
+      <p>
+        Xuchuan Huang, Fanding Huang, Yijie Xu, Cheng Chi, Yuting Zhao, Huaihai Lyu, Peterson Co, Mingyu Cao, Qiongyu Zhang, Zhe Li, Enshen Zhou
+      </p>
+
+      <h3>Advisors</h3>
+      <p>
+        Pengwei Wang, Zhongyuan Wang, Shanghang Zhang, Xiaolong Zheng
+      </p>
+
+      <h3>Citation</h3>
+      <p>
+        If you find our work helpful, please cite us:
+      </p>
+      <pre class="citation-block"><code>@article{xxx,
+  title = {xxx},
+  author = {xxx},
+  journal = {xxx},
+}</code></pre>
+
+      <p style="margin-top: 2rem; font-weight: 500;">Thank you!</p>
+    </div>
+  </article>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+  <script>
+    (function() {
+      var chartDom = document.getElementById('robopulse-chart');
+      if (!chartDom) return;
+      var myChart = echarts.init(chartDom);
+      var option = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: { type: 'shadow' },
+          formatter: function(params) {
+            var s = params[0].axisValue + ' hop<br/>';
+            params.forEach(function(p) {
+              s += p.marker + ' ' + p.seriesName + ': <b>' + (p.value * 100).toFixed(0) + '%</b><br/>';
+            });
+            return s;
+          }
+        },
+        legend: {
+          data: ['CLIP ViT-L/14', 'Gemini 3 Pro Preview', 'Robo-Dopamine'],
+          bottom: 0,
+          textStyle: { fontFamily: '"STIX Two Text", "Times New Roman", serif' }
+        },
+        grid: { left: '12%', right: '8%', bottom: '18%', top: '12%', containLabel: true },
+        xAxis: {
+          type: 'category',
+          data: ['Small', 'Medium', 'Large'],
+          axisLabel: { fontFamily: '"STIX Two Text", "Times New Roman", serif' }
+        },
+        yAxis: {
+          type: 'value',
+          name: 'Pairwise Progress-Judgement Accuracy',
+          nameLocation: 'middle',
+          nameGap: 45,
+          min: 0,
+          max: 1,
+          axisLabel: {
+            formatter: function(v) { return (v * 100) + '%'; },
+            fontFamily: '"STIX Two Text", "Times New Roman", serif'
+          },
+          nameTextStyle: { fontFamily: '"STIX Two Text", "Times New Roman", serif', fontSize: 11 },
+          splitLine: { lineStyle: { color: '#e8e8e8', type: 'dashed' } }
+        },
+        series: [
+          { name: 'CLIP ViT-L/14', type: 'bar', data: [0.54, 0.59, 0.65], itemStyle: { color: '#5C6BC0' }, barGap: '20%', barCategoryGap: '35%' },
+          { name: 'Gemini 3 Pro Preview', type: 'bar', data: [0.54, 0.67, 0.77], itemStyle: { color: '#26A69A' }, barGap: '20%', barCategoryGap: '35%' },
+          { name: 'Robo-Dopamine', type: 'bar', data: [0.80, 0.85, 0.85], itemStyle: { color: '#E65100' }, barGap: '20%', barCategoryGap: '35%' }
+        ],
+        animation: true,
+        animationDuration: 1200,
+        animationEasing: 'cubicOut',
+        animationDelay: function(idx) { return idx * 80; },
+        animationDelayUpdate: function(idx) { return idx * 80; }
+      };
+      myChart.setOption(option);
+      window.addEventListener('resize', function() { myChart.resize(); });
+    })();
+
+    (function() {
+      var video = document.getElementById('case-video');
+      var slider = document.getElementById('case-slider');
+      var timeLabel = document.getElementById('case-time');
+      var chartDom = document.getElementById('case-chart');
+      var frameData = [];
+      var caseChart = null;
+
+      function generateFrameData(durationSec) {
+        var n = Math.max(60, Math.floor(durationSec * 4));
+        var data = [];
+        var reward = 0.05, mc = 0.1, mp = 0.1;
+        for (var i = 0; i <= n; i++) {
+          var t = (i / n) * durationSec;
+          reward = Math.min(1, reward + 0.02 + (Math.random() - 0.45) * 0.15);
+          mc = Math.min(1, mc + (Math.random() - 0.3) * 0.2);
+          mp = Math.max(mp, reward * (0.9 + Math.random() * 0.2));
+          data.push({
+            t: t,
+            reward: Math.max(0, Math.min(1, reward)),
+            MC: Math.max(0, Math.min(1, mc)),
+            MP: Math.max(0, Math.min(1, mp)),
+            PPL: 0.5 + Math.random() * 0.5,
+            CRA: Math.random() * 2.5,
+            STR: Math.random() * 0.6
+          });
+        }
+        return data;
+      }
+
+      function interpolate(data, t) {
+        if (!data.length) return null;
+        if (t <= data[0].t) return data[0];
+        if (t >= data[data.length - 1].t) return data[data.length - 1];
+        for (var i = 0; i < data.length - 1; i++) {
+          if (data[i].t <= t && t <= data[i + 1].t) {
+            var a = (t - data[i].t) / (data[i + 1].t - data[i].t);
+            return {
+              reward: data[i].reward + a * (data[i + 1].reward - data[i].reward),
+              MC: data[i].MC + a * (data[i + 1].MC - data[i].MC),
+              MP: data[i].MP + a * (data[i + 1].MP - data[i].MP),
+              PPL: data[i].PPL + a * (data[i + 1].PPL - data[i].PPL),
+              CRA: data[i].CRA + a * (data[i + 1].CRA - data[i].CRA),
+              STR: data[i].STR + a * (data[i + 1].STR - data[i].STR)
+            };
+          }
+        }
+        return data[data.length - 1];
+      }
+
+      function fmtTime(s) {
+        var m = Math.floor(s / 60);
+        var sec = Math.floor(s % 60);
+        return m + ':' + (sec < 10 ? '0' : '') + sec;
+      }
+
+      var COLOR_RISE = 'rgba(239, 83, 80, 0.9)';
+      var COLOR_FALL = 'rgba(129, 199, 132, 0.9)';
+
+      function buildSegments(filtered, t) {
+        var riseData = [], fallData = [];
+        for (var i = 0; i < filtered.length - 1; i++) {
+          var a = filtered[i], b = filtered[i + 1];
+          var seg = [[a.t, a.reward], [b.t, b.reward]];
+          if (b.reward > a.reward) {
+            if (riseData.length) riseData.push([null, null]);
+            riseData.push.apply(riseData, seg);
+          } else {
+            if (fallData.length) fallData.push([null, null]);
+            fallData.push.apply(fallData, seg);
+          }
+        }
+        if (t > 0 && filtered.length > 0) {
+          var last = filtered[filtered.length - 1];
+          var m = interpolate(frameData, t);
+          if (m && last.t < t) {
+            var seg = [[last.t, last.reward], [t, m.reward]];
+            if (m.reward > last.reward) {
+              if (riseData.length) riseData.push([null, null]);
+              riseData.push.apply(riseData, seg);
+            } else {
+              if (fallData.length) fallData.push([null, null]);
+              fallData.push.apply(fallData, seg);
+            }
+          }
+        }
+        return { rise: riseData, fall: fallData };
+      }
+
+      function updateChart(t) {
+        if (!caseChart || !frameData.length) return;
+        var filtered = frameData.filter(function(d) { return d.t <= t; });
+        if (filtered.length === 0) {
+          var m = interpolate(frameData, t);
+          if (m) filtered = [{ t: t, reward: m.reward }];
+        }
+        if (filtered.length < 2) {
+          caseChart.setOption({
+            series: [{ data: [] }, { data: [] }]
+          });
+          return;
+        }
+        var seg = buildSegments(filtered, t);
+        caseChart.setOption({
+          series: [
+            { data: seg.rise, lineStyle: { color: COLOR_RISE }, areaStyle: { color: 'rgba(239, 83, 80, 0.25)' } },
+            { data: seg.fall, lineStyle: { color: COLOR_FALL }, areaStyle: { color: 'rgba(129, 199, 132, 0.25)' } }
+          ]
+        });
+      }
+
+      function updateBorder(t) {
+        var wrap = document.getElementById('video-wrap');
+        if (!wrap || !frameData.length) return;
+        var m = interpolate(frameData, t);
+        var prev = t > 0 ? interpolate(frameData, Math.max(0, t - 0.05)) : null;
+        var rising = prev ? (m.reward > prev.reward) : true;
+        wrap.style.borderColor = rising ? COLOR_RISE : COLOR_FALL;
+      }
+
+      function updateUI(t) {
+        var m = interpolate(frameData, t);
+        if (m) {
+          document.getElementById('m-mc').textContent = m.MC.toFixed(3);
+          document.getElementById('m-mp').textContent = m.MP.toFixed(3);
+          document.getElementById('m-ppl').textContent = m.PPL.toFixed(3);
+          document.getElementById('m-cra').textContent = m.CRA.toFixed(3);
+          document.getElementById('m-str').textContent = m.STR.toFixed(3);
+        }
+        updateChart(t);
+        updateBorder(t);
+      }
+
+      function initCase() {
+        if (!video || !chartDom) return;
+        video.addEventListener('loadedmetadata', function() {
+          var dur = video.duration;
+          if (!dur || isNaN(dur)) dur = 10;
+          frameData = generateFrameData(dur);
+          slider.max = 100;
+          timeLabel.textContent = '0:00 / ' + fmtTime(dur);
+
+          var times = frameData.map(function(d) { return d.t.toFixed(2); });
+          var rewards = frameData.map(function(d) { return d.reward; });
+
+          caseChart = echarts.init(chartDom);
+          caseChart.setOption({
+            backgroundColor: 'transparent',
+            tooltip: { show: false },
+            grid: { left: '8%', right: '4%', top: '6%', bottom: '10%' },
+            xAxis: {
+              type: 'value',
+              min: 0,
+              max: dur,
+              show: true,
+              axisLine: { lineStyle: { color: 'rgba(255,255,255,0.5)' } },
+              axisLabel: { color: 'rgba(255,255,255,0.9)', fontFamily: '"STIX Two Text", serif', fontSize: 10 },
+              splitLine: { show: false }
+            },
+            yAxis: {
+              type: 'value',
+              min: 0,
+              max: 1,
+              show: true,
+              axisLine: { lineStyle: { color: 'rgba(255,255,255,0.5)' } },
+              axisLabel: { color: 'rgba(255,255,255,0.9)', fontFamily: '"STIX Two Text", serif', fontSize: 10 },
+              splitLine: { lineStyle: { color: 'rgba(255,255,255,0.15)' } }
+            },
+            series: [
+              { type: 'line', data: [], smooth: true, symbol: 'none', lineStyle: { color: COLOR_RISE, width: 2.5 }, areaStyle: { color: 'rgba(239, 83, 80, 0.25)' }, animation: false },
+              { type: 'line', data: [], smooth: true, symbol: 'none', lineStyle: { color: COLOR_FALL, width: 2.5 }, areaStyle: { color: 'rgba(129, 199, 132, 0.25)' }, animation: false }
+            ]
+          });
+
+          updateChart(0);
+          updateBorder(0);
+
+          var wrap = video.closest('.video-chart-wrap');
+          if (wrap && window.ResizeObserver) {
+            new ResizeObserver(function() { caseChart.resize(); }).observe(wrap);
+          }
+        });
+
+        var playBtn = document.getElementById('play-btn');
+        var progressWrap = document.getElementById('progress-wrap');
+        var progressFill = document.getElementById('progress-fill');
+        var ctrlTime = document.getElementById('ctrl-time');
+        var muteBtn = document.getElementById('mute-btn');
+        var volSlider = document.getElementById('vol-slider');
+
+        if (playBtn) {
+          playBtn.addEventListener('click', function() {
+            if (video.paused) video.play(); else video.pause();
+          });
+        }
+        video.addEventListener('play', function() { if (playBtn) playBtn.textContent = '⏸'; });
+        video.addEventListener('pause', function() { if (playBtn) playBtn.textContent = '▶'; });
+
+        if (progressWrap) {
+          progressWrap.addEventListener('click', function(e) {
+            if (!video.duration) return;
+            var rect = progressWrap.getBoundingClientRect();
+            var pct = (e.clientX - rect.left) / rect.width;
+            video.currentTime = pct * video.duration;
+          });
+        }
+
+        if (muteBtn) {
+          muteBtn.addEventListener('click', function() {
+            video.muted = !video.muted;
+            muteBtn.textContent = video.muted ? '🔇' : '🔊';
+            if (volSlider) volSlider.value = video.muted ? 0 : video.volume * 100;
+          });
+        }
+        if (volSlider) {
+          volSlider.addEventListener('input', function() {
+            video.volume = parseFloat(volSlider.value) / 100;
+            video.muted = video.volume === 0;
+            if (muteBtn) muteBtn.textContent = video.volume === 0 ? '🔇' : '🔊';
+          });
+        }
+
+        slider.addEventListener('input', function() {
+          var pct = parseFloat(slider.value) / 100;
+          var t = pct * (video.duration || 0);
+          video.currentTime = t;
+          timeLabel.textContent = fmtTime(t) + ' / ' + fmtTime(video.duration || 0);
+          updateUI(t);
+        });
+
+        video.addEventListener('timeupdate', function() {
+          var t = video.currentTime;
+          var dur = video.duration;
+          if (dur > 0) {
+            slider.value = (t / dur) * 100;
+            timeLabel.textContent = fmtTime(t) + ' / ' + fmtTime(dur);
+            if (progressFill) progressFill.style.width = (t / dur) * 100 + '%';
+            if (ctrlTime) ctrlTime.textContent = fmtTime(t) + ' / ' + fmtTime(dur);
+            updateUI(t);
+          }
+        });
+
+        video.addEventListener('seeked', function() {
+          var t = video.currentTime;
+          var dur = video.duration;
+          if (dur > 0) {
+            slider.value = (t / dur) * 100;
+            updateUI(t);
+          }
+        });
+
+        window.addEventListener('resize', function() { if (caseChart) caseChart.resize(); });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCase);
+      } else {
+        initCase();
+      }
+    })();
+  </script>
+</body>
+
+</html>
