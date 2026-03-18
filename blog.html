@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 
@@ -109,6 +110,18 @@
       color: #666;
     }
 
+    .hero-figure {
+      margin: 0 0 2rem 0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .hero-figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
     .gist-box {
       background: #f5f5f5;
       border-left: 4px solid #333;
@@ -180,6 +193,14 @@
       border: 1px solid #e8e8e8;
     }
 
+    .robopulse-imgs img {
+      display: block;
+    }
+
+    .robopulse-imgs img + img {
+      margin-top: 0.5rem;
+    }
+
     .blog-figcaption {
       font-size: 0.9rem;
       color: #555;
@@ -191,18 +212,29 @@
     .math-inline {
       display: block;
       text-align: center;
-      font-family: "STIX Two Text", "Times New Roman", Times, serif;
-      font-size: 0.95rem;
-      color: #1a1a1a;
-      background: #f8f8f8;
-      padding: 0.4rem 0.75rem;
-      margin: 0.2rem 0;
-      border-radius: 4px;
+      margin: 0.35rem 0;
       overflow-x: auto;
+      padding: 0.5rem 0.75rem;
+      background: #f8f8f8;
+      border-radius: 4px;
+    }
+
+    .math-inline .katex {
+      font-size: 1.05em;
     }
 
     .formula-block {
-      margin: 0.3rem 0;
+      margin: 0.35rem 0;
+    }
+
+    .formula-block .math-inline {
+      margin: 0;
+    }
+
+    .blog-section li .formula-block,
+    .blog-section li p {
+      margin-top: 0.35rem;
+      margin-bottom: 0.35rem;
     }
 
     .chart-wrapper {
@@ -219,6 +251,13 @@
       margin-bottom: 0.5rem;
       text-align: center;
       font-family: "STIX Two Text", "Times New Roman", serif;
+    }
+
+    .chart-wrapper .chart-caption {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+      color: #555;
+      text-align: center;
     }
 
     .interactive-case {
@@ -436,6 +475,9 @@
   </nav>
 
   <article class="blog-container">
+    <figure class="hero-figure">
+      <img src="assets/images/hero.png" alt="PRM-as-a-Judge overview">
+    </figure>
     <header class="blog-header">
       <h1 class="blog-title title-with-logo">
         <img src="assets/images/logo-clip.jpg" alt="PRM-as-a-Judge" class="title-logo">
@@ -489,7 +531,7 @@
       <figure class="blog-figure">
         <img src="assets/images/figure2.png" alt="What makes a model a qualified judge">
         <figcaption class="blog-figcaption">
-          Figure 2: Progress potential and evaluator axioms.
+          Given task instructions and trajectory observations, we map the visual state evolution to a task-conditioned progress potential, Φ. Building on this, we derive the OPD metric system, thereby transforming raw execution videos into comparable and diagnosable trajectory-level signals.
         </figcaption>
       </figure>
 
@@ -499,14 +541,14 @@
       </p>
       <ul>
         <li><strong>Macro-Consistency (The Big Picture):</strong> Local progress checks must add up to a coherent story for the entire episode. Mathematically, for any intermediate time t<sub>1</sub>, the evaluator must satisfy:
-          <br><code class="math-inline">S(o<sub>t0</sub>,o<sub>t2</sub>) = S(o<sub>t0</sub>,o<sub>t1</sub>) + S(o<sub>t1</sub>,o<sub>t2</sub>)</code>
-          <br>This means progress is additive and independent of how you slice the timeline. If a metric drifts depending on the sampling rate, you don't have a reliable audit—you have a mess.</li>
+          <p class="formula-block"><span class="math-inline math-latex" data-latex="S(o_{t_0},o_{t_2})=S(o_{t_0},o_{t_1})+S(o_{t_1},o_{t_2})"></span></p>
+          <p>This means progress is additive and independent of how you slice the timeline. If a metric drifts depending on the sampling rate, you don't have a reliable audit—you have a mess.</p></li>
         <li><strong>Micro-Resolution (The Sharp Eye):</strong> A judge has to be sensitive to tiny, task-relevant shifts in physical state. If it can't distinguish between a minor victory, a slight slip-up, or just standing still, its response flatlines into a useless constant, and the "dense" part of the evaluation loses its diagnostic teeth.</li>
       </ul>
       <p>
         We chose Process Reward Models (PRMs) because they naturally learn a task-conditioned progress potential Φ(s)∈[0,1], which maps every state to its relative position on the road to completion. By defining the net progress between two states as the difference in their potentials:
       </p>
-      <div class="formula-block"><code class="math-inline">S(o<sub>i</sub>,o<sub>j</sub>) = Φ(s<sub>j</sub>) − Φ(s<sub>i</sub>)</code></div>
+      <p class="formula-block"><span class="math-inline math-latex" data-latex="S(o_i,o_j)=\Phi(s_j)-\Phi(s_i)"></span></p>
       <p>
         Macro-consistency is guaranteed by design—every local nudge is automatically measured on the same global scale. At the same time, because PRMs are trained with dense supervision on "how much further to go," they develop the high-resolution vision needed to spot the subtle physical evolutions that actually matter.
       </p>
@@ -517,22 +559,28 @@
       </p>
       <ul>
         <li><strong>Outcome: How far did it get?</strong> The outcome layer characterizes the trajectory's depth of advancement within the task space.
-          <br><code class="math-inline">MC(τ) = max{q ∈ {0, 0.25, 0.5, 0.75, 1} ∣ ∃t, Φ(s<sub>t</sub>) ≥ q}</code>
-          <br>MC (Milestone Coverage) indicates the furthest stage a trajectory reached. It discretizes continuous progress into key milestones to distinguish between an "early collapse" and "failing at the last mile." Physically, it describes the reachability of task stages. When MC = 1, the trajectory has reached the final completion stage; in this sense, it is equivalent to success at the outcome layer.
-          <br><code class="math-inline">MP(τ) = max<sub>t∈[0,T]</sub> Φ(s<sub>t</sub>)</code>
-          <br>MP (Max Progress) represents the peak progress value achieved across the entire trajectory. Unlike MC, which emphasizes "which level was reached," MP more directly depicts the trajectory's capability boundary in the continuous progress space: the absolute highest point reached during the execution.</li>
+          <p class="formula-block"><span class="math-inline math-latex" data-latex="MC(\tau)=\max\{q\in\{0,0.25,0.5,0.75,1\}\mid\exists t,\Phi(s_t)\geq q\}"></span></p>
+          <p>MC (Milestone Coverage) indicates the furthest stage a trajectory reached. It discretizes continuous progress into key milestones to distinguish between an "early collapse" and "failing at the last mile." Physically, it describes the reachability of task stages. When MC = 1, the trajectory has reached the final completion stage; in this sense, it is equivalent to success at the outcome layer.</p>
+          <p class="formula-block"><span class="math-inline math-latex" data-latex="MP(\tau)=\max_{t\in[0,T]}\Phi(s_t)"></span></p>
+          <p>MP (Max Progress) represents the peak progress value achieved across the entire trajectory. Unlike MC, which emphasizes "which level was reached," MP more directly depicts the trajectory's capability boundary in the continuous progress space: the absolute highest point reached during the execution.</p></li>
         <li><strong>Process: How well did it go?</strong> The process layer characterizes the execution quality of the trajectory itself, rather than merely focusing on ultimate completion.
-          <br><code class="math-inline">PPL(τ) = Φ(s<sub>T</sub>) · (Φ(s<sub>T</sub>) − Φ(s<sub>0</sub>)) / Σ<sub>t=1</sub><sup>T</sup> |Φ(s<sub>t</sub>) − Φ(s<sub>t−1</sub>)|</code>
-          <br>PPL (Path-weighted Progress Length) measures execution efficiency and trajectory monotonicity. The numerator is the net progress, and the denominator is the total potential energy variation along the entire trajectory. The preceding soft-gating term Φ(s<sub>T</sub>) penalizes attempts that are not truly completed. Physically, a higher PPL means the robot takes fewer detours, engages in less back-and-forth trial-and-error, and is closer to "advancing toward the goal smoothly and monotonically."</li>
+          <p class="formula-block"><span class="math-inline math-latex" data-latex="PPL(\tau)=\Phi(s_T)\cdot\frac{\Phi(s_T)-\Phi(s_0)}{\sum_{t=1}^T|\Phi(s_t)-\Phi(s_{t-1})|}"></span></p>
+          <p>PPL (Path-weighted Progress Length) measures execution efficiency and trajectory monotonicity. The numerator is the net progress, and the denominator is the total potential energy variation along the entire trajectory. The preceding soft-gating term Φ(s<sub>T</sub>) penalizes attempts that are not truly completed. Physically, a higher PPL means the robot takes fewer detours, engages in less back-and-forth trial-and-error, and is closer to "advancing toward the goal smoothly and monotonically."</p></li>
         <li><strong>Diagnosis: Why did it fail?</strong> The diagnosis layer goes beyond merely judging success or failure; it further deconstructs the underlying physical mechanisms of failure.
-          <br><code class="math-inline">CRA(τ) = (1/T) Σ<sub>t=0</sub><sup>T</sup> max(0, max<sub>k≤t</sub> Φ(s<sub>k</sub>) − Φ(s<sub>t</sub>))</code>
-          <br>CRA (Cumulative Regret Area) measures the area of regression of the current state relative to the historically best state. It reflects how long and by how much the robot drops back after achieving its peak progress. Physically, it corresponds to instability, regression, and the cost of trial-and-error.
-          <br><code class="math-inline">STR(τ) = (1/T) Σ<sub>t=1</sub><sup>T</sup> 1(|Φ(s<sub>t</sub>) − Φ(s<sub>t−1</sub>)| &lt; ε)</code>
-          <br>STR (Stagnation Ratio) measures the proportion of time the trajectory spends in a state of virtually no substantive progress. It does not measure "regression," but rather a "lack of movement"—such as hesitation, stuttering, or prolonged local ineffective interactions. Physically, it corresponds to stagnation and decision latency.</li>
+          <p class="formula-block"><span class="math-inline math-latex" data-latex="CRA(\tau)=\frac{1}{T}\sum_{t=0}^T\max(0,\max_{k\leq t}\Phi(s_k)-\Phi(s_t))"></span></p>
+          <p>CRA (Cumulative Regret Area) measures the area of regression of the current state relative to the historically best state. It reflects how long and by how much the robot drops back after achieving its peak progress. Physically, it corresponds to instability, regression, and the cost of trial-and-error.</p>
+          <p class="formula-block"><span class="math-inline math-latex" data-latex="STR(\tau)=\frac{1}{T}\sum_{t=1}^T\mathbf{1}(|\Phi(s_t)-\Phi(s_{t-1})|&lt;\varepsilon)"></span></p>
+          <p>STR (Stagnation Ratio) measures the proportion of time the trajectory spends in a state of virtually no substantive progress. It does not measure "regression," but rather a "lack of movement"—such as hesitation, stuttering, or prolonged local ineffective interactions. Physically, it corresponds to stagnation and decision latency.</p></li>
       </ul>
       <p>
         These five metrics collectively address five critical questions: how far did it get, what was its peak progress, how smooth was the path, how severe were the regressions, and how long did it stagnate. Together, they form a highly interpretable audit report for a single execution.
       </p>
+      <figure class="blog-figure">
+        <img src="assets/images/OPD.png" alt="OPD framework">
+        <figcaption class="blog-figcaption">
+          The OPD framework deconstructs a single execution into a three-tier signal system: Outcome characterizes progression depth, Process evaluates execution quality, and Diagnosis analyzes failure mechanisms. The five core metrics—MC, MP, PPL, CRA, and STR—correspond to milestone reachability, peak progress, path efficiency, regression cost, and stagnation ratio, respectively.
+        </figcaption>
+      </figure>
 
       <h2>5. RoboPulse: The "Physical Microscope" for Evaluator Verification</h2>
       <p>
@@ -548,12 +596,24 @@
         Evaluators based on PRM (Process Reward Models) demonstrate an overwhelming advantage. Taking Robo-Dopamine as an example, it achieves an overall accuracy of 0.83, maintaining 0.80 even in the most challenging "Small-hop" interval.
       </p>
       <p>
-        In contrast, general large models like Gemini and Qwen3-VL-8B only reach overall accuracies of 0.66 and 0.59, respectively. On "Small-hop" judgments, Gemini and GPT-5.2 perform at 0.54 and 0.47—nearly equivalent to random guessing. This proves that the core strength of PRM lies not in coarse semantic understanding, but in the acute capture of the physical evolution process.Once a judge possesses verifiable microscopic resolution, it can be further applied to the systematic analysis of real-world policy trajectories.
+        In contrast, general large models like Gemini and Qwen3-VL-8B only reach overall accuracies of 0.66 and 0.59, respectively. On "Small-hop" judgments, Gemini and GPT-5.2 perform at 0.54 and 0.47—nearly equivalent to random guessing. This proves that the core strength of PRM lies not in coarse semantic understanding, but in the acute capture of the physical evolution process. Once a judge possesses verifiable microscopic resolution, it can be further applied to the systematic analysis of real-world policy trajectories.
       </p>
+      <figure class="blog-figure">
+        <div class="robopulse-imgs">
+          <img src="assets/images/robopulse1.png" alt="RoboPulse benchmark">
+          <img src="assets/images/robopulse2.png" alt="RoboPulse structure">
+        </div>
+        <figcaption class="blog-figcaption">
+          RoboPulse is a diagnostic benchmark designed for microscopic progress resolution. Covering diverse sources—including real-world robots, simulations, UMI, and human first-person perspectives—it is organized into three relative progress spans: Small, Medium, and Large. This structure is used to systematically verify an evaluator's sensitivity to fine-grained physical changes.
+        </figcaption>
+      </figure>
 
       <div class="chart-wrapper">
         <div class="chart-title">Pairwise Progress-Judgement Accuracy on RoboPulse under different comparison scales</div>
         <div id="robopulse-chart" style="width:100%; height:280px;"></div>
+        <p class="chart-caption">
+          On RoboPulse, PRM-based judges demonstrate stronger discrimination ability across different relative progress spans, with the most significant advantage in the most challenging Small-hop interval, indicating higher sensitivity to subtle, task-relevant physical state changes.
+        </p>
       </div>
 
       <h2>6. Dense Trajectory Auditing Reveals Strategic Discrepancies</h2>
@@ -577,7 +637,7 @@
       </p>
       <figure class="blog-figure">
         <img src="assets/images/Outcome.png" alt="Outcome layer metrics">
-        <figcaption class="blog-figcaption">Outcome-layer metrics (MC, MP) for phased reachability analysis.</figcaption>
+        <figcaption class="blog-figcaption">Outcome-layer metrics reveal the discrepancies in phased reachability across long-horizon tasks: although many policies ultimately fail to complete the task, they often stably advance to the later stages. Consequently, dense trajectory auditing enables us to clearly distinguish between an 'early collapse' and a 'last-mile failure.</figcaption>
       </figure>
 
       <h3>6.2 Execution Quality Under Success Conditions</h3>
@@ -593,7 +653,7 @@
       </p>
       <figure class="blog-figure">
         <img src="assets/images/Process.png" alt="Process layer metrics">
-        <figcaption class="blog-figcaption">Process-layer metrics (PPL) for execution quality under success conditions.</figcaption>
+        <figcaption class="blog-figcaption">Success-Conditioned Execution Quality: Within successful samples, different policies may still exhibit significantly distinct execution qualities. Path efficiency and regression costs jointly demonstrate a critical insight: success does not automatically equate to high-quality success, and high-precision execution is not always aligned with overall reliability.</figcaption>
       </figure>
 
       <h3>6.3 Failure Mechanisms and Strategy Fingerprinting</h3>
@@ -609,12 +669,15 @@
       </p>
       <figure class="blog-figure">
         <img src="assets/images/Diagnosis.png" alt="Diagnosis layer metrics">
-        <figcaption class="blog-figcaption">Diagnosis-layer metrics (CRA, STR) for failure mechanism fingerprinting.</figcaption>
+        <figcaption class="blog-figcaption">Failure Fingerprints: On failed samples, CRA and STR deconstruct the single endgame "failure" label into distinct mechanisms. Some policies are prone to late-stage instability and pronounced regression, while others manifest as prolonged stagnation and insufficient progression. Behind the identical "failure" label often lie entirely different physical root causes.</figcaption>
       </figure>
 
-      <h2>7. Interactive Case</h2>
+      <h2>7. Interactive Trajectory Explorer</h2>
       <p>
-        Explore a dense trajectory audit in real time. Drag the progress bar to scrub through the video and observe how the reward curve and OPD metrics evolve frame by frame.
+        Experience the demo firsthand below. As you drag the timeline, the page dynamically aligns the video playback with the real-time progress curve, highlighting the exact position within the full trajectory. The five core metrics for the episode—MC, MP, PPL, CRA, and STR—are updated and displayed concurrently.
+      </p>
+      <p>
+        This module provides a complete temporal audit of an individual execution. Watch as upward trends, regressions, and stagnations on the curve perfectly mirror the robot's physical actions, enabling a precise, frame-by-frame understanding of the rollout's evaluation.
       </p>
 
       <div class="interactive-case">
@@ -647,6 +710,14 @@
           <div class="metric-card"><div class="metric-name">STR</div><div class="metric-value" id="m-str">—</div></div>
         </div>
       </div>
+
+      <h2>8. Conclusion</h2>
+      <p>
+        What PRM-as-a-Judge introduces is not merely a supplement to the traditional success rate, but a fundamental shift in robot evaluation: moving from binary endgame judgments to the precise characterization of the execution process itself. Through task-conditioned progress potential, the trajectory-level OPD metric system, and the systematic verification of microscopic resolution via RoboPulse, we transform an execution trajectory—once reductively summarized as a simple success or failure—into interpretable, comparable, and diagnosable process signals.
+      </p>
+      <p>
+        For increasingly long-horizon and complex robotic tasks, a single binary success label is no longer sufficient to fully capture the nuances of model behavior. Fine-grained trajectory auditing not only reveals the intrinsic differences between policies in terms of progression depth, execution quality, and failure mechanisms, but it also provides a highly targeted foundation for downstream model analysis and system refinement.
+      </p>
 
       <h2>Author Team</h2>
 
@@ -684,8 +755,19 @@
     </div>
   </article>
 
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
   <script defer src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+  <script>
+    (function() {
+      document.querySelectorAll('.math-latex').forEach(function(el) {
+        var latex = el.getAttribute('data-latex');
+        if (latex && typeof katex !== 'undefined') {
+          katex.render(latex, el, { throwOnError: false, displayMode: true });
+        }
+      });
+    })();
+  </script>
   <script>
     (function() {
       var chartDom = document.getElementById('robopulse-chart');
