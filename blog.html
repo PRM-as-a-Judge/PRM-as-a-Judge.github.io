@@ -357,6 +357,65 @@
       margin-top: 0.5rem;
     }
 
+    /* RoboPulse section: text left, figure/chart right */
+    .robopulse-side-by-side {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    .robopulse-side-by-side .robopulse-text-block {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .robopulse-side-by-side .robopulse-figure-right {
+      flex-shrink: 0;
+      flex: 0 0 42%;
+      max-width: 420px;
+      margin: 0 !important;  /* 覆盖 blog-figure 的 margin: 2rem 0，避免图片被推低 */
+    }
+
+    .robopulse-side-by-side .robopulse-figure-right .robopulse-imgs img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid #e8e8e8;
+    }
+
+    .robopulse-side-by-side .robopulse-figure-right .blog-figcaption {
+      font-size: 0.82rem;
+      margin-top: 0.5rem;
+    }
+
+    .robopulse-side-by-side .robopulse-chart-right {
+      flex-shrink: 0;
+      flex: 0 0 42%;
+      max-width: 420px;
+      margin: 0;
+      padding: 0.75rem;
+    }
+
+    .robopulse-side-by-side .robopulse-chart-right .chart-caption {
+      font-size: 0.85rem;
+      margin-top: 0.6rem;
+    }
+
+    .robopulse-side-by-side .robopulse-chart-right #robopulse-chart {
+      height: 220px !important;
+    }
+
+    @media (max-width: 768px) {
+      .robopulse-side-by-side {
+        flex-direction: column;
+      }
+      .robopulse-side-by-side .robopulse-figure-right,
+      .robopulse-side-by-side .robopulse-chart-right {
+        width: 100%;
+      }
+    }
+
     .blog-figcaption {
       font-size: 0.9rem;
       color: #555;
@@ -424,9 +483,216 @@
       border: 1px solid #e8e8e8;
     }
 
+    .interactive-case .video-selectors {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .interactive-case .selector-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      width: 100%;
+    }
+
+    .interactive-case .selector-row-label {
+      font-size: 0.8rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .interactive-case .selector-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .interactive-case .selector-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 2px solid var(--btn-color, #5C6BC0);
+      color: var(--btn-color, #5C6BC0);
+      background: transparent;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .interactive-case .selector-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .interactive-case .selector-btn.active {
+      border-width: 3px;
+    }
+
+    .interactive-case .selector-btn-filled,
+    .interactive-case .selector-btn-outline {
+      background: transparent;
+      color: var(--btn-color, #5C6BC0);
+      border: 2px solid var(--btn-color, #5C6BC0);
+    }
+
+    .interactive-case .selector-btn-filled.active,
+    .interactive-case .selector-btn-outline.active {
+      background: transparent;
+      color: var(--btn-color, #5C6BC0);
+      border-color: var(--btn-color, #5C6BC0);
+      border-width: 3px;
+    }
+
+    .interactive-case .opd-metrics-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 0.75rem;
+      background: #fff;
+    }
+
+    .interactive-case .opd-metrics-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #e8e8e8;
+      width: 100%;
+      text-align: center;
+    }
+
+    .interactive-case .opd-metrics-wrapper .case-metrics {
+      flex: 1;
+      width: 100%;
+    }
+
+    .interactive-case .opd-metrics-wrapper .metrics-group {
+      align-items: center;
+      text-align: center;
+    }
+
+    .interactive-case .opd-metrics-wrapper .metrics-group-title {
+      text-align: center;
+    }
+
+    .interactive-case .opd-metrics-wrapper .metric-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .interactive-case .opd-metrics-wrapper .metric-mc-row {
+      justify-content: center;
+    }
+
+    .interactive-case .video-metrics-row {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .interactive-case .video-col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .interactive-case .metrics-col {
+      flex-shrink: 0;
+      width: 250px;
+      display: flex;
+    }
+
+    .interactive-case .metrics-col .case-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0;
+      flex: 1;
+    }
+
+    .interactive-case .metrics-group {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 0.35rem 0.55rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .interactive-case .metrics-group.metrics-group-process {
+      flex: 0.5;
+    }
+
+    .interactive-case .metrics-group-title {
+      font-size: 0.7rem;
+      color: #888;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .interactive-case .metrics-group .metric-card {
+      margin-bottom: 0.25rem;
+      background: transparent;
+      border: none;
+      padding: 0.1rem 0;
+    }
+
+    .interactive-case .metrics-group .metric-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .interactive-case .metrics-group .metric-card .metric-name {
+      margin-bottom: 0.05rem;
+    }
+
+    .interactive-case .metric-mc-row {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-top: 0.1rem;
+    }
+
+    .interactive-case .mc-milestone {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      background: #f0f0f0;
+      color: #888;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .interactive-case .mc-milestone.reached {
+      background: rgba(129, 199, 132, 0.35);
+      color: #2e7d32;
+    }
+
+    @media (max-width: 768px) {
+      .interactive-case .video-metrics-row {
+        flex-direction: column;
+      }
+      .interactive-case .metrics-col {
+        width: 100%;
+      }
+    }
+
     .interactive-case .video-chart-wrap {
       position: relative;
       width: 100%;
+      min-height: 320px;
       margin: 0 auto;
       border-radius: 8px;
       overflow: hidden;
@@ -538,11 +804,15 @@
       right: 0;
       bottom: 0;
       pointer-events: none;
+      z-index: 2;
     }
 
     .interactive-case .case-chart {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
+      min-height: 200px;
     }
 
     .interactive-case .case-slider-wrap {
@@ -579,10 +849,7 @@
     }
 
     .interactive-case .case-metrics {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 0.75rem;
-      margin-top: 1rem;
+      margin-top: 0;
     }
 
     .interactive-case .metric-card {
@@ -760,37 +1027,43 @@
       </figure>
 
       <h2>5. RoboPulse: The "Physical Microscope" for Evaluator Verification</h2>
-      <p>
-        To verify whether an evaluator possesses true microscopic resolution, we constructed the RoboPulse benchmark. It simplifies evaluation into a pairwise judgment task: given a task description and two states from the same trajectory, the evaluator must determine if the latter state represents "Progress" or "Regression." This design bypasses the need for absolute progress labeling and focuses on the core capability: can the evaluator reliably distinguish directionality when physical changes are minute?
-      </p>
-      <ul>
-        <li><strong>Dataset Scale:</strong> RoboPulse comprises 1,800 pairwise judgment samples derived from 1,622 episodes across 816 tasks.</li>
-        <li><strong>Diversity:</strong> Data sources include real-world robots, simulations, UMI, and human first-person perspectives.</li>
-        <li><strong>Granularity:</strong> Samples are categorized into Small / Medium / Large relative progress spans to systematically test the evaluator's physical resolution across different scales.</li>
-      </ul>
-      <p><strong>Experimental Results:</strong></p>
-      <p>
-        Evaluators based on PRM (Process Reward Models) demonstrate an overwhelming advantage. Taking Robo-Dopamine as an example, it achieves an overall accuracy of 0.83, maintaining 0.80 even in the most challenging "Small-hop" interval.
-      </p>
-      <p>
-        In contrast, general large models like Gemini and Qwen3-VL-8B only reach overall accuracies of 0.66 and 0.59, respectively. On "Small-hop" judgments, Gemini and GPT-5.2 perform at 0.54 and 0.47—nearly equivalent to random guessing. This proves that the core strength of PRM lies not in coarse semantic understanding, but in the acute capture of the physical evolution process. Once a judge possesses verifiable microscopic resolution, it can be further applied to the systematic analysis of real-world policy trajectories.
-      </p>
-      <figure class="blog-figure">
-        <div class="robopulse-imgs">
-          <img src="assets/images/robopulse1.png" alt="RoboPulse benchmark">
-          <img src="assets/images/robopulse2.png" alt="RoboPulse structure">
+      <div class="robopulse-side-by-side">
+        <div class="robopulse-text-block">
+          <p>
+            To verify whether an evaluator possesses true microscopic resolution, we constructed the RoboPulse benchmark. It simplifies evaluation into a pairwise judgment task: given a task description and two states from the same trajectory, the evaluator must determine if the latter state represents "Progress" or "Regression." This design bypasses the need for absolute progress labeling and focuses on the core capability: can the evaluator reliably distinguish directionality when physical changes are minute?
+          </p>
+          <ul>
+            <li><strong>Dataset Scale:</strong> RoboPulse comprises 1,800 pairwise judgment samples derived from 1,622 episodes across 816 tasks.</li>
+            <li><strong>Diversity:</strong> Data sources include real-world robots, simulations, UMI, and human first-person perspectives.</li>
+            <li><strong>Granularity:</strong> Samples are categorized into Small / Medium / Large relative progress spans to systematically test the evaluator's physical resolution across different scales.</li>
+          </ul>
         </div>
-        <figcaption class="blog-figcaption">
-          RoboPulse is a diagnostic benchmark designed for microscopic progress resolution. Covering diverse sources—including real-world robots, simulations, UMI, and human first-person perspectives—it is organized into three relative progress spans: Small, Medium, and Large. This structure is used to systematically verify an evaluator's sensitivity to fine-grained physical changes.
-        </figcaption>
-      </figure>
-
-      <div class="chart-wrapper">
-        <div class="chart-title">Pairwise Progress-Judgement Accuracy on RoboPulse under different comparison scales</div>
-        <div id="robopulse-chart" style="width:100%; height:280px;"></div>
-        <p class="chart-caption">
-          On RoboPulse, PRM-based judges demonstrate stronger discrimination ability across different relative progress spans, with the most significant advantage in the most challenging Small-hop interval, indicating higher sensitivity to subtle, task-relevant physical state changes.
-        </p>
+        <figure class="blog-figure robopulse-figure-right">
+          <div class="robopulse-imgs">
+            <img src="assets/images/robopulse1.png" alt="RoboPulse benchmark">
+            <img src="assets/images/robopulse2.png" alt="RoboPulse structure">
+          </div>
+          <figcaption class="blog-figcaption">
+            RoboPulse is a diagnostic benchmark designed for microscopic progress resolution. Covering diverse sources—including real-world robots, simulations, UMI, and human first-person perspectives—it is organized into three relative progress spans: Small, Medium, and Large. This structure is used to systematically verify an evaluator's sensitivity to fine-grained physical changes.
+          </figcaption>
+        </figure>
+      </div>
+      <p><strong>Experimental Results:</strong></p>
+      <div class="robopulse-side-by-side">
+        <div class="robopulse-text-block">
+          <p>
+            Evaluators based on PRM (Process Reward Models) demonstrate an overwhelming advantage. Taking Robo-Dopamine as an example, it achieves an overall accuracy of 0.83, maintaining 0.80 even in the most challenging "Small-hop" interval.
+          </p>
+          <p>
+            In contrast, general large models like Gemini and Qwen3-VL-8B only reach overall accuracies of 0.66 and 0.59, respectively. On "Small-hop" judgments, Gemini and GPT-5.2 perform at 0.54 and 0.47—nearly equivalent to random guessing. This proves that the core strength of PRM lies not in coarse semantic understanding, but in the acute capture of the physical evolution process. Once a judge possesses verifiable microscopic resolution, it can be further applied to the systematic analysis of real-world policy trajectories.
+          </p>
+        </div>
+        <div class="chart-wrapper robopulse-chart-right">
+          <div id="robopulse-chart" style="width:100%; height:280px;"></div>
+          <p class="chart-caption">
+            On RoboPulse, PRM-based judges demonstrate stronger discrimination ability across different relative progress spans, with the most significant advantage in the most challenging Small-hop interval, indicating higher sensitivity to subtle, task-relevant physical state changes.
+          </p>
+        </div>
       </div>
 
       <h2>6. Dense Trajectory Auditing Reveals Strategic Discrepancies</h2>
@@ -858,6 +1131,27 @@
       </p>
 
       <div class="interactive-case">
+        <div class="video-selectors">
+          <div class="selector-row">
+            <div class="selector-row-label">Benchmark</div>
+            <div class="selector-buttons" id="benchmark-buttons">
+              <button type="button" class="selector-btn selector-btn-filled active" data-benchmark="robotwin" style="--btn-color: #E8641B;">RoboTwin 2.0</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="libero" style="--btn-color: #2B69E4;">LIBERO</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="metaworld" style="--btn-color: #9333EA;">Meta-World</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="calvin" style="--btn-color: #059669;">CALVIN</button>
+            </div>
+          </div>
+          <div class="selector-row">
+            <div class="selector-row-label">Task</div>
+            <div class="selector-buttons" id="task-buttons">
+              <button type="button" class="selector-btn selector-btn-filled active" data-task="blocks_ranking_rgb" style="--btn-color: #5C6BC0;">Blocks Ranking RGB</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-task="handover_mic" style="--btn-color: #26A69A;">Handover Mic</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-task="place_bread_basket" style="--btn-color: #E65100;">Place Bread Basket</button>
+            </div>
+          </div>
+        </div>
+        <div class="video-metrics-row">
+          <div class="video-col">
         <div class="video-chart-wrap" id="video-wrap">
           <video class="case-video" id="case-video" src="assets/videos/blocks_ranking_rgb_ACT_episode11_Success_head_049.mp4" preload="metadata"></video>
           <div class="video-controls">
@@ -879,12 +1173,36 @@
           <input type="range" id="case-slider" min="0" max="100" value="0" step="0.1">
           <span class="time-label" id="case-time">0:00 / 0:00</span>
         </div>
-        <div class="case-metrics" id="case-metrics">
-          <div class="metric-card"><div class="metric-name">MC</div><div class="metric-value" id="m-mc">—</div></div>
-          <div class="metric-card"><div class="metric-name">MP</div><div class="metric-value" id="m-mp">—</div></div>
-          <div class="metric-card"><div class="metric-name">PPL</div><div class="metric-value" id="m-ppl">—</div></div>
-          <div class="metric-card"><div class="metric-name">CRA</div><div class="metric-value" id="m-cra">—</div></div>
-          <div class="metric-card"><div class="metric-name">STR</div><div class="metric-value" id="m-str">—</div></div>
+          </div>
+          <div class="metrics-col">
+            <div class="opd-metrics-wrapper">
+              <div class="opd-metrics-title">OPD Metrics</div>
+              <div class="case-metrics" id="case-metrics">
+              <div class="metrics-group">
+                <div class="metrics-group-title">O (Outcome)</div>
+                <div class="metric-card metric-mc">
+                  <div class="metric-name">MC</div>
+                  <div class="metric-mc-row" id="m-mc">
+                    <span class="mc-milestone" data-pct="25">25%</span>
+                    <span class="mc-milestone" data-pct="50">50%</span>
+                    <span class="mc-milestone" data-pct="75">75%</span>
+                    <span class="mc-milestone" data-pct="100">100%</span>
+                  </div>
+                </div>
+                <div class="metric-card"><div class="metric-name">MP</div><div class="metric-value" id="m-mp">—</div></div>
+              </div>
+              <div class="metrics-group metrics-group-process">
+                <div class="metrics-group-title">P (Process)</div>
+                <div class="metric-card"><div class="metric-name">PPL</div><div class="metric-value" id="m-ppl">—</div></div>
+              </div>
+              <div class="metrics-group">
+                <div class="metrics-group-title">D (Diagnosis)</div>
+                <div class="metric-card"><div class="metric-name">CRA</div><div class="metric-value" id="m-cra">—</div></div>
+                <div class="metric-card"><div class="metric-name">STR</div><div class="metric-value" id="m-str">—</div></div>
+              </div>
+            </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -918,7 +1236,7 @@
         Pengwei Wang, Zhongyuan Wang, Shanghang Zhang, Xiaolong Zheng
       </p>
 
-      <h3>Citation</h3>
+      <h2>Citation</h2>
       <p>
         If you find our work helpful, please cite us:
       </p>
@@ -1040,10 +1358,14 @@
         },
         legend: {
           data: ['CLIP ViT-L/14', 'Gemini 3 Pro Preview', 'Robo-Dopamine'],
+          orient: 'horizontal',
+          left: '0%',
+          right: '0%',
           bottom: 0,
-          textStyle: { fontFamily: '"STIX Two Text", "Times New Roman", serif' }
+          itemGap: 8,
+          textStyle: { fontFamily: '"STIX Two Text", "Times New Roman", serif', fontSize: 9 }
         },
-        grid: { left: '12%', right: '8%', bottom: '18%', top: '12%', containLabel: true },
+        grid: { left: '12%', right: '8%', bottom: '12%', top: '12%', containLabel: true },
         xAxis: {
           type: 'category',
           data: ['Small', 'Medium', 'Large'],
@@ -1051,7 +1373,7 @@
         },
         yAxis: {
           type: 'value',
-          name: 'Pairwise Progress-Judgement Accuracy',
+          name: 'Accuracy',
           nameLocation: 'middle',
           nameGap: 45,
           min: 0,
@@ -1134,8 +1456,8 @@
         return m + ':' + (sec < 10 ? '0' : '') + sec;
       }
 
-      var COLOR_RISE = 'rgba(239, 83, 80, 0.9)';
-      var COLOR_FALL = 'rgba(129, 199, 132, 0.9)';
+      var COLOR_RISE = 'rgba(129, 199, 132, 0.9)';
+      var COLOR_FALL = 'rgba(239, 83, 80, 0.9)';
 
       function buildSegments(filtered, t) {
         var riseData = [], fallData = [];
@@ -1183,8 +1505,8 @@
         var seg = buildSegments(filtered, t);
         caseChart.setOption({
           series: [
-            { data: seg.rise, lineStyle: { color: COLOR_RISE }, areaStyle: { color: 'rgba(239, 83, 80, 0.25)' } },
-            { data: seg.fall, lineStyle: { color: COLOR_FALL }, areaStyle: { color: 'rgba(129, 199, 132, 0.25)' } }
+            { data: seg.rise, lineStyle: { color: COLOR_RISE }, areaStyle: { color: 'rgba(129, 199, 132, 0.25)' } },
+            { data: seg.fall, lineStyle: { color: COLOR_FALL }, areaStyle: { color: 'rgba(239, 83, 80, 0.25)' } }
           ]
         });
       }
@@ -1198,15 +1520,37 @@
         wrap.style.borderColor = rising ? COLOR_RISE : COLOR_FALL;
       }
 
+      function getMaxRewardUpTo(t) {
+        if (!frameData.length) return 0;
+        var maxR = 0;
+        for (var i = 0; i < frameData.length && frameData[i].t <= t; i++) {
+          if (frameData[i].reward > maxR) maxR = frameData[i].reward;
+        }
+        var m = interpolate(frameData, t);
+        if (m && m.reward > maxR) maxR = m.reward;
+        return maxR;
+      }
+
       function updateUI(t) {
         var m = interpolate(frameData, t);
-        if (m) {
-          document.getElementById('m-mc').textContent = m.MC.toFixed(3);
-          document.getElementById('m-mp').textContent = m.MP.toFixed(3);
-          document.getElementById('m-ppl').textContent = m.PPL.toFixed(3);
-          document.getElementById('m-cra').textContent = m.CRA.toFixed(3);
-          document.getElementById('m-str').textContent = m.STR.toFixed(3);
-        }
+        var maxR = frameData.length ? getMaxRewardUpTo(t) : 0;
+        var milestones = [25, 50, 75, 100];
+        milestones.forEach(function(pct) {
+          var el = document.querySelector('.mc-milestone[data-pct="' + pct + '"]');
+          if (el) {
+            var reached = maxR >= pct / 100;
+            el.classList.toggle('reached', reached);
+            el.textContent = pct + '% ' + (reached ? '✓' : '✗');
+          }
+        });
+        var mpEl = document.getElementById('m-mp');
+        if (mpEl) mpEl.textContent = m ? m.MP.toFixed(3) : '—';
+        var pplEl = document.getElementById('m-ppl');
+        if (pplEl) pplEl.textContent = m ? m.PPL.toFixed(3) : '—';
+        var craEl = document.getElementById('m-cra');
+        if (craEl) craEl.textContent = m ? m.CRA.toFixed(3) : '—';
+        var strEl = document.getElementById('m-str');
+        if (strEl) strEl.textContent = m ? m.STR.toFixed(3) : '—';
         updateChart(t);
         updateBorder(t);
       }
@@ -1247,18 +1591,95 @@
               splitLine: { lineStyle: { color: 'rgba(255,255,255,0.15)' } }
             },
             series: [
-              { type: 'line', data: [], smooth: true, symbol: 'none', lineStyle: { color: COLOR_RISE, width: 2.5 }, areaStyle: { color: 'rgba(239, 83, 80, 0.25)' }, animation: false },
-              { type: 'line', data: [], smooth: true, symbol: 'none', lineStyle: { color: COLOR_FALL, width: 2.5 }, areaStyle: { color: 'rgba(129, 199, 132, 0.25)' }, animation: false }
+              { type: 'line', data: [], smooth: true, symbol: 'none', lineStyle: { color: COLOR_RISE, width: 2.5 }, areaStyle: { color: 'rgba(129, 199, 132, 0.25)' }, animation: false },
+              { type: 'line', data: [], smooth: true, symbol: 'none', lineStyle: { color: COLOR_FALL, width: 2.5 }, areaStyle: { color: 'rgba(239, 83, 80, 0.25)' }, animation: false }
             ]
           });
 
           updateChart(0);
           updateBorder(0);
+          updateUI(0);
 
           var wrap = video.closest('.video-chart-wrap');
           if (wrap && window.ResizeObserver) {
             new ResizeObserver(function() { caseChart.resize(); }).observe(wrap);
           }
+          setTimeout(function() { if (caseChart) caseChart.resize(); }, 200);
+        });
+
+        var TASKS_BY_BENCHMARK = {
+          robotwin: [
+            { id: 'blocks_ranking_rgb', name: 'Blocks Ranking RGB', color: '#5C6BC0' },
+            { id: 'handover_mic', name: 'Handover Mic', color: '#26A69A' },
+            { id: 'place_bread_basket', name: 'Place Bread Basket', color: '#E65100' }
+          ],
+          libero: [
+            { id: 'libero_task1', name: 'Task 1 (placeholder)', color: '#2B69E4' },
+            { id: 'libero_task2', name: 'Task 2 (placeholder)', color: '#059669' }
+          ],
+          metaworld: [
+            { id: 'mw_task1', name: 'Task 1 (placeholder)', color: '#9333EA' },
+            { id: 'mw_task2', name: 'Task 2 (placeholder)', color: '#E8641B' }
+          ],
+          calvin: [
+            { id: 'calvin_task1', name: 'Task 1 (placeholder)', color: '#059669' },
+            { id: 'calvin_task2', name: 'Task 2 (placeholder)', color: '#5C6BC0' }
+          ]
+        };
+        var currentBenchmark = 'robotwin';
+        var currentTask = 'blocks_ranking_rgb';
+
+        function renderTaskButtons(benchmarkId) {
+          var container = document.getElementById('task-buttons');
+          if (!container) return;
+          var tasks = TASKS_BY_BENCHMARK[benchmarkId] || TASKS_BY_BENCHMARK.robotwin;
+          container.innerHTML = tasks.map(function(t) {
+            var isActive = (t.id === currentTask);
+            var btnClass = 'selector-btn ' + (isActive ? 'selector-btn-filled active' : 'selector-btn-outline');
+            return '<button type="button" class="' + btnClass + '" data-task="' + t.id + '" style="--btn-color: ' + t.color + '">' + t.name + '</button>';
+          }).join('');
+          container.querySelectorAll('.selector-btn').forEach(function(btn) {
+            btn.addEventListener('click', onTaskClick);
+          });
+        }
+
+        function onBenchmarkClick(e) {
+          var btn = e.target.closest('.selector-btn');
+          if (!btn) return;
+          document.querySelectorAll('#benchmark-buttons .selector-btn').forEach(function(b) {
+            b.classList.remove('active', 'selector-btn-filled');
+            b.classList.add('selector-btn-outline');
+          });
+          btn.classList.remove('selector-btn-outline');
+          btn.classList.add('selector-btn-filled', 'active');
+          currentBenchmark = btn.dataset.benchmark;
+          var tasks = TASKS_BY_BENCHMARK[currentBenchmark] || [];
+          currentTask = tasks[0] ? tasks[0].id : '';
+          renderTaskButtons(currentBenchmark);
+        }
+
+        function onTaskClick(e) {
+          var btn = e.target.closest('.selector-btn');
+          if (!btn) return;
+          document.querySelectorAll('#task-buttons .selector-btn').forEach(function(b) {
+            b.classList.remove('active', 'selector-btn-filled');
+            b.classList.add('selector-btn-outline');
+          });
+          btn.classList.remove('selector-btn-outline');
+          btn.classList.add('selector-btn-filled', 'active');
+          currentTask = btn.dataset.task;
+          var videoSrc = 'assets/videos/' + currentTask + '.mp4';
+          if (currentTask === 'blocks_ranking_rgb') {
+            videoSrc = 'assets/videos/blocks_ranking_rgb_ACT_episode11_Success_head_049.mp4';
+          }
+          video.src = videoSrc;
+        }
+
+        document.querySelectorAll('#benchmark-buttons .selector-btn').forEach(function(btn) {
+          btn.addEventListener('click', onBenchmarkClick);
+        });
+        document.querySelectorAll('#task-buttons .selector-btn').forEach(function(btn) {
+          btn.addEventListener('click', onTaskClick);
         });
 
         var playBtn = document.getElementById('play-btn');
