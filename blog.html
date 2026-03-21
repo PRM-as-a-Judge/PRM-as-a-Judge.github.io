@@ -1076,30 +1076,27 @@
 
       <h3>6.1 Phased Reachability and Failure Localization</h3>
       <p>
-        For long-horizon tasks, binary success rates fail to characterize the progression depth at different stages, often masking the exact point of failure and the true strategic differences between policies. Using the outcome-layer metrics MC and MP, we can directly analyze how far each strategy actually pushed through the task.
+        A 0% success rate doesn't mean a policy learned nothing—it just fails to tell you where things fell apart. By tracking how deep a model actually pushes into a long-horizon task (using our MC and MP metrics), we can peek under the hood and uncover two strategic realities that binary labels hide:
       </p>
       <ul>
-        <li><strong>Example (Blocks Ranking RGB):</strong> Most strategies show high reachability in the early stages; the MC@25 for ACT, DP, RDT, π<sub>0</sub>, and OpenVLA-OFT reached 84, 94, 100, 96, and 98, respectively.</li>
-        <li><strong>The "Last Mile" Gap:</strong> However, at the final completion stage, MC@100 drops to 2, 0, 0, 8, and 0. This indicates that many rollouts are not a "total failure to learn," but rather failures that occur specifically in the late stages.</li>
+        <li><strong>The "Last-Mile" Illusion:</strong> Policies rarely fail from the starting line. In Blocks Ranking RGB, almost every baseline breezes through the early stages with massive reachability (MC@25 &gt; 84). Yet, when it comes to actually closing the deal (MC@100), performance plummets to near zero. They aren't failing to learn the task; they are specifically tripping at the finish line.</li>
+        <li><strong>Not All Zeros Are Created Equal:</strong> A near-miss and an early breakdown both score a flat 0%, but physically, they are completely different. Dense auditing finally separates models that "fail the same way" from those that "fail at different locations." Even though both ultimately drop the ball, π<sub>0</sub> fights its way much closer to the goal (MC@75 = 40), whereas OpenVLA-OFT falls apart almost immediately (MC@75 = 6).</li>
       </ul>
-      <p>
-        More importantly, dense auditing distinguishes between strategies that "fail the same way but at different locations." In Blocks Ranking RGB, π<sub>0</sub> achieves an MC@75 of 40, while OpenVLA-OFT only reaches 6. Although both ultimately fail, the former's failures occur much closer to the finish line, whereas the latter is prone to collapsing at a much earlier stage.Measuring progression depth only addresses a fraction of the execution process; it remains necessary to further analyze whether successful trajectories exhibit consistent execution quality.
-      </p>
       <figure class="blog-figure">
         <img src="assets/images/Outcome.png" alt="Outcome layer metrics">
-        <figcaption class="blog-figcaption">Outcome-layer metrics reveal the discrepancies in phased reachability across long-horizon tasks: although many policies ultimately fail to complete the task, they often stably advance to the later stages. Consequently, dense trajectory auditing enables us to clearly distinguish between an 'early collapse' and a 'last-mile failure.</figcaption>
+        <figcaption class="blog-figcaption">Outcome-layer metrics reveal the discrepancies in phased reachability across long-horizon tasks: although many policies ultimately fail to complete the task, they often stably advance to the later stages. Consequently, dense trajectory auditing enables us to clearly distinguish between an 'early collapse' and a 'last-mile failure.'</figcaption>
       </figure>
 
       <h3>6.2 Execution Quality Under Success Conditions</h3>
       <p>
-        Reaching the goal does not imply identical execution quality. To further analyze how a model succeeds, we calculated process and diagnosis metrics specifically on successful samples.
+        A "success" tag tells you nothing about execution quality—binary results hide whether a task was done smoothly, efficiently, or through messy trial and error. By measuring process and diagnosis metrics only on successful runs, we uncover two key truths buried by simple success rates:
       </p>
       <ul>
-        <li><strong>In Handover Mic:</strong> DP (Diffusion Policy) success samples exhibit significantly higher path efficiency and lower regression costs: its success-conditioned PPL reaches 94.9 with a CRA of only 0.26.</li>
-        <li><strong>Comparison:</strong> Conversely, OpenVLA-OFT shows a CRA of 2.55, indicating its success is often accompanied by redundant corrections and repetitive adjustments.</li>
+        <li><strong>Success ≠ High Quality:</strong> Even when policies succeed, their performance varies sharply. In Handover Mic, DP delivers near-perfect execution: success-conditioned PPL = 94.9, CRA = 0.26. OpenVLA‑OFT, by contrast, shows CRA = 2.55—its successes rely on repeated corrections and unstable adjustments.</li>
+        <li><strong>The Precision–Reliability Gap:</strong> Top-tier execution doesn't mean consistent reliability. DP achieves elite quality when it succeeds, but its overall success rate hits only 44%. Some policies excel at clean, precise wins—but cannot sustain that quality across all rollouts.</li>
       </ul>
       <p>
-        This reveals a stable "strategy-layer" phenomenon: execution precision and overall reliability are not always aligned. While DP produces the highest execution quality when it succeeds, its overall completion rate is not dominant. Some strategies, once successful, demonstrate extreme precision, but this high-quality performance may not stably cover a wider range of rollouts.
+        Our OPD metrics go beyond "success/failure" to separate smooth, high‑quality successes from inefficient, janky ones—revealing tradeoffs that shape real‑world robot performance.
       </p>
       <figure class="blog-figure">
         <img src="assets/images/Process.png" alt="Process layer metrics">
@@ -1108,14 +1105,15 @@
 
       <h3>6.3 Failure Mechanisms and Strategy Fingerprinting</h3>
       <p>
-        Beyond locating where a failure occurs, dense auditing analyzes how a failure forms. Using CRA and STR, we can deconstruct "failure" from a single label into distinct physical mechanisms.
+        A single "failure" label reveals nothing about why policies fail. Binary evaluation erases the real physical mechanisms behind breakdowns. By analyzing OPD metrics on failed episodes, we uncover clear, interpretable failure fingerprints invisible to traditional methods:
       </p>
       <ul>
-        <li><strong>Instability vs. Stagnation:</strong> In Place Bread Basket, OpenVLA-OFT achieves an MP of 92.61 but suffers a high CRA of 26.25, indicating late-stage instability and severe regression. In contrast, ACT has a lower MP of 73.11 but a high STR of 65.38, pointing to an early-stage, stagnation-led failure.</li>
-        <li><strong>The "Failure Fingerprint":</strong> While both are recorded as failures, their mechanisms differ: the former "drops the ball" just as it nears completion, while the latter stays trapped in ineffective interactions.</li>
+        <li><strong>Unique Failure Signatures:</strong> Each policy family shows consistent, task-stable failure patterns. On Place Bread Basket, OpenVLA-OFT fails late with severe regression (MP=92.6, CRA=26.3), while ACT fails early from prolonged stagnation (MP=73.1, STR=65.4).</li>
+        <li><strong>Stagnation vs. Regret Failure Modes:</strong> Failure fingerprints clearly distinguish two root causes. On Handover Mic, DP fails from stalled interaction (high STR=57.2), while OpenVLA-OFT fails from unstable correction loops (low PPL=66.2, high CRA=5.66).</li>
+        <li><strong>Actionable Optimization Guidance:</strong> Stagnation failures demand better end-effector stability and contact maintenance; regression failures require stronger error absorption and closed-loop correction; low efficiency calls for fewer redundant motions.</li>
       </ul>
       <p>
-        These failure fingerprints provide clear directions for optimization: Stagnation-type failures suggest a need for improved contact maintenance and end-effector stability, while Regression-type failures indicate a need for enhanced error absorption and closed-loop correction capabilities.
+        Our OPD framework turns vague failures into clear diagnostic signatures—delivering direct, targeted guidance for policy improvement.
       </p>
       <figure class="blog-figure">
         <img src="assets/images/Diagnosis.png" alt="Diagnosis layer metrics">
@@ -1136,24 +1134,26 @@
             <div class="selector-row-label">Benchmark</div>
             <div class="selector-buttons" id="benchmark-buttons">
               <button type="button" class="selector-btn selector-btn-filled active" data-benchmark="robotwin" style="--btn-color: #E8641B;">RoboTwin 2.0</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="robocasa" style="--btn-color: #D84315;">RoboCasa</button>
               <button type="button" class="selector-btn selector-btn-outline" data-benchmark="libero" style="--btn-color: #2B69E4;">LIBERO</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="metaworld" style="--btn-color: #9333EA;">Meta-World</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="calvin" style="--btn-color: #059669;">CALVIN</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="robochallenge" style="--btn-color: #6A1B9A;">RoboChallenge</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="simplerenv" style="--btn-color: #00897B;">SimplerEnv</button>
             </div>
           </div>
           <div class="selector-row">
             <div class="selector-row-label">Task</div>
             <div class="selector-buttons" id="task-buttons">
-              <button type="button" class="selector-btn selector-btn-filled active" data-task="blocks_ranking_rgb" style="--btn-color: #5C6BC0;">Blocks Ranking RGB</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-task="handover_mic" style="--btn-color: #26A69A;">Handover Mic</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-task="place_bread_basket" style="--btn-color: #E65100;">Place Bread Basket</button>
+              <button type="button" class="selector-btn selector-btn-filled active" data-task="Handover block" style="--btn-color: #5C6BC0;">Handover block</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-task="Hang mug" style="--btn-color: #26A69A;">Hang mug</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-task="Place the bread into basket" style="--btn-color: #E65100;">Place the bread into basket</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-task="Rank RGB blocks" style="--btn-color: #E8641B;">Rank RGB blocks</button>
             </div>
           </div>
         </div>
         <div class="video-metrics-row">
           <div class="video-col">
         <div class="video-chart-wrap" id="video-wrap">
-          <video class="case-video" id="case-video" src="assets/videos/blocks_ranking_rgb_ACT_episode11_Success_head_049.mp4" preload="metadata"></video>
+          <video class="case-video" id="case-video" preload="metadata"></video>
           <div class="video-controls">
             <button class="btn-icon" id="play-btn" aria-label="Play">▶</button>
             <div class="progress-wrap" id="progress-wrap">
@@ -1437,7 +1437,7 @@
         for (var i = 0; i < data.length - 1; i++) {
           if (data[i].t <= t && t <= data[i + 1].t) {
             var a = (t - data[i].t) / (data[i + 1].t - data[i].t);
-            return {
+            var m = {
               reward: data[i].reward + a * (data[i + 1].reward - data[i].reward),
               MC: data[i].MC + a * (data[i + 1].MC - data[i].MC),
               MP: data[i].MP + a * (data[i + 1].MP - data[i].MP),
@@ -1445,6 +1445,13 @@
               CRA: data[i].CRA + a * (data[i + 1].CRA - data[i].CRA),
               STR: data[i].STR + a * (data[i + 1].STR - data[i].STR)
             };
+            if (data[i].M25 !== undefined && data[i + 1].M25 !== undefined) {
+              m.M25 = data[i].M25 + a * (data[i + 1].M25 - data[i].M25);
+              m.M50 = data[i].M50 + a * (data[i + 1].M50 - data[i].M50);
+              m.M75 = data[i].M75 + a * (data[i + 1].M75 - data[i].M75);
+              m.M100 = data[i].M100 + a * (data[i + 1].M100 - data[i].M100);
+            }
+            return m;
           }
         }
         return data[data.length - 1];
@@ -1538,7 +1545,12 @@
         milestones.forEach(function(pct) {
           var el = document.querySelector('.mc-milestone[data-pct="' + pct + '"]');
           if (el) {
-            var reached = maxR >= pct / 100;
+            var reached;
+            if (m && m['M' + pct] !== undefined) {
+              reached = m['M' + pct] >= 50;
+            } else {
+              reached = maxR >= pct / 100;
+            }
             el.classList.toggle('reached', reached);
             el.textContent = pct + '% ' + (reached ? '✓' : '✗');
           }
@@ -1560,7 +1572,11 @@
         video.addEventListener('loadedmetadata', function() {
           var dur = video.duration;
           if (!dur || isNaN(dur)) dur = 10;
-          frameData = generateFrameData(dur);
+          if ((currentBenchmark === 'robotwin' || currentBenchmark === 'libero' || currentBenchmark === 'robocasa' || currentBenchmark === 'robochallenge' || currentBenchmark === 'simplerenv') && pendingCsvData && pendingCsvData.length) {
+            frameData = buildFrameDataFromCsv(pendingCsvData, dur);
+          } else {
+            frameData = generateFrameData(dur);
+          }
           slider.max = 100;
           timeLabel.textContent = '0:00 / ' + fmtTime(dur);
 
@@ -1609,25 +1625,40 @@
 
         var TASKS_BY_BENCHMARK = {
           robotwin: [
-            { id: 'blocks_ranking_rgb', name: 'Blocks Ranking RGB', color: '#5C6BC0' },
-            { id: 'handover_mic', name: 'Handover Mic', color: '#26A69A' },
-            { id: 'place_bread_basket', name: 'Place Bread Basket', color: '#E65100' }
+            { id: 'Handover block', name: 'Handover block', color: '#5C6BC0' },
+            { id: 'Hang mug', name: 'Hang mug', color: '#26A69A' },
+            { id: 'Place the bread into basket', name: 'Place the bread into basket', color: '#E65100' },
+            { id: 'Rank RGB blocks', name: 'Rank RGB blocks', color: '#E8641B' }
+          ],
+          robocasa: [
+            { id: 'Close the cabinet doors', name: 'Close the cabinet doors', color: '#5C6BC0' },
+            { id: 'Open the right drawer', name: 'Open the right drawer', color: '#26A69A' },
+            { id: 'Pick the bread and place it on the counter', name: 'Pick the bread and place it on the counter', color: '#E65100' },
+            { id: 'Turn off the sink faucet', name: 'Turn off the sink faucet', color: '#7B1FA2' },
+            { id: 'Turn on the stove', name: 'Turn on the stove', color: '#D84315' }
           ],
           libero: [
-            { id: 'libero_task1', name: 'Task 1 (placeholder)', color: '#2B69E4' },
-            { id: 'libero_task2', name: 'Task 2 (placeholder)', color: '#059669' }
+            { id: 'Put the bowl on the stove', name: 'Put the bowl on the stove', color: '#2B69E4' },
+            { id: 'Pick up the butter and place it in the basket', name: 'Pick up the butter and place it in the basket', color: '#059669' },
+            { id: 'Pick up the book and place it in the back compartment of the caddy', name: 'Pick up the book and place it in the caddy', color: '#9333EA' },
+            { id: 'Pick up the black bowl between the plate and the ramekin and place it on the plate', name: 'Pick up the black bowl on the plate', color: '#E8641B' }
           ],
-          metaworld: [
-            { id: 'mw_task1', name: 'Task 1 (placeholder)', color: '#9333EA' },
-            { id: 'mw_task2', name: 'Task 2 (placeholder)', color: '#E8641B' }
+          robochallenge: [
+            { id: 'Arrange flowers', name: 'Arrange flowers', color: '#E91E63' },
+            { id: 'Fold dishcloth', name: 'Fold dishcloth', color: '#9C27B0' },
+            { id: 'Move objects into the box', name: 'Move objects into the box', color: '#673AB7' },
+            { id: 'Scan QR code', name: 'Scan QR code', color: '#3F51B5' },
+            { id: 'Search green boxes', name: 'Search green boxes', color: '#6A1B9A' }
           ],
-          calvin: [
-            { id: 'calvin_task1', name: 'Task 1 (placeholder)', color: '#059669' },
-            { id: 'calvin_task2', name: 'Task 2 (placeholder)', color: '#5C6BC0' }
+          simplerenv: [
+            { id: 'Close bottom drawer', name: 'Close bottom drawer', color: '#00897B' },
+            { id: 'Grasp Coke Can', name: 'Grasp Coke Can', color: '#26A69A' },
+            { id: 'Put carrot on plate', name: 'Put carrot on plate', color: '#4DB6AC' },
+            { id: 'Stack cube', name: 'Stack cube', color: '#00796B' }
           ]
         };
         var currentBenchmark = 'robotwin';
-        var currentTask = 'blocks_ranking_rgb';
+        var currentTask = 'Handover block';
 
         function renderTaskButtons(benchmarkId) {
           var container = document.getElementById('task-buttons');
@@ -1656,6 +1687,122 @@
           var tasks = TASKS_BY_BENCHMARK[currentBenchmark] || [];
           currentTask = tasks[0] ? tasks[0].id : '';
           renderTaskButtons(currentBenchmark);
+          loadTaskContent();
+        }
+
+        var pendingCsvData = null;
+
+        function parseStepMetricsCsv(text) {
+          var rows = text.trim().split('\n');
+          if (rows.length < 2) return [];
+          var headers = rows[0].split(',');
+          var data = [];
+          for (var i = 1; i < rows.length; i++) {
+            var vals = rows[i].split(',');
+            var row = {};
+            headers.forEach(function(h, j) {
+              row[h.trim()] = vals[j] !== undefined ? parseFloat(vals[j].trim()) || 0 : 0;
+            });
+            data.push(row);
+          }
+          return data;
+        }
+
+        function buildFrameDataFromCsv(csvRows, durationSec) {
+          if (!csvRows.length) return [];
+          var n = csvRows.length;
+          var data = [];
+          data.push({
+            t: 0,
+            reward: 0,
+            MC: 0,
+            MP: csvRows[0].MP || 0,
+            PPL: csvRows[0].PPL || 0,
+            CRA: csvRows[0].CRA || 0,
+            STR: csvRows[0].STR || 0,
+            M25: 0, M50: 0, M75: 0, M100: 0
+          });
+          for (var i = 0; i < n; i++) {
+            var r = csvRows[i];
+            var t = ((i + 1) / n) * durationSec;
+            var progress = (r.StepProgress !== undefined ? r.StepProgress : 0);
+            data.push({
+              t: t,
+              reward: progress,
+              MC: progress,
+              MP: r.MP !== undefined ? r.MP : 0,
+              PPL: r.PPL !== undefined ? r.PPL : 0,
+              CRA: r.CRA !== undefined ? r.CRA : 0,
+              STR: r.STR !== undefined ? r.STR : 0,
+              M25: r.M25 !== undefined ? r.M25 : 0,
+              M50: r.M50 !== undefined ? r.M50 : 0,
+              M75: r.M75 !== undefined ? r.M75 : 0,
+              M100: r.M100 !== undefined ? r.M100 : 0
+            });
+          }
+          return data;
+        }
+
+        function loadTaskContent() {
+          if (currentBenchmark === 'robotwin') {
+            var basePath = 'assets/videos/demos/RoboTwin/' + encodeURIComponent(currentTask) + '/';
+            var csvUrl = basePath + 'step_metrics.csv';
+            pendingCsvData = null;
+            fetch(csvUrl).then(function(res) { return res.text(); }).then(function(text) {
+              pendingCsvData = parseStepMetricsCsv(text);
+              video.src = basePath + 'episode.mp4';
+            }).catch(function() {
+              pendingCsvData = [];
+              video.src = basePath + 'episode.mp4';
+            });
+          } else if (currentBenchmark === 'libero') {
+            var basePath = 'assets/videos/demos/Libero/' + encodeURIComponent(currentTask) + '/';
+            var csvUrl = basePath + 'step_metrics.csv';
+            pendingCsvData = null;
+            fetch(csvUrl).then(function(res) { return res.text(); }).then(function(text) {
+              pendingCsvData = parseStepMetricsCsv(text);
+              video.src = basePath + 'episode.mp4';
+            }).catch(function() {
+              pendingCsvData = [];
+              video.src = basePath + 'episode.mp4';
+            });
+          } else if (currentBenchmark === 'robocasa') {
+            var basePath = 'assets/videos/demos/RoboCasa/' + encodeURIComponent(currentTask) + '/';
+            var csvUrl = basePath + 'step_metrics.csv';
+            pendingCsvData = null;
+            fetch(csvUrl).then(function(res) { return res.text(); }).then(function(text) {
+              pendingCsvData = parseStepMetricsCsv(text);
+              video.src = basePath + 'episode.mp4';
+            }).catch(function() {
+              pendingCsvData = [];
+              video.src = basePath + 'episode.mp4';
+            });
+          } else if (currentBenchmark === 'robochallenge') {
+            var basePath = 'assets/videos/demos/RoboChallenge/' + encodeURIComponent(currentTask) + '/';
+            var csvUrl = basePath + 'step_metrics.csv';
+            pendingCsvData = null;
+            fetch(csvUrl).then(function(res) { return res.text(); }).then(function(text) {
+              pendingCsvData = parseStepMetricsCsv(text);
+              video.src = basePath + 'episode.mp4';
+            }).catch(function() {
+              pendingCsvData = [];
+              video.src = basePath + 'episode.mp4';
+            });
+          } else if (currentBenchmark === 'simplerenv') {
+            var basePath = 'assets/videos/demos/SimplerEnv/' + encodeURIComponent(currentTask) + '/';
+            var csvUrl = basePath + 'step_metrics.csv';
+            pendingCsvData = null;
+            fetch(csvUrl).then(function(res) { return res.text(); }).then(function(text) {
+              pendingCsvData = parseStepMetricsCsv(text);
+              video.src = basePath + 'episode.mp4';
+            }).catch(function() {
+              pendingCsvData = [];
+              video.src = basePath + 'episode.mp4';
+            });
+          } else {
+            pendingCsvData = null;
+            video.src = 'assets/videos/' + currentTask + '.mp4';
+          }
         }
 
         function onTaskClick(e) {
@@ -1668,11 +1815,7 @@
           btn.classList.remove('selector-btn-outline');
           btn.classList.add('selector-btn-filled', 'active');
           currentTask = btn.dataset.task;
-          var videoSrc = 'assets/videos/' + currentTask + '.mp4';
-          if (currentTask === 'blocks_ranking_rgb') {
-            videoSrc = 'assets/videos/blocks_ranking_rgb_ACT_episode11_Success_head_049.mp4';
-          }
-          video.src = videoSrc;
+          loadTaskContent();
         }
 
         document.querySelectorAll('#benchmark-buttons .selector-btn').forEach(function(btn) {
@@ -1681,6 +1824,8 @@
         document.querySelectorAll('#task-buttons .selector-btn').forEach(function(btn) {
           btn.addEventListener('click', onTaskClick);
         });
+
+        loadTaskContent();
 
         var playBtn = document.getElementById('play-btn');
         var progressWrap = document.getElementById('progress-wrap');
