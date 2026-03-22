@@ -124,6 +124,137 @@
       min-width: 0;
     }
 
+    .blog-hero {
+      margin-bottom: 1.8rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .hero-eyebrow {
+      margin: 0 0 0.35rem 0;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 2rem;
+      line-height: 1.24;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .hero-title-with-logo {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.2rem;
+    }
+
+    .hero-title-logo {
+      height: 2.9rem;
+      width: auto;
+      flex-shrink: 0;
+      transform: translateY(-0.16rem);
+      margin-right: -0.34rem;
+    }
+
+    .hero-subtitle {
+      margin: 0.72rem 0 1rem 0;
+      color: #555;
+      font-size: 1rem;
+      max-width: 48rem;
+    }
+
+    .metadata-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid #dfdfdf;
+      background: #f8f8f8;
+      color: #444;
+      font-size: 0.86rem;
+      text-decoration: none;
+    }
+
+    .meta-chip .chip-key {
+      color: #777;
+      font-weight: 600;
+    }
+
+    .meta-chip .chip-value {
+      color: #333;
+      font-weight: 500;
+    }
+
+    .meta-chip.chip-link:hover {
+      border-color: #c9c9c9;
+      color: #1a1a1a;
+    }
+
+    .hero-cta-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.42rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-cta-links a {
+      color: #2a2a2a;
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .hero-cta-links a:hover {
+      color: #111;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .hero-cta-sep {
+      color: #b0b0b0;
+      font-size: 0.88rem;
+      user-select: none;
+    }
+
+    .tldr-card {
+      border: 1px solid #e4e4e4;
+      border-left: 3px solid #cfcfcf;
+      border-radius: 8px;
+      background: #fafafa;
+      padding: 0.75rem 0.9rem;
+      color: #3b3b3b;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .tldr-card .tldr-label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 700;
+      color: #333;
+      letter-spacing: 0.02em;
+    }
+
+    .tldr-card p {
+      display: block;
+      margin: 0;
+    }
+
     .blog-header {
       margin-bottom: 2.5rem;
       padding-bottom: 2rem;
@@ -316,6 +447,288 @@
       margin-bottom: 1rem;
     }
 
+    .key-takeaway {
+      margin: 0.95rem 0 1.15rem;
+      padding: 0.72rem 0.9rem;
+      border-left: 3px solid #bcbcbc;
+      border-radius: 6px;
+      background: #f7f7f7;
+      color: #353535;
+      line-height: 1.58;
+    }
+
+    .key-takeaway strong {
+      font-weight: 700;
+      color: #222;
+    }
+
+    .blog-figure.explainer-figure {
+      width: min(76%, 680px);
+      margin: 1.3rem auto 1.55rem;
+    }
+
+    .blog-figure.explainer-figure img {
+      width: 100%;
+    }
+
+    .blog-figure.explainer-figure .blog-figcaption {
+      text-align: center;
+      margin-top: 0.55rem;
+    }
+
+    .section-lead {
+      margin: 0.35rem 0 0.85rem;
+      font-size: 0.95rem;
+      color: #4a4a4a;
+      line-height: 1.55;
+    }
+
+    .section-lead strong {
+      color: #252525;
+      font-weight: 700;
+    }
+
+    .blog-figure.core-idea-figure {
+      width: 86%;
+      margin: 1.05rem auto 1.65rem;
+    }
+
+    .blog-figure.core-idea-figure img {
+      width: 100%;
+    }
+
+    .blog-figure.core-idea-figure .blog-figcaption {
+      text-align: center;
+      margin-top: 0.58rem;
+    }
+
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.95rem;
+      margin: 1rem 0 1.1rem;
+    }
+
+    .principle-card {
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      background: #fafafa;
+      padding: 0.9rem 1rem;
+      color: #333;
+    }
+
+    .principle-card-title {
+      margin: 0 0 0.45rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1f1f1f;
+      font-family: "Source Serif 4", Georgia, serif;
+    }
+
+    .principle-card p {
+      margin: 0.35rem 0;
+      line-height: 1.6;
+    }
+
+    .equation-card {
+      margin: 0.6rem 0;
+      border: 1px solid #e2e2e2;
+      border-radius: 8px;
+      background: #f6f7f8;
+      padding: 0.55rem 0.7rem;
+    }
+
+    .equation-card .formula-block {
+      margin: 0;
+    }
+
+    .equation-card .math-inline {
+      margin: 0;
+      background: #ffffff;
+      border: 1px solid #ececec;
+    }
+
+    .plain-english {
+      margin: 0.45rem 0 0;
+      font-size: 0.92rem;
+      color: #4a4a4a;
+    }
+
+    .relation-card {
+      margin: 0.6rem 0 1.35rem;
+      border: 1px solid #e2e2e2;
+      border-radius: 10px;
+      background: #f9f9f9;
+      padding: 0.88rem 1rem;
+    }
+
+    .relation-card-title {
+      margin: 0 0 0.38rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .opd-tier-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin: 1rem 0 1.15rem;
+    }
+
+    .opd-tier-card {
+      border: 1px solid #e4e4e4;
+      border-radius: 10px;
+      background: #fafafa;
+      padding: 0.88rem 0.95rem;
+      color: #333;
+    }
+
+    .opd-tier-title {
+      margin: 0 0 0.35rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1f1f1f;
+      font-family: "Source Serif 4", Georgia, serif;
+    }
+
+    .opd-tier-def {
+      margin: 0.2rem 0 0.35rem;
+      font-size: 0.92rem;
+      color: #4a4a4a;
+      line-height: 1.56;
+    }
+
+    .opd-tier-key {
+      margin: 0.25rem 0 0.15rem;
+      font-size: 0.9rem;
+      color: #2d2d2d;
+      font-weight: 700;
+    }
+
+    .opd-tier-support {
+      margin: 0.42rem 0 0;
+      font-size: 0.86rem;
+      color: #666;
+    }
+
+    .opd-pref-note {
+      margin: 0.2rem 0 1rem;
+      font-size: 0.9rem;
+      color: #4c4c4c;
+    }
+
+    .blog-figure.opd-overview-figure {
+      width: min(78%, 760px);
+      margin: 1.15rem auto 1.7rem;
+    }
+
+    .blog-figure.opd-overview-figure img {
+      width: 100%;
+    }
+
+    .blog-figure.opd-overview-figure .blog-figcaption {
+      text-align: center;
+    }
+
+    .section6-primary-figure {
+      margin: 1.05rem 0 1.5rem;
+    }
+
+    .section6-primary-figure .blog-figcaption {
+      margin-top: 0.55rem;
+    }
+
+    .section6-two-col-figures {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
+      margin: 0.95rem 0 1.2rem;
+    }
+
+    .section6-subfigure {
+      margin: 0;
+      padding: 0.46rem;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      background: #fafafa;
+    }
+
+    .section6-subfigure img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #ededed;
+    }
+
+    .section6-subfigure.left-view img {
+      object-position: left center;
+    }
+
+    .section6-subfigure.right-view img {
+      object-position: right center;
+    }
+
+    .section6-subfigure .blog-figcaption {
+      margin-top: 0.38rem;
+      font-size: 0.8rem;
+      line-height: 1.35;
+      font-style: normal;
+      text-align: center;
+      color: #5a5a5a;
+    }
+
+    .section6-group-note {
+      margin: -0.35rem 0 1rem;
+      font-size: 0.9rem;
+      color: #4f4f4f;
+    }
+
+    .section6-heatmap-figure {
+      width: min(78%, 760px);
+      margin: 1.05rem auto 1.6rem;
+    }
+
+    .section6-heatmap-figure .blog-figcaption {
+      text-align: center;
+      margin-top: 0.55rem;
+    }
+
+    @media (max-width: 900px) {
+      .blog-figure.explainer-figure {
+        width: 100%;
+      }
+
+      .blog-figure.core-idea-figure {
+        width: 100%;
+      }
+
+      .principles-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .opd-tier-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .blog-figure.opd-overview-figure {
+        width: 100%;
+      }
+
+      .section6-two-col-figures {
+        grid-template-columns: 1fr;
+      }
+
+      .section6-subfigure img {
+        height: auto;
+      }
+
+      .section6-heatmap-figure {
+        width: 100%;
+      }
+    }
+
     .blog-section ul {
       margin: 1rem 0 1rem 1.5rem;
     }
@@ -361,8 +774,8 @@
     .robopulse-side-by-side {
       display: flex;
       align-items: flex-start;
-      gap: 1.5rem;
-      margin: 1.5rem 0;
+      gap: 1.1rem;
+      margin: 1.15rem 0;
     }
 
     .robopulse-side-by-side .robopulse-text-block {
@@ -370,40 +783,57 @@
       min-width: 0;
     }
 
+    .robopulse-side-by-side .robopulse-text-block > :first-child {
+      margin-top: 0;
+    }
+
     .robopulse-side-by-side .robopulse-figure-right {
       flex-shrink: 0;
-      flex: 0 0 42%;
-      max-width: 420px;
+      flex: 0 0 40%;
+      max-width: 400px;
       margin: 0 !important;  /* 覆盖 blog-figure 的 margin: 2rem 0，避免图片被推低 */
+      padding: 0.5rem;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      background: #fafafa;
     }
 
     .robopulse-side-by-side .robopulse-figure-right .robopulse-imgs img {
       width: 100%;
       height: auto;
       border-radius: 6px;
-      border: 1px solid #e8e8e8;
+      border: 1px solid #ededed;
     }
 
     .robopulse-side-by-side .robopulse-figure-right .blog-figcaption {
-      font-size: 0.82rem;
-      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      margin-top: 0.4rem;
+      line-height: 1.38;
     }
 
     .robopulse-side-by-side .robopulse-chart-right {
       flex-shrink: 0;
-      flex: 0 0 42%;
-      max-width: 420px;
+      flex: 0 0 40%;
+      max-width: 400px;
       margin: 0;
-      padding: 0.75rem;
+      padding: 0.55rem;
+      border-radius: 8px;
+      align-self: flex-start;
     }
 
     .robopulse-side-by-side .robopulse-chart-right .chart-caption {
-      font-size: 0.85rem;
-      margin-top: 0.6rem;
+      font-size: 0.82rem;
+      margin-top: 0.45rem;
+      line-height: 1.35;
     }
 
     .robopulse-side-by-side .robopulse-chart-right #robopulse-chart {
-      height: 220px !important;
+      height: 210px !important;
+    }
+
+    .robopulse-side-by-side .robopulse-figure-right,
+    .robopulse-side-by-side .robopulse-chart-right {
+      align-self: flex-start;
     }
 
     @media (max-width: 768px) {
@@ -546,6 +976,11 @@
       color: var(--btn-color, #5C6BC0);
       border-color: var(--btn-color, #5C6BC0);
       border-width: 3px;
+    }
+
+    /* Keep task buttons visually stable: one unified color. */
+    .interactive-case #task-buttons .selector-btn {
+      --btn-color: #5f6f86 !important;
     }
 
     .interactive-case .opd-metrics-wrapper {
@@ -873,6 +1308,354 @@
       font-family: "STIX Two Text", "Times New Roman", serif;
     }
 
+    /* Productized explorer layout and controls */
+    .interactive-case {
+      margin: 1.7rem 0;
+      padding: 1rem;
+      background: #f7f8fa;
+      border: 1px solid #e3e7ec;
+      border-radius: 12px;
+    }
+
+    .interactive-case .video-selectors {
+      align-items: stretch;
+      gap: 0.6rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .interactive-case .selector-row {
+      align-items: flex-start;
+      gap: 0.32rem;
+    }
+
+    .interactive-case .selector-row-label {
+      font-size: 0.74rem;
+      color: #6a727d;
+      letter-spacing: 0.02em;
+    }
+
+    .interactive-case .selector-buttons {
+      width: 100%;
+      justify-content: flex-start;
+      gap: 0.34rem;
+    }
+
+    .interactive-case .selector-buttons-benchmark,
+    .interactive-case .selector-buttons-task {
+      padding: 0.26rem;
+      border-radius: 10px;
+      border: 1px solid #d8dee7;
+      background: #eef2f7;
+    }
+
+    .interactive-case .selector-buttons-task {
+      background: #f5f7fa;
+      border-color: #e0e5ec;
+    }
+
+    .interactive-case .selector-btn {
+      padding: 0.38rem 0.7rem;
+      border: 1px solid transparent !important;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #5e6878;
+      background: transparent;
+      transform: none !important;
+      box-shadow: none !important;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .interactive-case .selector-btn:hover {
+      background: #e6ebf3;
+      color: #2d3b52;
+    }
+
+    .interactive-case .selector-buttons-benchmark .selector-btn.active {
+      background: #2f5fa7;
+      color: #fff;
+    }
+
+    .interactive-case .selector-buttons-task .selector-btn.active {
+      background: #dce6f6;
+      color: #1f3f72;
+    }
+
+    .interactive-case .video-metrics-row {
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(260px, 3fr);
+      gap: 0.9rem;
+      align-items: start;
+    }
+
+    .interactive-case .explorer-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.72rem;
+    }
+
+    .interactive-case .explorer-side {
+      width: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.62rem;
+    }
+
+    .interactive-case .video-chart-wrap {
+      min-height: 280px;
+      border-radius: 10px;
+      border: 2px solid #d7e0eb;
+      background: #000;
+    }
+
+    .interactive-case .curve-panel {
+      padding: 0.55rem 0.62rem 0.5rem;
+      border-radius: 10px;
+      border: 1px solid #dde3ec;
+      background: #fff;
+    }
+
+    .interactive-case .curve-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .interactive-case .curve-title {
+      font-size: 0.82rem;
+      color: #2b3340;
+      font-weight: 700;
+    }
+
+    .interactive-case .curve-status {
+      font-size: 0.76rem;
+      color: #5e6879;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .interactive-case .curve-status.state-progress {
+      color: #2f7b48;
+    }
+
+    .interactive-case .curve-status.state-regress {
+      color: #b84343;
+    }
+
+    .interactive-case .curve-status.state-stall {
+      color: #7e6a33;
+    }
+
+    .interactive-case .case-chart {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      height: 220px;
+      min-height: 220px;
+    }
+
+    .interactive-case .curve-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 0.85rem;
+      margin-top: 0.4rem;
+      font-size: 0.74rem;
+      color: #5f6878;
+    }
+
+    .interactive-case .curve-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.33rem;
+    }
+
+    .interactive-case .curve-line {
+      width: 15px;
+      height: 2px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .interactive-case .curve-line-rise {
+      background: rgba(72, 152, 94, 0.95);
+    }
+
+    .interactive-case .curve-line-fall {
+      background: rgba(210, 79, 79, 0.95);
+    }
+
+    .interactive-case .curve-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+      background: #304a73;
+    }
+
+    .interactive-case .case-slider-wrap {
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.35rem;
+      padding: 0.5rem 0.62rem 0.58rem;
+      border-radius: 10px;
+      border: 1px solid #dde3ec;
+      background: #fff;
+    }
+
+    .interactive-case .timeline-label {
+      font-size: 0.74rem;
+      color: #687180;
+      font-weight: 600;
+    }
+
+    .interactive-case .case-slider-wrap input[type="range"] {
+      height: 8px;
+      background: linear-gradient(90deg, #cad7ec, #d9e4f5);
+      border-radius: 999px;
+    }
+
+    .interactive-case .case-slider-wrap input[type="range"]::-webkit-slider-thumb {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: #2f5fa7;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px rgba(47, 95, 167, 0.35);
+    }
+
+    .interactive-case .timeline-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .interactive-case .case-slider-wrap .time-label {
+      min-width: auto;
+      font-size: 0.8rem;
+      color: #5e6878;
+    }
+
+    .interactive-case .timeline-percent {
+      font-size: 0.78rem;
+      color: #2f5fa7;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .interactive-case .opd-metrics-wrapper,
+    .interactive-case .side-card {
+      border: 1px solid #dee4ed;
+      border-radius: 10px;
+      padding: 0.6rem 0.66rem;
+      background: #fff;
+    }
+
+    .interactive-case .opd-metrics-wrapper {
+      align-items: stretch;
+      text-align: left;
+    }
+
+    .interactive-case .opd-metrics-title,
+    .interactive-case .side-card-title {
+      margin: 0 0 0.45rem;
+      padding: 0;
+      border: 0;
+      font-size: 0.78rem;
+      color: #3e4a5f;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-align: left;
+    }
+
+    .interactive-case .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.3rem;
+    }
+
+    .interactive-case .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.45rem;
+      border-radius: 7px;
+      background: #f4f7fb;
+      border: 1px solid #e4e9f2;
+      padding: 0.3rem 0.42rem;
+      font-size: 0.76rem;
+    }
+
+    .interactive-case .summary-key {
+      color: #637086;
+      font-weight: 600;
+    }
+
+    .interactive-case .summary-value {
+      color: #1f2f47;
+      font-weight: 700;
+      font-family: "STIX Two Text", "Times New Roman", serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .interactive-case .metric-mc-row {
+      gap: 0.24rem;
+      margin-top: 0;
+    }
+
+    .interactive-case .mc-milestone {
+      font-size: 0.7rem;
+      padding: 0.16rem 0.36rem;
+      border-radius: 999px;
+      border: 1px solid #d7dde7;
+      background: #f6f8fb;
+      color: #7a8494;
+    }
+
+    .interactive-case .mc-milestone.reached {
+      border-color: #8fc2a1;
+      background: #eaf6ee;
+      color: #2f7446;
+    }
+
+    .interactive-case .state-line {
+      margin: 0.3rem 0 0;
+      font-size: 0.79rem;
+      line-height: 1.4;
+      color: #3e4a5f;
+    }
+
+    .interactive-case .state-line.state-diagnosis {
+      color: #60708b;
+    }
+
+    .interactive-case .legend-text {
+      margin: 0.2rem 0 0;
+      font-size: 0.76rem;
+      color: #5f6877;
+      line-height: 1.35;
+    }
+
+    @media (max-width: 980px) {
+      .interactive-case .video-metrics-row {
+        grid-template-columns: 1fr;
+      }
+
+      .interactive-case .summary-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .interactive-case .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
     .link-block {
       margin-right: 1rem;
       display: inline-block;
@@ -905,44 +1688,34 @@
       </aside>
 
       <div class="blog-main">
-        <figure class="hero-figure">
-          <img src="assets/images/hero.png" alt="PRM-as-a-Judge overview">
-        </figure>
-        <header class="blog-header">
-          <h1 class="blog-title title-with-logo">
-            <img src="assets/images/logo-clip.png" alt="PRM-as-a-Judge" class="title-logo">
-            <span class="title-text">
-              Beyond the Binary: Dense Auditing for Robots
-            </span>
+        <header class="blog-hero">
+          <p class="hero-eyebrow">PRM-as-a-Judge</p>
+          <h1 class="hero-title hero-title-with-logo">
+            <img src="assets/images/logo-clip.png" alt="PRM-as-a-Judge" class="hero-title-logo">
+            <span>Beyond the Binary: Dense Auditing for Robots</span>
           </h1>
+          <p class="hero-subtitle">A dense evaluation paradigm that turns trajectory videos into interpretable signals for progress depth, execution quality, and failure mechanisms in long-horizon robotics.</p>
 
-          <div class="meta-card" aria-label="Publication metadata">
-            <p class="meta-row">
-              <span class="meta-label">Published</span>
-              <span class="meta-value">March 2026</span>
-            </p>
-            <p class="meta-row">
-              <span class="meta-label">Report</span>
-              <span class="meta-value">
-                <a href="#" target="_blank" rel="noopener noreferrer">2603.xxxxx</a><span class="meta-note">(arXiv link)</span>
-              </span>
-            </p>
-            <p class="meta-row">
-              <span class="meta-label">Repository</span>
-              <span class="meta-value">
-                <a href="#" target="_blank" rel="noopener noreferrer">PRM-as-a-Judge</a><span class="meta-note">(GitHub link)</span>
-              </span>
-            </p>
-            <p class="meta-row">
-              <span class="meta-label">By</span>
-              <span class="meta-value">PRM-as-a-Judge Team</span>
-            </p>
+          <div class="metadata-chips" aria-label="Publication metadata">
+            <span class="meta-chip"><span class="chip-key">Published</span><span class="chip-value">March 23, 2026</span></span>
+            <a class="meta-chip chip-link" href="https://prm-as-a-judge.github.io/" target="_blank" rel="noopener noreferrer"><span class="chip-key">Report</span><span class="chip-value">2603.6666</span></a>
+            <a class="meta-chip chip-link" href="https://prm-as-a-judge.github.io/" target="_blank" rel="noopener noreferrer"><span class="chip-key">Repository</span><span class="chip-value">PRM-as-a-Judge</span></a>
+            <span class="meta-chip"><span class="chip-key">By</span><span class="chip-value">PRM-as-a-Judge Team</span></span>
+          </div>
+
+          <div class="hero-cta-links" aria-label="Primary actions">
+            <a href="https://prm-as-a-judge.github.io/" target="_blank" rel="noopener noreferrer">Read paper</a>
+            <span class="hero-cta-sep">|</span>
+            <a href="#interactive-trajectory-explorer">Jump to explorer</a>
+            <span class="hero-cta-sep">|</span>
+            <a href="https://prm-as-a-judge.github.io/" target="_blank" rel="noopener noreferrer">View code</a>
+          </div>
+
+          <div class="tldr-card">
+            <span class="tldr-label">TL;DR</span>
+            <p>Binary success rate hides where a policy actually progressed and how it failed. PRM-as-a-Judge converts rollout videos into dense OPD signals that expose progression depth, execution quality, and failure mechanisms. This makes model comparison and diagnosis more transparent, actionable, and reproducible.</p>
           </div>
         </header>
-
-        <div class="gist-box">
-          <strong>TL; DR:</strong> In the marathon of long-horizon robotics, a binary "Pass/Fail" is a pretty blunt instrument. It tells you if the robot crossed the finish line, but it's silent on whether it ran like a pro or stumbled the whole way. We're introducing <strong>PRM-as-a-Judge</strong>: a dense evaluation paradigm that turns trajectory videos into a goldmine of progress signals. Using our OPD (Outcome-Process-Diagnosis) system, we break down every attempt into three layers to answer the million-dollar questions: How far did it go, how gracefully did it move, and exactly where/why did the wheels fall off?
-        </div>
 
         <div class="blog-section content">
       <h2>1. Why Success Rate is No Longer the Full Story</h2>
@@ -950,17 +1723,16 @@
         As robotic manipulation graduates from simple "pick-and-place" to complex, contact-rich marathons, relying solely on Success Rate is like trying to judge a symphony by its final note. It's a classic case of throwing the baby out with the bathwater.
       </p>
       <p>
-        The "Success/Failure" binary creates two massive blind spots:
+        The "Success/Failure" binary creates two massive blind spots. First, there is a resolution gap: near-complete failures and early collapses are both flattened to zero, even though they reveal very different policy maturity. Second, there is diagnostic opacity: a nominal "success" can still hide instability, regressions, and excessive trial-and-error.
       </p>
-      <ul>
-        <li><strong>Resolution Gap:</strong> Not all failures are created equal. A robot that misses the goal by a hair's breadth at the 99% mark gets the same "zero" as a robot that freezes the second the clock starts. Without better resolution, we can't tell which policy is actually closer to cracking the code.</li>
-        <li><strong>Diagnostic Opacity:</strong> Success Rate doesn't distinguish a "flawless victory", efficient and steady, from a "janky success" achieved through trial, error, and sheer luck. When the devil is in the details of contact dynamics and recovery, a single bit of information just doesn't cut it.</li>
-      </ul>
+      <div class="key-takeaway">
+        <strong>Key Takeaway:</strong> Success rate answers "Did it finish?" but not "How far did it get, how well did it execute, and where did it break?" Dense auditing is needed for actionable model diagnosis.
+      </div>
 
-      <figure class="blog-figure">
+      <figure class="blog-figure explainer-figure">
         <img src="assets/images/figure1.png" alt="Same label, different reality">
         <figcaption class="blog-figcaption">
-          Same label, different reality. A "Failure" can hide a 99% progress milestone, while a "Success" might mask a trajectory of instability and redundant back-and-forth.
+          The same binary label can hide very different progress depth and execution quality.
         </figcaption>
       </figure>
 
@@ -971,8 +1743,9 @@
       <p>
         Our solution is to use the evolution of visual states as a proxy for physical progress. We assign a task-conditioned progress potential Φ(s)∈[0,1] to every state. This turns a simple video into a continuous progress curve that we can compare, break down, and diagnose.
       </p>
+      <p class="section-lead"><strong>Core idea:</strong> map visual state evolution into a task-conditioned progress potential.</p>
 
-      <figure class="blog-figure">
+      <figure class="blog-figure core-idea-figure">
         <img src="assets/images/figure2.png" alt="What makes a model a qualified judge">
         <figcaption class="blog-figcaption">
           Given task instructions and trajectory observations, we map the visual state evolution to a task-conditioned progress potential, Φ. Building on this, we derive the OPD metric system, thereby transforming raw execution videos into comparable and diagnosable trajectory-level signals.
@@ -981,45 +1754,76 @@
 
       <h2>3. What Makes a Model a Qualified Judge?</h2>
       <p>
-        What are the "ground rules" for a dense evaluator? We believe it must satisfy two axioms:
+        We represent an execution as an information-state trajectory τ = (x<sub>0</sub>, x<sub>1</sub>, ..., x<sub>T</sub>), where x<sub>t</sub> is the task-relevant information available to the judge at time t. For a fixed instruction, we assume a progress potential Φ(x<sub>t</sub>) in [0, 1] toward completion.
       </p>
-      <ul>
-        <li><strong>Macro-Consistency (The Big Picture):</strong> Local progress checks must add up to a coherent story for the entire episode. Mathematically, for any intermediate time t<sub>1</sub>, the evaluator must satisfy:
-          <p class="formula-block"><span class="math-inline math-latex" data-latex="S(o_{t_0},o_{t_2})=S(o_{t_0},o_{t_1})+S(o_{t_1},o_{t_2})"></span></p>
-          <p>This means progress is additive and independent of how you slice the timeline. If a metric drifts depending on the sampling rate, you don't have a reliable audit—you have a mess.</p></li>
-        <li><strong>Micro-Resolution (The Sharp Eye):</strong> A judge has to be sensitive to tiny, task-relevant shifts in physical state. If it can't distinguish between a minor victory, a slight slip-up, or just standing still, its response flatlines into a useless constant, and the "dense" part of the evaluation loses its diagnostic teeth.</li>
-      </ul>
-      <p>
-        We chose Process Reward Models (PRMs) because they naturally learn a task-conditioned progress potential Φ(s)∈[0,1], which maps every state to its relative position on the road to completion. By defining the net progress between two states as the difference in their potentials:
-      </p>
-      <p class="formula-block"><span class="math-inline math-latex" data-latex="S(o_i,o_j)=\Phi(s_j)-\Phi(s_i)"></span></p>
-      <p>
-        Macro-consistency is guaranteed by design—every local nudge is automatically measured on the same global scale. At the same time, because PRMs are trained with dense supervision on "how much further to go," they develop the high-resolution vision needed to spot the subtle physical evolutions that actually matter.
-      </p>
+      <p>A valid dense evaluator should satisfy two properties simultaneously: macro-consistency for additive, path-independent aggregation, and micro-resolution for distinguishing fine-grained task-relevant state changes.</p>
+      <div class="principles-grid">
+        <article class="principle-card">
+          <p class="principle-card-title">Macro-Consistency via Temporal Additivity</p>
+          <p>Progress measured on a long segment should match the sum of progress measured on its subsegments.</p>
+          <div class="equation-card">
+            <p class="formula-block"><span class="math-inline math-latex" data-latex="S(x_{t_0},x_{t_2})=S(x_{t_0},x_{t_1})+S(x_{t_1},x_{t_2})"></span></p>
+          </div>
+          <p class="plain-english">Plain English: episode-level progress should not change when we re-partition the same trajectory in time.</p>
+        </article>
+        <article class="principle-card">
+          <p class="principle-card-title">Micro-Resolution of Progress Signals</p>
+          <p>Nearby states with meaningful physical differences should induce non-degenerate progress differences.</p>
+          <div class="equation-card">
+            <p class="formula-block"><span class="math-inline math-latex" data-latex="\left|\Phi(x_{t+\Delta})-\Phi(x_t)\right|>0"></span></p>
+          </div>
+          <p class="plain-english">Plain English: the judge should separate subtle gains, regressions, and stagnation, instead of collapsing them into near-constant scores.</p>
+        </article>
+      </div>
+      <div class="relation-card">
+        <p class="relation-card-title">Potential-Induced Progress Relation</p>
+        <p>Under the proposed formulation, macro-consistency is satisfied when pairwise progress is induced by a scalar potential.</p>
+        <div class="equation-card">
+          <p class="formula-block"><span class="math-inline math-latex" data-latex="S(x_i,x_j)=\Phi(x_j)-\Phi(x_i)"></span></p>
+        </div>
+        <p class="plain-english">Plain English: every local comparison is measured on one shared scale, so global additivity and local sensitivity can coexist.</p>
+      </div>
 
       <h2>4. OPD: Deconstructing a Single Execution into Three-Tier Signals</h2>
       <p>
-        Building upon the progress potential Φ, we further construct the OPD (Outcome-Process-Diagnosis) metric system to transform an execution trajectory into interpretable three-tier auditing signals.
+        Building on the progress potential Φ, we construct OPD (Outcome-Process-Diagnosis) to decompose one execution into interpretable auditing signals at three complementary levels.
       </p>
-      <ul>
-        <li><strong>Outcome: How far did it get?</strong> The outcome layer characterizes the trajectory's depth of advancement within the task space.
-          <p class="formula-block"><span class="math-inline math-latex" data-latex="MC(\tau)=\max\{q\in\{0,0.25,0.5,0.75,1\}\mid\exists t,\Phi(s_t)\geq q\}"></span></p>
-          <p>MC (Milestone Coverage) indicates the furthest stage a trajectory reached. It discretizes continuous progress into key milestones to distinguish between an "early collapse" and "failing at the last mile." Physically, it describes the reachability of task stages. When MC = 1, the trajectory has reached the final completion stage; in this sense, it is equivalent to success at the outcome layer.</p>
-          <p class="formula-block"><span class="math-inline math-latex" data-latex="MP(\tau)=\max_{t\in[0,T]}\Phi(s_t)"></span></p>
-          <p>MP (Max Progress) represents the peak progress value achieved across the entire trajectory. Unlike MC, which emphasizes "which level was reached," MP more directly depicts the trajectory's capability boundary in the continuous progress space: the absolute highest point reached during the execution.</p></li>
-        <li><strong>Process: How well did it go?</strong> The process layer characterizes the execution quality of the trajectory itself, rather than merely focusing on ultimate completion.
-          <p class="formula-block"><span class="math-inline math-latex" data-latex="PPL(\tau)=\Phi(s_T)\cdot\frac{\Phi(s_T)-\Phi(s_0)}{\sum_{t=1}^T|\Phi(s_t)-\Phi(s_{t-1})|}"></span></p>
-          <p>PPL (Path-weighted Progress Length) measures execution efficiency and trajectory monotonicity. The numerator is the net progress, and the denominator is the total potential energy variation along the entire trajectory. The preceding soft-gating term Φ(s<sub>T</sub>) penalizes attempts that are not truly completed. Physically, a higher PPL means the robot takes fewer detours, engages in less back-and-forth trial-and-error, and is closer to "advancing toward the goal smoothly and monotonically."</p></li>
-        <li><strong>Diagnosis: Why did it fail?</strong> The diagnosis layer goes beyond merely judging success or failure; it further deconstructs the underlying physical mechanisms of failure.
-          <p class="formula-block"><span class="math-inline math-latex" data-latex="CRA(\tau)=\frac{1}{T}\sum_{t=0}^T\max(0,\max_{k\leq t}\Phi(s_k)-\Phi(s_t))"></span></p>
-          <p>CRA (Cumulative Regret Area) measures the area of regression of the current state relative to the historically best state. It reflects how long and by how much the robot drops back after achieving its peak progress. Physically, it corresponds to instability, regression, and the cost of trial-and-error.</p>
-          <p class="formula-block"><span class="math-inline math-latex" data-latex="STR(\tau)=\frac{1}{T}\sum_{t=1}^T\mathbf{1}(|\Phi(s_t)-\Phi(s_{t-1})|&lt;\varepsilon)"></span></p>
-          <p>STR (Stagnation Ratio) measures the proportion of time the trajectory spends in a state of virtually no substantive progress. It does not measure "regression," but rather a "lack of movement"—such as hesitation, stuttering, or prolonged local ineffective interactions. Physically, it corresponds to stagnation and decision latency.</p></li>
-      </ul>
+      <div class="opd-tier-grid">
+        <article class="opd-tier-card">
+          <p class="opd-tier-title">Outcome</p>
+          <p class="opd-tier-def">Captures how far the trajectory advanced toward completion.</p>
+          <p class="opd-tier-key">Key metric: Milestone Coverage (MC)</p>
+          <div class="equation-card">
+            <p class="formula-block"><span class="math-inline math-latex" data-latex="MC(\tau)=\max\{q\in\{0,0.25,0.5,0.75,1\}\mid\exists t,\Phi(x_t)\geq q\}"></span></p>
+          </div>
+          <p class="plain-english">Plain English: MC tells us the furthest milestone reached; higher is better.</p>
+          <p class="opd-tier-support">Supporting metric: MP tracks the continuous peak progress value.</p>
+        </article>
+        <article class="opd-tier-card">
+          <p class="opd-tier-title">Process</p>
+          <p class="opd-tier-def">Evaluates execution quality, not just whether the task eventually succeeds.</p>
+          <p class="opd-tier-key">Key metric: Path-weighted Progress Length (PPL)</p>
+          <div class="equation-card">
+            <p class="formula-block"><span class="math-inline math-latex" data-latex="PPL(\tau)=\Phi(x_T)\cdot\frac{\Phi(x_T)-\Phi(x_0)}{\sum_{t=1}^T|\Phi(x_t)-\Phi(x_{t-1})|}"></span></p>
+          </div>
+          <p class="plain-english">Plain English: higher PPL means more direct, stable, and efficient progress with less backtracking.</p>
+        </article>
+        <article class="opd-tier-card">
+          <p class="opd-tier-title">Diagnosis</p>
+          <p class="opd-tier-def">Explains why failure happens by separating regression from stagnation.</p>
+          <p class="opd-tier-key">Key metric: Cumulative Regret Area (CRA)</p>
+          <div class="equation-card">
+            <p class="formula-block"><span class="math-inline math-latex" data-latex="CRA(\tau)=\frac{1}{T}\sum_{t=0}^T\max(0,\max_{k\leq t}\Phi(x_k)-\Phi(x_t))"></span></p>
+          </div>
+          <p class="plain-english">Plain English: lower CRA means fewer and shorter regressions after reaching better states.</p>
+          <p class="opd-tier-support">Supporting metric: STR measures the fraction of near-no-progress steps.</p>
+        </article>
+      </div>
+      <p class="opd-pref-note"><strong>Preference direction:</strong> MC / MP / PPL ↑, CRA / STR ↓.</p>
       <p>
-        These five metrics collectively address five critical questions: how far did it get, what was its peak progress, how smooth was the path, how severe were the regressions, and how long did it stagnate. Together, they form a highly interpretable audit report for a single execution.
+        Together, these five metrics answer five practical questions: how far it reached, its peak capability, path efficiency, regression severity, and stagnation duration.
       </p>
-      <figure class="blog-figure">
+      <figure class="blog-figure opd-overview-figure">
         <img src="assets/images/OPD.png" alt="OPD framework">
         <figcaption class="blog-figcaption">
           The OPD framework deconstructs a single execution into a three-tier signal system: Outcome characterizes progression depth, Process evaluates execution quality, and Diagnosis analyzes failure mechanisms. The five core metrics—MC, MP, PPL, CRA, and STR—correspond to milestone reachability, peak progress, path efficiency, regression cost, and stagnation ratio, respectively.
@@ -1044,7 +1848,7 @@
             <img src="assets/images/robopulse2.png" alt="RoboPulse structure">
           </div>
           <figcaption class="blog-figcaption">
-            RoboPulse is a diagnostic benchmark designed for microscopic progress resolution. Covering diverse sources—including real-world robots, simulations, UMI, and human first-person perspectives—it is organized into three relative progress spans: Small, Medium, and Large. This structure is used to systematically verify an evaluator's sensitivity to fine-grained physical changes.
+            RoboPulse collage: diverse sources and Small/Medium/Large spans for testing microscopic progress sensitivity.
           </figcaption>
         </figure>
       </div>
@@ -1061,7 +1865,7 @@
         <div class="chart-wrapper robopulse-chart-right">
           <div id="robopulse-chart" style="width:100%; height:280px;"></div>
           <p class="chart-caption">
-            On RoboPulse, PRM-based judges demonstrate stronger discrimination ability across different relative progress spans, with the most significant advantage in the most challenging Small-hop interval, indicating higher sensitivity to subtle, task-relevant physical state changes.
+            PRM-based judges lead across spans, with the biggest margin on the hardest Small-hop split.
           </p>
         </div>
       </div>
@@ -1082,9 +1886,9 @@
         <li><strong>The "Last-Mile" Illusion:</strong> Policies rarely fail from the starting line. In Blocks Ranking RGB, almost every baseline breezes through the early stages with massive reachability (MC@25 &gt; 84). Yet, when it comes to actually closing the deal (MC@100), performance plummets to near zero. They aren't failing to learn the task; they are specifically tripping at the finish line.</li>
         <li><strong>Not All Zeros Are Created Equal:</strong> A near-miss and an early breakdown both score a flat 0%, but physically, they are completely different. Dense auditing finally separates models that "fail the same way" from those that "fail at different locations." Even though both ultimately drop the ball, π<sub>0</sub> fights its way much closer to the goal (MC@75 = 40), whereas OpenVLA-OFT falls apart almost immediately (MC@75 = 6).</li>
       </ul>
-      <figure class="blog-figure">
+      <figure class="blog-figure section6-primary-figure">
         <img src="assets/images/Outcome.png" alt="Outcome layer metrics">
-        <figcaption class="blog-figcaption">Outcome-layer metrics reveal the discrepancies in phased reachability across long-horizon tasks: although many policies ultimately fail to complete the task, they often stably advance to the later stages. Consequently, dense trajectory auditing enables us to clearly distinguish between an 'early collapse' and a 'last-mile failure.'</figcaption>
+        <figcaption class="blog-figcaption">Phased reachability reveals the "last-mile" gap and separates early collapse from near-complete failure.</figcaption>
       </figure>
 
       <h3>6.2 Execution Quality Under Success Conditions</h3>
@@ -1098,10 +1902,17 @@
       <p>
         Our OPD metrics go beyond "success/failure" to separate smooth, high‑quality successes from inefficient, janky ones—revealing tradeoffs that shape real‑world robot performance.
       </p>
-      <figure class="blog-figure">
-        <img src="assets/images/Process.png" alt="Process layer metrics">
-        <figcaption class="blog-figcaption">Success-Conditioned Execution Quality: Within successful samples, different policies may still exhibit significantly distinct execution qualities. Path efficiency and regression costs jointly demonstrate a critical insight: success does not automatically equate to high-quality success, and high-precision execution is not always aligned with overall reliability.</figcaption>
-      </figure>
+      <div class="section6-two-col-figures">
+        <figure class="section6-subfigure left-view">
+          <img src="assets/images/Process.png" alt="Execution quality view 1">
+          <figcaption class="blog-figcaption">Efficiency-focused view under successful rollouts.</figcaption>
+        </figure>
+        <figure class="section6-subfigure right-view">
+          <img src="assets/images/Process.png" alt="Execution quality view 2">
+          <figcaption class="blog-figcaption">Regression/stability-focused view under successful rollouts.</figcaption>
+        </figure>
+      </div>
+      <p class="section6-group-note">These two views together show why success quality and success reliability can diverge.</p>
 
       <h3>6.3 Failure Mechanisms and Strategy Fingerprinting</h3>
       <p>
@@ -1115,12 +1926,12 @@
       <p>
         Our OPD framework turns vague failures into clear diagnostic signatures—delivering direct, targeted guidance for policy improvement.
       </p>
-      <figure class="blog-figure">
+      <figure class="blog-figure section6-heatmap-figure">
         <img src="assets/images/Diagnosis.png" alt="Diagnosis layer metrics">
-        <figcaption class="blog-figcaption">Failure Fingerprints: On failed samples, CRA and STR deconstruct the single endgame "failure" label into distinct mechanisms. Some policies are prone to late-stage instability and pronounced regression, while others manifest as prolonged stagnation and insufficient progression. Behind the identical "failure" label often lie entirely different physical root causes.</figcaption>
+        <figcaption class="blog-figcaption">Failure fingerprints expose distinct mechanisms behind identical binary failure labels.</figcaption>
       </figure>
 
-      <h2>7. Interactive Trajectory Explorer</h2>
+      <h2 id="interactive-trajectory-explorer">7. Interactive Trajectory Explorer</h2>
       <p>
         Experience the demo firsthand below. As you drag the timeline, the page dynamically aligns the video playback with the real-time progress curve, highlighting the exact position within the full trajectory. The five core metrics for the episode—MC, MP, PPL, CRA, and STR—are updated and displayed concurrently.
       </p>
@@ -1132,77 +1943,98 @@
         <div class="video-selectors">
           <div class="selector-row">
             <div class="selector-row-label">Benchmark</div>
-            <div class="selector-buttons" id="benchmark-buttons">
-              <button type="button" class="selector-btn selector-btn-filled active" data-benchmark="robotwin" style="--btn-color: #E8641B;">RoboTwin 2.0</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="robocasa" style="--btn-color: #D84315;">RoboCasa</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="libero" style="--btn-color: #2B69E4;">LIBERO</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="robochallenge" style="--btn-color: #6A1B9A;">RoboChallenge</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="simplerenv" style="--btn-color: #00897B;">SimplerEnv</button>
+            <div class="selector-buttons selector-buttons-benchmark" id="benchmark-buttons">
+              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="robochallenge">RoboChallenge</button>
+              <button type="button" class="selector-btn selector-btn-filled active" data-benchmark="robotwin">RoboTwin 2.0</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="robocasa">RoboCasa</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="libero">LIBERO</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-benchmark="simplerenv">SimplerEnv</button>
             </div>
           </div>
           <div class="selector-row">
             <div class="selector-row-label">Task</div>
-            <div class="selector-buttons" id="task-buttons">
-              <button type="button" class="selector-btn selector-btn-filled active" data-task="Handover block" style="--btn-color: #5C6BC0;">Handover block</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-task="Hang mug" style="--btn-color: #26A69A;">Hang mug</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-task="Place the bread into basket" style="--btn-color: #E65100;">Place the bread into basket</button>
-              <button type="button" class="selector-btn selector-btn-outline" data-task="Rank RGB blocks" style="--btn-color: #E8641B;">Rank RGB blocks</button>
+            <div class="selector-buttons selector-buttons-task" id="task-buttons">
+              <button type="button" class="selector-btn selector-btn-filled active" data-task="Handover block">Handover block</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-task="Hang mug">Hang mug</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-task="Place the bread into basket">Place the bread into basket</button>
+              <button type="button" class="selector-btn selector-btn-outline" data-task="Rank RGB blocks">Rank RGB blocks</button>
             </div>
           </div>
         </div>
         <div class="video-metrics-row">
-          <div class="video-col">
-        <div class="video-chart-wrap" id="video-wrap">
-          <video class="case-video" id="case-video" preload="metadata"></video>
-          <div class="video-controls">
-            <button class="btn-icon" id="play-btn" aria-label="Play">▶</button>
-            <div class="progress-wrap" id="progress-wrap">
-              <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            <span class="time-display" id="ctrl-time">0:00 / 0:00</span>
-            <div class="vol-wrap">
-              <button class="btn-icon" id="mute-btn" aria-label="Mute">🔊</button>
-              <input type="range" id="vol-slider" min="0" max="100" value="100">
-            </div>
-          </div>
-          <div class="chart-overlay">
-            <div id="case-chart" class="case-chart"></div>
-          </div>
-        </div>
-        <div class="case-slider-wrap">
-          <input type="range" id="case-slider" min="0" max="100" value="0" step="0.1">
-          <span class="time-label" id="case-time">0:00 / 0:00</span>
-        </div>
-          </div>
-          <div class="metrics-col">
-            <div class="opd-metrics-wrapper">
-              <div class="opd-metrics-title">OPD Metrics</div>
-              <div class="case-metrics" id="case-metrics">
-              <div class="metrics-group">
-                <div class="metrics-group-title">O (Outcome)</div>
-                <div class="metric-card metric-mc">
-                  <div class="metric-name">MC</div>
-                  <div class="metric-mc-row" id="m-mc">
-                    <span class="mc-milestone" data-pct="25">25%</span>
-                    <span class="mc-milestone" data-pct="50">50%</span>
-                    <span class="mc-milestone" data-pct="75">75%</span>
-                    <span class="mc-milestone" data-pct="100">100%</span>
-                  </div>
+          <div class="video-col explorer-main">
+            <div class="video-chart-wrap" id="video-wrap">
+              <video class="case-video" id="case-video" preload="metadata"></video>
+              <div class="video-controls">
+                <button class="btn-icon" id="play-btn" aria-label="Play">▶</button>
+                <div class="progress-wrap" id="progress-wrap">
+                  <div class="progress-fill" id="progress-fill"></div>
                 </div>
-                <div class="metric-card"><div class="metric-name">MP</div><div class="metric-value" id="m-mp">—</div></div>
-              </div>
-              <div class="metrics-group metrics-group-process">
-                <div class="metrics-group-title">P (Process)</div>
-                <div class="metric-card"><div class="metric-name">PPL</div><div class="metric-value" id="m-ppl">—</div></div>
-              </div>
-              <div class="metrics-group">
-                <div class="metrics-group-title">D (Diagnosis)</div>
-                <div class="metric-card"><div class="metric-name">CRA</div><div class="metric-value" id="m-cra">—</div></div>
-                <div class="metric-card"><div class="metric-name">STR</div><div class="metric-value" id="m-str">—</div></div>
+                <span class="time-display" id="ctrl-time">0:00 / 0:00</span>
+                <div class="vol-wrap">
+                  <button class="btn-icon" id="mute-btn" aria-label="Mute">🔊</button>
+                  <input type="range" id="vol-slider" min="0" max="100" value="100">
+                </div>
               </div>
             </div>
+
+            <div class="curve-panel">
+              <div class="curve-header">
+                <div class="curve-title">Progress Curve Φ(x<sub>t</sub>)</div>
+                <div class="curve-status" id="progress-state">Waiting for playback</div>
+              </div>
+              <div id="case-chart" class="case-chart"></div>
+              <div class="curve-legend">
+                <span class="curve-legend-item"><span class="curve-line curve-line-rise"></span>Progressing</span>
+                <span class="curve-legend-item"><span class="curve-line curve-line-fall"></span>Regressing</span>
+                <span class="curve-legend-item"><span class="curve-dot"></span>Current frame</span>
+              </div>
+            </div>
+
+            <div class="case-slider-wrap">
+              <div class="timeline-label">Timeline / Scrubbing</div>
+              <input type="range" id="case-slider" min="0" max="100" value="0" step="0.1">
+              <div class="timeline-meta">
+                <span class="time-label" id="case-time">0:00 / 0:00</span>
+                <span class="timeline-percent" id="timeline-percent">0%</span>
+              </div>
             </div>
           </div>
+
+          <aside class="metrics-col explorer-side">
+            <div class="opd-metrics-wrapper">
+              <div class="opd-metrics-title">OPD Summary</div>
+              <div class="summary-grid">
+                <div class="summary-item"><span class="summary-key">Φ(t)</span><span class="summary-value" id="m-progress">—</span></div>
+                <div class="summary-item"><span class="summary-key">MP</span><span class="summary-value" id="m-mp">—</span></div>
+                <div class="summary-item"><span class="summary-key">PPL</span><span class="summary-value" id="m-ppl">—</span></div>
+                <div class="summary-item"><span class="summary-key">CRA</span><span class="summary-value" id="m-cra">—</span></div>
+                <div class="summary-item"><span class="summary-key">STR</span><span class="summary-value" id="m-str">—</span></div>
+              </div>
+            </div>
+
+            <div class="side-card">
+              <div class="side-card-title">Milestone Coverage</div>
+              <div class="metric-mc-row" id="m-mc">
+                <span class="mc-milestone" data-pct="25">25%</span>
+                <span class="mc-milestone" data-pct="50">50%</span>
+                <span class="mc-milestone" data-pct="75">75%</span>
+                <span class="mc-milestone" data-pct="100">100%</span>
+              </div>
+            </div>
+
+            <div class="side-card">
+              <div class="side-card-title">Current Frame Interpretation</div>
+              <p class="state-line" id="frame-interpretation">Move the timeline to inspect frame-level behavior.</p>
+              <p class="state-line state-diagnosis" id="diagnosis-hint">Diagnosis hints will update from trajectory dynamics.</p>
+            </div>
+
+            <div class="side-card">
+              <div class="side-card-title">Legend</div>
+              <p class="legend-text">↑ Better: <strong>MC, MP, PPL</strong></p>
+              <p class="legend-text">↓ Better: <strong>CRA, STR</strong></p>
+            </div>
+          </aside>
         </div>
       </div>
 
@@ -1271,8 +2103,20 @@
       var contentRoot = document.querySelector('.blog-section');
       if (!tocNav || !contentRoot) return;
 
-      var headings = contentRoot.querySelectorAll('h2, h3');
+      var headings = Array.prototype.slice.call(contentRoot.querySelectorAll('h2, h3'));
       if (!headings.length) return;
+
+      var hiddenH3InToc = {
+        'core team': true,
+        'other contributors': true,
+        'advisors': true
+      };
+
+      headings = headings.filter(function(heading) {
+        if (heading.tagName !== 'H3') return true;
+        var key = heading.textContent.trim().toLowerCase();
+        return !hiddenH3InToc[key];
+      });
 
       function slugify(text) {
         return text
@@ -1405,6 +2249,10 @@
       var slider = document.getElementById('case-slider');
       var timeLabel = document.getElementById('case-time');
       var chartDom = document.getElementById('case-chart');
+      var timelinePercent = document.getElementById('timeline-percent');
+      var progressStateEl = document.getElementById('progress-state');
+      var frameInterpretationEl = document.getElementById('frame-interpretation');
+      var diagnosisHintEl = document.getElementById('diagnosis-hint');
       var frameData = [];
       var caseChart = null;
 
@@ -1465,6 +2313,23 @@
 
       var COLOR_RISE = 'rgba(129, 199, 132, 0.9)';
       var COLOR_FALL = 'rgba(239, 83, 80, 0.9)';
+      var COLOR_CURSOR = '#2f5fa7';
+      var COLOR_REFERENCE = 'rgba(143, 157, 178, 0.55)';
+
+      function getPhaseName(progress) {
+        if (progress < 0.25) return 'Initialization';
+        if (progress < 0.5) return 'Approach';
+        if (progress < 0.75) return 'Manipulation';
+        return 'Finishing';
+      }
+
+      function getProgressDynamics(t, m) {
+        var prev = t > 0 ? interpolate(frameData, Math.max(0, t - 0.2)) : null;
+        var delta = prev ? (m.reward - prev.reward) : 0;
+        if (delta > 0.01) return { type: 'progress', delta: delta };
+        if (delta < -0.01) return { type: 'regress', delta: delta };
+        return { type: 'stall', delta: delta };
+      }
 
       function buildSegments(filtered, t) {
         var riseData = [], fallData = [];
@@ -1498,22 +2363,27 @@
 
       function updateChart(t) {
         if (!caseChart || !frameData.length) return;
+        var m = interpolate(frameData, t);
         var filtered = frameData.filter(function(d) { return d.t <= t; });
         if (filtered.length === 0) {
-          var m = interpolate(frameData, t);
           if (m) filtered = [{ t: t, reward: m.reward }];
         }
         if (filtered.length < 2) {
           caseChart.setOption({
-            series: [{ data: [] }, { data: [] }]
+            series: [
+              { id: 'rise-path', data: [] },
+              { id: 'fall-path', data: [] },
+              { id: 'cursor-point', data: m ? [[t, m.reward]] : [] }
+            ]
           });
           return;
         }
         var seg = buildSegments(filtered, t);
         caseChart.setOption({
           series: [
-            { data: seg.rise, lineStyle: { color: COLOR_RISE }, areaStyle: { color: 'rgba(129, 199, 132, 0.25)' } },
-            { data: seg.fall, lineStyle: { color: COLOR_FALL }, areaStyle: { color: 'rgba(239, 83, 80, 0.25)' } }
+            { id: 'rise-path', data: seg.rise, lineStyle: { color: COLOR_RISE }, areaStyle: { color: 'rgba(129, 199, 132, 0.22)' } },
+            { id: 'fall-path', data: seg.fall, lineStyle: { color: COLOR_FALL }, areaStyle: { color: 'rgba(239, 83, 80, 0.22)' } },
+            { id: 'cursor-point', data: m ? [[t, m.reward]] : [] }
           ]
         });
       }
@@ -1557,12 +2427,50 @@
         });
         var mpEl = document.getElementById('m-mp');
         if (mpEl) mpEl.textContent = m ? m.MP.toFixed(3) : '—';
+        var progressEl = document.getElementById('m-progress');
+        if (progressEl) progressEl.textContent = m ? m.reward.toFixed(3) : '—';
         var pplEl = document.getElementById('m-ppl');
         if (pplEl) pplEl.textContent = m ? m.PPL.toFixed(3) : '—';
         var craEl = document.getElementById('m-cra');
         if (craEl) craEl.textContent = m ? m.CRA.toFixed(3) : '—';
         var strEl = document.getElementById('m-str');
         if (strEl) strEl.textContent = m ? m.STR.toFixed(3) : '—';
+        if (timelinePercent) {
+          var dur = video && video.duration ? video.duration : 0;
+          timelinePercent.textContent = dur > 0 ? Math.round((t / dur) * 100) + '%' : '0%';
+        }
+        if (m) {
+          var dynamics = getProgressDynamics(t, m);
+          if (progressStateEl) {
+            progressStateEl.classList.remove('state-progress', 'state-regress', 'state-stall');
+            progressStateEl.classList.add(
+              dynamics.type === 'progress' ? 'state-progress' :
+              dynamics.type === 'regress' ? 'state-regress' : 'state-stall'
+            );
+            if (dynamics.type === 'progress') {
+              progressStateEl.textContent = 'Progressing +' + (dynamics.delta * 100).toFixed(1) + '%';
+            } else if (dynamics.type === 'regress') {
+              progressStateEl.textContent = 'Regressing ' + (dynamics.delta * 100).toFixed(1) + '%';
+            } else {
+              progressStateEl.textContent = 'Stagnating around current state';
+            }
+          }
+          if (frameInterpretationEl) {
+            frameInterpretationEl.textContent =
+              'Phase: ' + getPhaseName(m.reward) + ' (Φ=' + m.reward.toFixed(3) + ', MP=' + m.MP.toFixed(3) + ').';
+          }
+          if (diagnosisHintEl) {
+            if (m.STR > 0.45) {
+              diagnosisHintEl.textContent = 'Diagnosis: high stagnation signal (STR=' + m.STR.toFixed(3) + '). Consider stronger exploration or contact adaptation.';
+            } else if (m.CRA > 1.0) {
+              diagnosisHintEl.textContent = 'Diagnosis: regression pressure is visible (CRA=' + m.CRA.toFixed(3) + '). Stability and correction control may be weak.';
+            } else if (m.PPL > 0.72) {
+              diagnosisHintEl.textContent = 'Diagnosis: trajectory is relatively efficient and monotonic (PPL=' + m.PPL.toFixed(3) + ').';
+            } else {
+              diagnosisHintEl.textContent = 'Diagnosis: mixed dynamics. Track curve direction and milestone transitions for finer attribution.';
+            }
+          }
+        }
         updateChart(t);
         updateBorder(t);
       }
@@ -1580,21 +2488,26 @@
           slider.max = 100;
           timeLabel.textContent = '0:00 / ' + fmtTime(dur);
 
-          var times = frameData.map(function(d) { return d.t.toFixed(2); });
-          var rewards = frameData.map(function(d) { return d.reward; });
+          var fullPath = frameData.map(function(d) { return [d.t, d.reward]; });
 
+          if (caseChart) {
+            caseChart.dispose();
+          }
           caseChart = echarts.init(chartDom);
           caseChart.setOption({
             backgroundColor: 'transparent',
             tooltip: { show: false },
-            grid: { left: '8%', right: '4%', top: '6%', bottom: '10%' },
+            grid: { left: '7%', right: '2.5%', top: '9%', bottom: '12%' },
             xAxis: {
               type: 'value',
               min: 0,
               max: dur,
               show: true,
-              axisLine: { lineStyle: { color: 'rgba(255,255,255,0.5)' } },
-              axisLabel: { color: 'rgba(255,255,255,0.9)', fontFamily: '"STIX Two Text", serif', fontSize: 10 },
+              name: 'Time (s)',
+              nameLocation: 'end',
+              nameTextStyle: { color: '#697487', fontSize: 10, padding: [6, 0, 0, 0], fontFamily: '"STIX Two Text", serif' },
+              axisLine: { lineStyle: { color: '#c7d0dd' } },
+              axisLabel: { color: '#667084', fontFamily: '"STIX Two Text", serif', fontSize: 10 },
               splitLine: { show: false }
             },
             yAxis: {
@@ -1602,13 +2515,17 @@
               min: 0,
               max: 1,
               show: true,
-              axisLine: { lineStyle: { color: 'rgba(255,255,255,0.5)' } },
-              axisLabel: { color: 'rgba(255,255,255,0.9)', fontFamily: '"STIX Two Text", serif', fontSize: 10 },
-              splitLine: { lineStyle: { color: 'rgba(255,255,255,0.15)' } }
+              name: 'Φ(x_t)',
+              nameTextStyle: { color: '#697487', fontSize: 10, fontFamily: '"STIX Two Text", serif' },
+              axisLine: { lineStyle: { color: '#c7d0dd' } },
+              axisLabel: { color: '#667084', fontFamily: '"STIX Two Text", serif', fontSize: 10 },
+              splitLine: { lineStyle: { color: '#e8edf4', type: 'dashed' } }
             },
             series: [
-              { type: 'line', data: [], smooth: true, symbol: 'none', lineStyle: { color: COLOR_RISE, width: 2.5 }, areaStyle: { color: 'rgba(129, 199, 132, 0.25)' }, animation: false },
-              { type: 'line', data: [], smooth: true, symbol: 'none', lineStyle: { color: COLOR_FALL, width: 2.5 }, areaStyle: { color: 'rgba(239, 83, 80, 0.25)' }, animation: false }
+              { id: 'full-path', type: 'line', data: fullPath, smooth: true, symbol: 'none', lineStyle: { color: COLOR_REFERENCE, width: 1.4, type: 'dashed' }, animation: false, z: 1 },
+              { id: 'rise-path', type: 'line', data: [], smooth: true, symbol: 'none', lineStyle: { color: COLOR_RISE, width: 2.4 }, areaStyle: { color: 'rgba(129, 199, 132, 0.22)' }, animation: false, z: 3 },
+              { id: 'fall-path', type: 'line', data: [], smooth: true, symbol: 'none', lineStyle: { color: COLOR_FALL, width: 2.4 }, areaStyle: { color: 'rgba(239, 83, 80, 0.22)' }, animation: false, z: 3 },
+              { id: 'cursor-point', type: 'scatter', data: [[0, 0]], symbolSize: 8, itemStyle: { color: COLOR_CURSOR, borderColor: '#fff', borderWidth: 1.5 }, z: 5, animation: false }
             ]
           });
 
@@ -1616,7 +2533,7 @@
           updateBorder(0);
           updateUI(0);
 
-          var wrap = video.closest('.video-chart-wrap');
+          var wrap = chartDom.parentElement;
           if (wrap && window.ResizeObserver) {
             new ResizeObserver(function() { caseChart.resize(); }).observe(wrap);
           }
@@ -1667,7 +2584,7 @@
           container.innerHTML = tasks.map(function(t) {
             var isActive = (t.id === currentTask);
             var btnClass = 'selector-btn ' + (isActive ? 'selector-btn-filled active' : 'selector-btn-outline');
-            return '<button type="button" class="' + btnClass + '" data-task="' + t.id + '" style="--btn-color: ' + t.color + '">' + t.name + '</button>';
+            return '<button type="button" class="' + btnClass + '" data-task="' + t.id + '">' + t.name + '</button>';
           }).join('');
           container.querySelectorAll('.selector-btn').forEach(function(btn) {
             btn.addEventListener('click', onTaskClick);
