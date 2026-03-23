@@ -28,6 +28,12 @@
       max-width: 1100px;
       margin: 0 auto;
       border-bottom: 1px solid #e8e8e8;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(250, 250, 250, 0.94);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
     }
 
     .site-nav a {
@@ -62,6 +68,36 @@
       color: #666;
       font-size: 1rem;
       margin-bottom: 2rem;
+    }
+
+    .meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: -0.8rem 0 1rem;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.38rem;
+      padding: 0.26rem 0.62rem;
+      border-radius: 999px;
+      border: 1px solid #dde4ee;
+      background: #fff;
+      font-size: 0.84rem;
+      color: #445067;
+    }
+
+    .meta-chip .meta-key {
+      color: #71809a;
+      font-weight: 600;
+    }
+
+    .meta-chip .meta-value {
+      color: #2e3b53;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
     }
 
     .leaderboard-section {
@@ -225,7 +261,7 @@
     }
 
     .community-call {
-      margin-top: 3rem;
+      margin-top: 1.2rem;
       padding: 1.2rem 1.25rem;
       background: #f5f5f5;
       border-left: 4px solid #cfcfcf;
@@ -243,6 +279,14 @@
 
     .community-call p:last-child {
       margin-bottom: 0;
+    }
+
+    .community-call .community-contact {
+      margin-top: 0.75rem;
+      padding-top: 0.62rem;
+      border-top: 1px solid #e1e1e1;
+      font-size: 0.94rem;
+      color: #4a4a4a;
     }
 
     .table-note {
@@ -279,34 +323,21 @@
 
   <main class="page-container">
     <h1>Leaderboard</h1>
-    <p class="subtitle">OPD metrics on RoboChallenge Table30. Each model runs 10 rollouts per task.</p>
+    <p class="subtitle" id="page-subtitle">OPD metrics on RoboChallenge Table30. Each model runs 10 rollouts per task.</p>
+    <div class="meta-strip" aria-label="Leaderboard metadata">
+      <span class="meta-chip"><span class="meta-key">Benchmark</span><span class="meta-value" id="meta-benchmark">RoboChallenge Table30</span></span>
+      <span class="meta-chip"><span class="meta-key">Last Updated</span><span class="meta-value" id="meta-last-updated">March 23, 2026</span></span>
+      <span class="meta-chip"><span class="meta-key">Evaluator</span><span class="meta-value">Robo-Dopamine (GRM-2.0-8B-Preview)</span></span>
+    </div>
     <p class="info-note">
       Evaluator note: The leaderboard scores on this page are produced with
       <a href="https://huggingface.co/tanhuajie2001/Robo-Dopamine-GRM-2.0-8B-Preview" target="_blank" rel="noopener noreferrer">Robo-Dopamine (GRM-2.0-8B-Preview)</a>.
       Our current RoboChallenge results are reproduced by auditing publicly available execution videos from the official benchmark release.
       We warmly welcome stronger PRM evaluators from the community to improve robustness, coverage, and fairness of dense trajectory auditing.
     </p>
-
-    <section class="leaderboard-section" id="robochallenge-overall">
-      <h2>RoboChallenge Table30 — Overall Performance</h2>
-      <p class="subtitle" style="margin-bottom: 1rem;">Average OPD metrics across all 30 tasks. Sorted by Avg MC@100 (task completion rate).</p>
-      <div id="overall-table-wrap">
-        <p class="loading">Loading...</p>
-      </div>
-    </section>
-
-    <section class="leaderboard-section" id="robochallenge-per-task">
-      <h2>Per-Task Results</h2>
-      <p class="subtitle" style="margin-bottom: 1rem;">Select a task to view OPD metrics for each model on that specific task.</p>
-      <div class="task-selector">
-        <label for="task-select">Task:</label>
-        <select id="task-select"></select>
-      </div>
-      <div id="per-task-table-wrap">
-        <p class="loading">Select a task above.</p>
-      </div>
-    </section>
-
+    <p class="info-note" style="margin-top:-1.1rem;">
+      Methodology and metric definitions are described in our <a href="blog.html">technical blog</a>, and we will keep this leaderboard synchronized as new benchmark collaborations go live.
+    </p>
     <section class="community-call">
       <h2>Community Call For Transparent Evaluation</h2>
       <p>
@@ -318,7 +349,33 @@
         cross-benchmark, transparent evaluation ecosystem. We are happy to provide dense OPD-based auditing reports (progress depth, execution quality, and failure diagnosis)
         on shared trajectories, and we also welcome stronger PRM models from the community to co-develop this open evaluation stack.
       </p>
+      <p class="community-contact">
+        We welcome collaboration and feedback from the robotics community. If you have questions or would like to work with us on dense trajectory evaluation, please reach out at
+        <a href="mailto:jiyuheng2023@ia.ac.cn">jiyuheng2023@ia.ac.cn</a>.
+      </p>
     </section>
+
+    <div id="live-leaderboard-block">
+      <section class="leaderboard-section" id="robochallenge-overall">
+        <h2 id="overall-title">RoboChallenge Table30 — Overall Performance</h2>
+        <p class="subtitle" id="overall-subtitle" style="margin-bottom: 1rem;">Average OPD metrics across all 30 tasks. Sorted by Avg MC@100 (task completion rate).</p>
+        <div id="overall-table-wrap">
+          <p class="loading">Loading...</p>
+        </div>
+      </section>
+
+      <section class="leaderboard-section" id="robochallenge-per-task">
+        <h2 id="per-task-title">Per-Task Results</h2>
+        <p class="subtitle" id="per-task-subtitle" style="margin-bottom: 1rem;">Select a task to view OPD metrics for each model on that specific task.</p>
+        <div class="task-selector">
+          <label for="task-select">Task:</label>
+          <select id="task-select"></select>
+        </div>
+        <div id="per-task-table-wrap">
+          <p class="loading">Select a task above.</p>
+        </div>
+      </section>
+    </div>
 
     <section class="leaderboard-section" id="citation">
       <h2>Citation</h2>
@@ -369,6 +426,14 @@ x-vla,50,10,0,0,28.28,3.69,6.54,22.1,0,0,0,0,14.59,7.28,1.71,33.97,40,0,0,0,22.4
         'x-vla': { display: 'X-VLA', user: 'Chongyang Xu' },
         'rdt-1b': { display: 'RDT-1B', user: 'zsz' },
         'cogact': { display: 'cogact', user: 'hsk' }
+      };
+
+      var BENCHMARK = {
+        id: 'robochallenge',
+        label: 'RoboChallenge Table30',
+        updated: 'March 23, 2026',
+        csvElId: 'robochallenge-csv',
+        pageSubtitle: 'OPD metrics on RoboChallenge Table30. Each model runs 10 rollouts per task.'
       };
 
       function formatTaskName(key) {
@@ -563,80 +628,108 @@ x-vla,50,10,0,0,28.28,3.69,6.54,22.1,0,0,0,0,14.59,7.28,1.71,33.97,40,0,0,0,22.4
       }
 
       function init() {
-        var csvEl = document.getElementById('robochallenge-csv');
-        var text = csvEl ? csvEl.textContent : '';
-        if (!text.trim()) {
-          document.getElementById('overall-table-wrap').innerHTML = '<p class="error-msg">No data found.</p>';
-          return;
+        var subtitleEl = document.getElementById('page-subtitle');
+        var metaBenchmarkEl = document.getElementById('meta-benchmark');
+        var metaUpdatedEl = document.getElementById('meta-last-updated');
+        var overallTitleEl = document.getElementById('overall-title');
+        var overallSubtitleEl = document.getElementById('overall-subtitle');
+        var perTaskTitleEl = document.getElementById('per-task-title');
+        var perTaskSubtitleEl = document.getElementById('per-task-subtitle');
+
+        function updatePageMeta(cfg) {
+          if (subtitleEl) subtitleEl.textContent = cfg.pageSubtitle;
+          if (metaBenchmarkEl) metaBenchmarkEl.textContent = cfg.label;
+          if (metaUpdatedEl) metaUpdatedEl.textContent = cfg.updated;
         }
-        (function runWithText() {
-            var csvData = parseCSV(text);
-            if (!csvData.models.length) {
-              document.getElementById('overall-table-wrap').innerHTML = '<p class="error-msg">No data found.</p>';
-              return;
-            }
-            var overallSort = { key: 'avgM100', dir: SORT_PREF.avgM100 };
-            var perTaskSort = { key: 'M100', dir: SORT_PREF.M100 };
-            var overallRaw = computeOverall(csvData);
-            var currentTaskRows = [];
 
-            function renderOverall() {
-              var rows = sortRows(overallRaw, overallSort.key, overallSort.dir);
-              renderOverallTable(rows, overallSort);
-            }
+        function mountLiveData(cfg) {
+          var csvEl = document.getElementById(cfg.csvElId);
+          var text = csvEl ? csvEl.textContent : '';
+          if (!text.trim()) {
+            document.getElementById('overall-table-wrap').innerHTML = '<p class="error-msg">No data found.</p>';
+            document.getElementById('per-task-table-wrap').innerHTML = '<p class="error-msg">No data found.</p>';
+            return;
+          }
+          var csvData = parseCSV(text);
+          if (!csvData.models.length) {
+            document.getElementById('overall-table-wrap').innerHTML = '<p class="error-msg">No data found.</p>';
+            document.getElementById('per-task-table-wrap').innerHTML = '<p class="error-msg">No data found.</p>';
+            return;
+          }
 
-            function renderPerTask() {
-              var rows = sortRows(currentTaskRows, perTaskSort.key, perTaskSort.dir);
-              renderPerTaskTable(rows, perTaskSort);
-            }
+          if (overallTitleEl) overallTitleEl.textContent = cfg.label + ' — Overall Performance';
+          if (overallSubtitleEl) overallSubtitleEl.textContent = 'Average OPD metrics across all ' + csvData.tasks.length + ' tasks. Sorted by Avg MC@100 (task completion rate).';
+          if (perTaskTitleEl) perTaskTitleEl.textContent = cfg.label + ' — Per-Task Results';
+          if (perTaskSubtitleEl) perTaskSubtitleEl.textContent = 'Select a task to view OPD metrics for each model on that specific task.';
 
+          var overallSort = { key: 'avgM100', dir: SORT_PREF.avgM100 };
+          var perTaskSort = { key: 'M100', dir: SORT_PREF.M100 };
+          var overallRaw = computeOverall(csvData);
+          var currentTaskRows = [];
+          var overallWrap = document.getElementById('overall-table-wrap');
+          var perTaskWrap = document.getElementById('per-task-table-wrap');
+          var select = document.getElementById('task-select');
+
+          function renderOverall() {
+            var rows = sortRows(overallRaw, overallSort.key, overallSort.dir);
+            renderOverallTable(rows, overallSort);
+          }
+
+          function renderPerTask() {
+            var rows = sortRows(currentTaskRows, perTaskSort.key, perTaskSort.dir);
+            renderPerTaskTable(rows, perTaskSort);
+          }
+
+          renderOverall();
+
+          overallWrap.onclick = function(e) {
+            var th = e.target.closest('th.sortable[data-key]');
+            if (!th) return;
+            var key = th.getAttribute('data-key');
+            if (overallSort.key === key) {
+              overallSort.dir = overallSort.dir === 'desc' ? 'asc' : 'desc';
+            } else {
+              overallSort.key = key;
+              overallSort.dir = SORT_PREF[key] || 'desc';
+            }
             renderOverall();
+          };
 
-            document.getElementById('overall-table-wrap').addEventListener('click', function(e) {
-              var th = e.target.closest('th.sortable[data-key]');
-              if (!th) return;
-              var key = th.getAttribute('data-key');
-              if (overallSort.key === key) {
-                overallSort.dir = overallSort.dir === 'desc' ? 'asc' : 'desc';
-              } else {
-                overallSort.key = key;
-                overallSort.dir = SORT_PREF[key] || 'desc';
-              }
-              renderOverall();
-            });
+          select.innerHTML = '';
+          csvData.tasks.sort();
+          csvData.tasks.forEach(function(task) {
+            var opt = document.createElement('option');
+            opt.value = task;
+            opt.textContent = formatTaskName(task);
+            select.appendChild(opt);
+          });
 
-            var select = document.getElementById('task-select');
-            csvData.tasks.sort();
-            csvData.tasks.forEach(function(task) {
-              var opt = document.createElement('option');
-              opt.value = task;
-              opt.textContent = formatTaskName(task);
-              select.appendChild(opt);
-            });
+          function onTaskChange() {
+            var task = select.value;
+            if (!task) return;
+            currentTaskRows = getPerTaskData(csvData, task);
+            renderPerTask();
+          }
 
-            function onTaskChange() {
-              var task = select.value;
-              if (!task) return;
-              currentTaskRows = getPerTaskData(csvData, task);
-              renderPerTask();
+          perTaskWrap.onclick = function(e) {
+            var th = e.target.closest('th.sortable[data-key]');
+            if (!th) return;
+            var key = th.getAttribute('data-key');
+            if (perTaskSort.key === key) {
+              perTaskSort.dir = perTaskSort.dir === 'desc' ? 'asc' : 'desc';
+            } else {
+              perTaskSort.key = key;
+              perTaskSort.dir = SORT_PREF[key] || 'desc';
             }
+            renderPerTask();
+          };
 
-            document.getElementById('per-task-table-wrap').addEventListener('click', function(e) {
-              var th = e.target.closest('th.sortable[data-key]');
-              if (!th) return;
-              var key = th.getAttribute('data-key');
-              if (perTaskSort.key === key) {
-                perTaskSort.dir = perTaskSort.dir === 'desc' ? 'asc' : 'desc';
-              } else {
-                perTaskSort.key = key;
-                perTaskSort.dir = SORT_PREF[key] || 'desc';
-              }
-              renderPerTask();
-            });
+          select.onchange = onTaskChange;
+          onTaskChange();
+        }
 
-            select.addEventListener('change', onTaskChange);
-            onTaskChange();
-        })(text);
+        updatePageMeta(BENCHMARK);
+        mountLiveData(BENCHMARK);
       }
 
       if (document.readyState === 'loading') {
