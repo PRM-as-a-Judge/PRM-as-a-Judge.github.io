@@ -3,10 +3,12 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Leaderboard - PRM-as-a-Judge</title>
+  <title>PRM-as-a-Judge</title>
   <meta name="description"
         content="PRM-as-a-Judge Leaderboard">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/logo.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet"
@@ -326,7 +328,7 @@
     <p class="subtitle" id="page-subtitle">OPD metrics on RoboChallenge Table30. Each model runs 10 rollouts per task.</p>
     <div class="meta-strip" aria-label="Leaderboard metadata">
       <span class="meta-chip"><span class="meta-key">Benchmark</span><span class="meta-value" id="meta-benchmark">RoboChallenge Table30</span></span>
-      <span class="meta-chip"><span class="meta-key">Last Updated</span><span class="meta-value" id="meta-last-updated">March 23, 2026</span></span>
+      <span class="meta-chip"><span class="meta-key">Last Updated</span><span class="meta-value" id="meta-last-updated">March 20, 2026</span></span>
       <span class="meta-chip"><span class="meta-key">Evaluator</span><span class="meta-value">Robo-Dopamine (GRM-2.0-8B-Preview)</span></span>
     </div>
     <p class="info-note">
@@ -380,11 +382,11 @@
     <section class="leaderboard-section" id="citation">
       <h2>Citation</h2>
       <p class="subtitle" style="margin-bottom: 0.75rem;">If this leaderboard or evaluation pipeline helps your work, please cite us:</p>
-      <pre class="citation-block"><code>@article{prm_as_a_judge_2026,
-  title   = {PRM-as-a-Judge: Dense Trajectory Auditing for Robotics},
-  author  = {Ji, Yuheng and Liu, Yuyang and Tan, Huajie and others},
-  year    = {2026},
-  url     = {https://prm-as-a-judge.github.io/}
+      <pre class="citation-block"><code>@article{ji2026prmjudge,
+  title   = {PRM-as-a-Judge: A Dense Evaluation Paradigm for Fine-Grained Robotic Auditing},
+  author  = {Ji, Yuheng and Liu, Yuyang and Tan, Huajie and Huang, Xuchuan and Huang, Fanding and Xu, Yijie and Chi, Cheng and Zhao, Yuting and Lyu, Huaihai and Co, Peterson and others},
+  journal = {arXiv preprint arXiv:2603.21669},
+  year    = {2026}
 }</code></pre>
     </section>
   </main>
@@ -431,7 +433,7 @@ x-vla,50,10,0,0,28.28,3.69,6.54,22.1,0,0,0,0,14.59,7.28,1.71,33.97,40,0,0,0,22.4
       var BENCHMARK = {
         id: 'robochallenge',
         label: 'RoboChallenge Table30',
-        updated: 'March 23, 2026',
+        updated: 'March 20, 2026',
         csvElId: 'robochallenge-csv',
         pageSubtitle: 'OPD metrics on RoboChallenge Table30. Each model runs 10 rollouts per task.'
       };

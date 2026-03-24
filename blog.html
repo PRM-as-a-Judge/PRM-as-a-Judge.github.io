@@ -3,10 +3,12 @@
 
 <head>
   <meta charset="utf-8">
-  <title>PRM-as-a-Judge: Moving Beyond the "Pass/Fail" Mirage in Robotics</title>
+  <title>PRM-as-a-Judge</title>
   <meta name="description"
         content="PRM-as-a-Judge: A dense evaluation paradigm that turns trajectory videos into a goldmine of progress signals.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/logo.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -879,19 +881,30 @@
       color: #404d62;
       font-size: 0.92rem;
       line-height: 1.52;
+      text-align: left;
     }
 
     .relation-formula {
-      margin: 0.02rem auto 0.18rem;
-      max-width: 540px;
+      margin: 0.02rem 0 0.18rem;
+      width: 100%;
+      text-align: center;
+      display: block;
     }
 
     .relation-formula .math-inline {
-      margin: 0;
+      margin: 0 auto;
       padding: 0.14rem 0.24rem;
       background: transparent;
       border: 0;
       font-size: 0.98em;
+      display: block;
+      width: max-content;
+      max-width: 100%;
+    }
+
+    .relation-formula .katex-display {
+      margin: 0 auto;
+      text-align: center;
     }
 
     .relation-note {
@@ -899,6 +912,7 @@
       font-size: 0.84rem;
       color: #5f6d82;
       line-height: 1.45;
+      text-align: left;
     }
 
     .opd-tier-grid {
@@ -2404,13 +2418,13 @@
 
           <div class="metadata-chips" aria-label="Publication metadata">
             <span class="meta-chip"><span class="chip-key">Published</span><span class="chip-value">March 23, 2026</span></span>
-            <a class="meta-chip chip-link" href="https://prm-as-a-judge.github.io/" target="_blank" rel="noopener noreferrer"><span class="chip-key">Report</span><span class="chip-value">2603.6666</span></a>
+            <a class="meta-chip chip-link" href="https://arxiv.org/abs/2603.21669" target="_blank" rel="noopener noreferrer"><span class="chip-key">Report</span><span class="chip-value">2603.21669</span></a>
             <a class="meta-chip chip-link" href="https://prm-as-a-judge.github.io/" target="_blank" rel="noopener noreferrer"><span class="chip-key">Repository</span><span class="chip-value">PRM-as-a-Judge</span></a>
             <span class="meta-chip"><span class="chip-key">By</span><span class="chip-value">PRM-as-a-Judge Team</span></span>
           </div>
 
           <div class="hero-cta-links" aria-label="Primary actions">
-            <a class="hero-cta hero-cta-primary" href="https://prm-as-a-judge.github.io/" target="_blank" rel="noopener noreferrer">Read paper</a>
+            <a class="hero-cta hero-cta-primary" href="https://arxiv.org/abs/2603.21669" target="_blank" rel="noopener noreferrer">Read paper</a>
             <a class="hero-cta hero-cta-secondary" href="#interactive-trajectory-explorer">Jump to explorer</a>
             <a class="hero-cta hero-cta-secondary" href="https://prm-as-a-judge.github.io/" target="_blank" rel="noopener noreferrer">View code</a>
           </div>
@@ -2857,11 +2871,11 @@
             <span class="citation-kind">BibTeX</span>
             <button type="button" class="citation-copy-btn" id="copy-citation-btn">Copy citation</button>
           </div>
-          <pre class="citation-block" id="citation-block"><code id="citation-text">@article{prm_as_a_judge_2026,
-  title   = {PRM-as-a-Judge: Dense Trajectory Auditing for Robotics},
-  author  = {Ji, Yuheng and Liu, Yuyang and Tan, Huajie and others},
-  year    = {2026},
-  url     = {https://prm-as-a-judge.github.io/}
+          <pre class="citation-block" id="citation-block"><code id="citation-text">@article{ji2026prmjudge,
+  title   = {PRM-as-a-Judge: A Dense Evaluation Paradigm for Fine-Grained Robotic Auditing},
+  author  = {Ji, Yuheng and Liu, Yuyang and Tan, Huajie and Huang, Xuchuan and Huang, Fanding and Xu, Yijie and Chi, Cheng and Zhao, Yuting and Lyu, Huaihai and Co, Peterson and others},
+  journal = {arXiv preprint arXiv:2603.21669},
+  year    = {2026}
 }</code></pre>
           <p class="citation-status" id="citation-status">Copy this BibTeX entry into your bibliography.</p>
         </div>
