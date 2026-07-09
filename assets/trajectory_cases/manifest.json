@@ -1,0 +1,38 @@
+[
+  {
+    "model": "cogact",
+    "task": "arrange_flowers",
+    "taskLabel": "Arrange flowers",
+    "episode": "episode0",
+    "backend": "Dopamine",
+    "json": "assets/trajectory_cases/cogact_arrange_flowers_episode0_dopamine.json",
+    "video": "assets/videos/trajectory/cogact/arrange_flowers/episode0_high.mp4"
+  },
+  {
+    "model": "cogact",
+    "task": "arrange_flowers",
+    "taskLabel": "Arrange flowers",
+    "episode": "episode0",
+    "backend": "RoboMeter",
+    "json": "assets/trajectory_cases/cogact_arrange_flowers_episode0_robometer.json",
+    "video": "assets/videos/trajectory/cogact/arrange_flowers/episode0_high.mp4"
+  },
+  {
+    "model": "pi0.5",
+    "task": "set_the_plates",
+    "taskLabel": "Set the plates",
+    "episode": "episode0",
+    "backend": "Dopamine",
+    "json": "assets/trajectory_cases/pi05_set_the_plates_episode0_dopamine.json",
+    "video": "assets/videos/trajectory/pi0.5/set_the_plates/episode0_high.mp4"
+  },
+  {
+    "model": "pi0.5",
+    "task": "set_the_plates",
+    "taskLabel": "Set the plates",
+    "episode": "episode0",
+    "backend": "RoboMeter",
+    "json": "assets/trajectory_cases/pi05_set_the_plates_episode0_robometer.json",
+    "video": "assets/videos/trajectory/pi0.5/set_the_plates/episode0_high.mp4"
+  }
+]
