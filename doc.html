@@ -698,7 +698,7 @@ EVAL_MODE=incremental FRAME_INTERVAL=96 MANIFEST=cases.jsonl PRM_PATH=/path/to/p
                   <td>Recovered progress after the deepest drawdown trough.</td>
                 </tr>
                 <tr>
-                  <td><code>RBS</code></td>
+                  <td><code>DRR</code></td>
                   <td>Robustness score, approximately <code>(Rec + epsilon) / (MDD + epsilon)</code>, clipped to 1.</td>
                 </tr>
               </tbody>
@@ -738,7 +738,7 @@ EVAL_MODE=incremental FRAME_INTERVAL=96 MANIFEST=cases.jsonl PRM_PATH=/path/to/p
                 <tr>
                   <td><code>RBS</code></td>
                   <td>All trajectories</td>
-                  <td>Robustness after the largest drawdown. Some project materials call the same idea <code>DRR</code>.</td>
+                  <td>Robustness after the largest drawdown. </td>
                   <td>Mean trajectory <code>min(1, (Rec + epsilon) / (MDD + epsilon))</code>.</td>
                 </tr>
                 <tr>
