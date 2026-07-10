@@ -324,6 +324,15 @@ bash eval/run_eval.sh</code></pre>
                   <td>Per-case curve metrics when <code>--visualize</code> or <code>VISUALIZE=1</code> is enabled.</td>
                 </tr>
                 <tr>
+                  <td><code>visualizations/report.html</code></td>
+                  <td>
+                    Local interactive HTML report generated when <code>--visualize</code> or
+                    <code>VISUALIZE=1</code> is enabled. Open it in a browser to review rollout
+                    videos, progress curves, live frame metrics, milestones, and sortable
+                    model-level, model-by-task, and per-case metric tables.
+                  </td>
+                </tr>
+                <tr>
                   <td><code>visualizations/case_plots.csv</code></td>
                   <td>Index of generated per-case figures.</td>
                 </tr>
@@ -334,6 +343,14 @@ bash eval/run_eval.sh</code></pre>
               </tbody>
             </table>
           </div>
+
+          <p>
+            The HTML report is designed for local inspection after evaluation. It uses the
+            video paths recorded in the manifest or run outputs, so videos will play as
+            long as those files remain available on the user's machine. If a run has
+            already finished, the same report can be generated later with
+            <code>prm-judge visualize</code>.
+          </p>
 
           <p>Generate visualizations after a run has finished:</p>
           <pre><code>prm-judge visualize --run-root eval/results/run_YYMMDD_HHMMSS</code></pre>
