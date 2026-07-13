@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,6 +12,7 @@
   .site-nav {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
     gap: 1.5rem;
     padding: 1.25rem 1.5rem;
     max-width: 1120px;
@@ -38,19 +40,44 @@
     color: #1a1a1a;
     font-weight: 500;
   }
+
+  .lang-toggle {
+    border: 1px solid #d8d8d8;
+    border-radius: 6px;
+    background: #fff;
+    color: #1a1a1a;
+    font: inherit;
+    font-size: 0.9rem;
+    line-height: 1;
+    padding: 0.55rem 0.75rem;
+    cursor: pointer;
+  }
+
+  .lang-toggle:hover {
+    border-color: #aaa;
+  }
+
+  body[data-lang="en"] .lang-zh,
+  body[data-lang="zh"] .lang-en {
+    display: none !important;
+  }
 </style>
 </head>
 
-<body>
+<body data-lang="en">
   <nav class="site-nav">
-  <a href="index.html">Home</a>
-  <a href="blog.html">Blog</a>
-  <a href="leaderboard.html">Leaderboard</a>
-  <a href="doc.html" class="active">Usage</a>
+  <a href="index.html"><span class="lang-en">Home</span><span class="lang-zh">首页</span></a>
+  <a href="blog.html"><span class="lang-en">Blog</span><span class="lang-zh">博客</span></a>
+  <a href="leaderboard.html"><span class="lang-en">Leaderboard</span><span class="lang-zh">排行榜</span></a>
+  <a href="doc.html" class="active"><span class="lang-en">Usage</span><span class="lang-zh">使用指南</span></a>
+  <button type="button" class="lang-toggle" id="langToggle" aria-label="Switch language">
+    <span class="lang-en">中文</span>
+    <span class="lang-zh">English</span>
+  </button>
 </nav>
   <div class="doc-shell">
     <aside class="sidebar" aria-label="Documentation navigation">
-      <nav class="sidebar-panel">
+      <nav class="sidebar-panel lang-en">
         <p class="sidebar-title">Guide</p>
         <a href="#overview">Overview</a>
         <a href="#quick-start">Quick Start</a>
@@ -67,10 +94,27 @@
         <a href="#custom-prm">Custom PRM</a>
         <a href="#recipes">Recipes</a>
       </nav>
+      <nav class="sidebar-panel lang-zh">
+        <p class="sidebar-title">指南</p>
+        <a href="#zh-overview">概览</a>
+        <a href="#zh-quick-start">快速开始</a>
+        <a href="#zh-manifest">Manifest 格式</a>
+        <a href="#zh-outputs">输出结果</a>
+        <a href="#zh-defaults">默认设置</a>
+        <a href="#zh-choose-backend">选择后端</a>
+        <a href="#zh-modes">Dopamine 模式</a>
+        <a href="#zh-multi-view">视角和目标图像</a>
+        <a href="#zh-multi-gpu">Multi-GPU</a>
+        <a href="#zh-progress-standard">进度标准</a>
+        <a href="#zh-postprocess">后处理</a>
+        <a href="#zh-metrics">指标</a>
+        <a href="#zh-custom-prm">自定义 PRM</a>
+        <a href="#zh-recipes">常用命令</a>
+      </nav>
     </aside>
 
     <main class="doc-main">
-      <header class="doc-hero">
+      <header class="doc-hero lang-en">
         <p class="eyebrow">User Guide</p>
         <h1>PRM-as-a-Judge v1.5</h1>
         <p>
@@ -86,7 +130,21 @@
         </p>
       </header>
 
-      <article class="doc-content">
+      <header class="doc-hero lang-zh">
+        <p class="eyebrow">用户指南</p>
+        <h1>PRM-as-a-Judge v1.5</h1>
+        <p>
+          一个用于机器人过程审计的实用工具包。提供执行视频和任务描述后，
+          它会生成归一化进度曲线、单案例诊断、任务汇总，以及可用于排行榜的报告。
+        </p>
+        <p>
+          在默认设置下，你只需要提供一个 JSONL manifest 并运行一条命令即可获得评估结果。
+          对于进阶需求，本指南说明如何调整采样、模式、视角、GPUs、平滑、
+          指标和 PRM 后端。
+        </p>
+      </header>
+
+      <article class="doc-content lang-en">
         <section id="overview">
           <h2>Overview</h2>
           <p>
@@ -264,7 +322,7 @@ bash eval/run_eval.sh</code></pre>
                 <tr>
                   <td><code>progress</code> / <code>progress_path</code></td>
                   <td>&#9675; Optional</td>
-                  <td>Precomputed progress curve for <code>--prm recorded</code>, debugging, or external PRM integration. In the current manifest format, each row still includes <code>video</code> or <code>videos</code> as path fields, but the files can stay anywhere on disk.</td>
+                  <td>Precomputed progress curve for <code>--prm recorded</code>, debugging, or external PRM integration.</td>
                 </tr>
               </tbody>
             </table>
@@ -461,11 +519,6 @@ bash eval/run_eval.sh</code></pre>
             Robo-Dopamine is a pair-style PRM. It constructs a progress curve by
             scoring sampled states with one of three comparison modes.
           </p>
-          <p>
-            The descriptions below follow the current Dopamine inference
-            implementation in <code>eval/examples/inference.py</code>.
-          </p>
-
           <div class="table-wrap">
             <table>
               <thead>
@@ -842,7 +895,7 @@ class MyAdapter(BasePRMAdapter):
             multipart files, which keeps long-video requests manageable.
           </p>
         </section>
-        
+
         <section id="recipes">
           <h2>Recipes</h2>
 
@@ -870,7 +923,798 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
         </section>
 
       </article>
+
+      <article class="doc-content lang-zh">
+        <section id="zh-overview">
+          <h2>概览</h2>
+          <p>
+            PRM-as-a-Judge 评估的是机器人执行过程，而不只是最终结果。
+            PRM 后端会估计随时间变化的进度，随后指标栈将这条曲线转换为关于
+            接近成功、停滞、回撤、恢复和成功质量的可解释信号。
+          </p>
+
+          <pre><code>JSONL manifest -> PRM adapter -> normalized progress curve -> postprocess -> metrics/report</code></pre>
+
+          <div class="callout">
+            默认设置提供了一条快速、简单的评估路径。你可以根据任务、数据格式、运行资源和分析目标，
+            调整后续阶段的配置。
+          </div>
+
+          <div class="feature-grid compact-grid">
+            <div class="feature">
+              <h3>输入</h3>
+              <p>JSONL 的每一行表示一个执行案例，包含视频路径、任务文本、可选标签和元数据。</p>
+            </div>
+            <div class="feature">
+              <h3>评判</h3>
+              <p>适配器支持 Robo-Dopamine 这类成对比较式 PRMs，也支持 RoboMeter 这类序列式 PRMs。</p>
+            </div>
+            <div class="feature">
+              <h3>报告</h3>
+              <p>输出包括原始曲线和处理后曲线、单案例指标、任务汇总、排行榜和图表。</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="zh-quick-start">
+          <h2>快速开始</h2>
+          <p>在项目仓库根目录中安装工具包：</p>
+          <pre><code>pip install -e .</code></pre>
+
+          <h3>1. 创建 manifest</h3>
+          <p>
+            将执行视频路径和任务描述放入一个 JSONL 文件。视频可以保留在磁盘任意位置；
+            路径可以是绝对路径，也可以是相对于 manifest 的相对路径。
+          </p>
+          <pre><code>{"case_id":"case_001","task_name":"put_can","task":"put the can into the basket","video":"videos/case_001.mp4","model":"pi0"}</code></pre>
+
+          <h3>2. 运行默认评估</h3>
+          <p>
+            默认运行器使用 Robo-Dopamine、backward 模式、默认采样间隔、GPU 0、
+            异常值替换和加权平滑。
+          </p>
+          <pre><code>MANIFEST=/path/to/cases.jsonl \
+PRM_PATH=/path/to/Robo-Dopamine-GRM-8B-Pro \
+bash eval/run_eval.sh</code></pre>
+
+          <h3>3. 添加可视化</h3>
+          <pre><code>MANIFEST=/path/to/cases.jsonl \
+PRM_PATH=/path/to/Robo-Dopamine-GRM-8B-Pro \
+VISUALIZE=1 \
+bash eval/run_eval.sh</code></pre>
+
+          <h3>不加载模型进行试运行</h3>
+          <p>
+            当你想用预计算曲线验证安装、报告生成和指标计算时，
+            使用 recorded 后端。
+          </p>
+          <pre><code>prm-judge eval --prm recorded --manifest eval/examples/manifest_recorded.jsonl --visualize</code></pre>
+
+          <h3>使用 RoboMeter 运行</h3>
+          <p>
+            RoboMeter 是序列式后端。运行器可以启动本地 RoboMeter HTTP 服务器，
+            等待 <code>/health</code>，评估案例，并在运行结束后关闭服务器。
+          </p>
+          <pre><code>PRM=robometer \
+MANIFEST=/path/to/cases.jsonl \
+bash eval/run_eval.sh</code></pre>
+
+          <p>当你希望自行管理模型进程时，可以复用已经运行的服务器：</p>
+          <pre><code>PRM=robometer \
+MANIFEST=/path/to/cases.jsonl \
+ROBOMETER_SERVER_URL=http://localhost:8000 \
+ROBOMETER_AUTO_START=0 \
+bash eval/run_eval.sh</code></pre>
+
+          <div class="callout">
+            当 <code>PRM=robometer</code> 时，<code>eval/run_eval.sh</code> 会同时为运行器
+            和自动启动的服务器使用 <code>ROBOMETER_PYTHON</code>，确保可用
+            <code>decord</code> 或 <code>opencv-python</code> 等视频依赖。如果直接调用
+            <code>prm-judge</code>，请在能够解码你的视频的环境中运行。
+          </div>
+        </section>
+
+        <section id="zh-manifest">
+          <h2>Manifest 格式</h2>
+          <p>
+            推荐的默认输入是 manifest 文件。它使用 UTF-8 JSONL，每一行描述一个执行案例。
+            路径可以是绝对路径，也可以是相对于 manifest 文件的相对路径。
+          </p>
+
+          <h3>单视角</h3>
+          <pre><code>{"case_id":"case_001","task_name":"put_can","task":"put the can into the basket","video":"videos/case_001.mp4"}</code></pre>
+
+          <h3>多视角</h3>
+          <pre><code>{"case_id":"case_002","task_name":"put_can","task":"put the can into the basket","videos":{"high":"high.mp4","left":"left.mp4","right":"right.mp4"}}</code></pre>
+
+          <h3>带目标图像和基准标签</h3>
+          <pre><code>{"case_id":"case_003","task_name":"arrange_flowers","task":"arrange the flowers in the vase","videos":{"high":"h.mp4","left":"l.mp4","right":"r.mp4"},"goal_image":"goal.png","label":"success","benchmark":"RoboTwin","model":"pi0"}</code></pre>
+
+          <h3>带预计算进度</h3>
+          <pre><code>{"case_id":"case_004","task_name":"open_drawer","task":"open the drawer","video":"drawer.mp4","progress_path":"curves/case_004.json"}</code></pre>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>字段</th>
+                  <th>要求</th>
+                  <th>说明</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>case_id</code></td>
+                  <td>&#9679; 必需</td>
+                  <td>稳定的案例标识符。缺失时加载器会报错。</td>
+                </tr>
+                <tr>
+                  <td><code>task</code></td>
+                  <td>&#9679; 必需</td>
+                  <td>传递给 PRM 后端的自然语言任务描述。<code>instruction</code> 和 <code>task_prompt</code> 也可作为别名使用。</td>
+                </tr>
+                <tr>
+                  <td><code>video</code></td>
+                  <td>&#9679; 必需：在 <code>video</code> 和 <code>videos</code> 中选择一个</td>
+                  <td>单个执行视频路径。Dopamine 适配器可以将其复用于所有相机槽位。</td>
+                </tr>
+                <tr>
+                  <td><code>videos</code></td>
+                  <td>&#9679; 必需：在 <code>video</code> 和 <code>videos</code> 中选择一个</td>
+                  <td>包含视角专用路径的对象，通常为 <code>high</code>、<code>left</code> 和 <code>right</code>。</td>
+                </tr>
+                <tr>
+                  <td><code>task_name</code></td>
+                  <td>&#9675; 可选</td>
+                  <td>用于过滤、输出路径、汇总和排行榜行的短分组键。默认回退到 <code>task</code>。</td>
+                </tr>
+                <tr>
+                  <td><code>goal_image</code></td>
+                  <td>&#9675; 可选</td>
+                  <td>期望最终状态的图像。当任务文本存在歧义或目标布局很重要时很有用。</td>
+                </tr>
+                <tr>
+                  <td><code>label</code></td>
+                  <td>&#9675; 可选</td>
+                  <td><code>success</code> 或 <code>failure</code>。基于 label 的分组也接受常见布尔别名，例如 <code>true</code>、<code>false</code>、<code>1</code> 和 <code>0</code>。当 benchmark labels 应定义分组时，使用 <code>--success-source label</code>。</td>
+                </tr>
+                <tr>
+                  <td><code>benchmark</code></td>
+                  <td>&#9675; 可选</td>
+                  <td>复制到报告中的数据集或 benchmark 名称。</td>
+                </tr>
+                <tr>
+                  <td><code>model</code></td>
+                  <td>&#9675; 可选</td>
+                  <td>用于排行榜聚合的策略、机器人模型或方法名称。</td>
+                </tr>
+                <tr>
+                  <td><code>metadata</code></td>
+                  <td>&#9675; 可选</td>
+                  <td>用于可复现性的自由格式 JSON 对象，会复制到输出中。</td>
+                </tr>
+                <tr>
+                  <td><code>progress</code> / <code>progress_path</code></td>
+                  <td>&#9675; 可选</td>
+                  <td>用于 <code>--prm recorded</code>、调试或外部 PRM 集成的预计算进度曲线。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="zh-outputs">
+          <h2>输出结果</h2>
+          <p>默认情况下，输出会写入 <code>eval/results/run_YYMMDD_HHMMSS/</code>。</p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>文件</th>
+                  <th>用途</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>run_params.json</code></td>
+                  <td>记录已解析的 CLI 选项和运行时设置，用于可复现性。</td>
+                </tr>
+                <tr>
+                  <td><code>run_summary.json</code></td>
+                  <td>记录本次运行的总数、成功数、失败数和聚合指标计数。</td>
+                </tr>
+                <tr>
+                  <td><code>per_case.jsonl</code></td>
+                  <td>每个执行案例的原始和处理后进度曲线以及指标。</td>
+                </tr>
+                <tr>
+                  <td><code>benchmark/model/task/case/result_summary.json</code></td>
+                  <td>案例输出目录下的单案例结果文件。</td>
+                </tr>
+                <tr>
+                  <td><code>summary.csv</code></td>
+                  <td>任务级 v1.5 指标和 success/failure 分组。</td>
+                </tr>
+                <tr>
+                  <td><code>leaderboard.csv</code></td>
+                  <td>用于比较策略的模型级汇总。</td>
+                </tr>
+                <tr>
+                  <td><code>report.md</code></td>
+                  <td>便于分享结果的人类可读运行报告。</td>
+                </tr>
+                <tr>
+                  <td><code>discovery_manifest.json</code></td>
+                  <td>已解析的输入路径、运行时选择和可复现性元数据。</td>
+                </tr>
+                <tr>
+                  <td><code>robometer_server_PORT.log</code></td>
+                  <td>使用自动启动时的 RoboMeter 服务器日志。</td>
+                </tr>
+                <tr>
+                  <td><code>visualizations/curve_metrics.csv</code></td>
+                  <td>启用 <code>--visualize</code> 或 <code>VISUALIZE=1</code> 时的单案例曲线指标。</td>
+                </tr>
+                <tr>
+                  <td><code>visualizations/report.html</code></td>
+                  <td>
+                    启用 <code>--visualize</code> 或 <code>VISUALIZE=1</code> 时生成的本地交互式 HTML 报告。
+                    在浏览器中打开后，可以查看执行视频、进度曲线、实时帧指标、里程碑，
+                    以及可排序的模型级、模型-任务级和单案例指标表。
+                  </td>
+                </tr>
+                <tr>
+                  <td><code>visualizations/case_plots.csv</code></td>
+                  <td>生成的单案例图像索引。</td>
+                </tr>
+                <tr>
+                  <td><code>visualizations/cases/*.png</code></td>
+                  <td>安装 <code>matplotlib</code> 时生成的原始和处理后进度曲线图。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            HTML 报告面向评估后的本地检查。它使用 manifest 或运行输出中记录的视频路径，
+            因此只要这些文件仍在用户机器上可用，视频就可以播放。如果一次运行已经完成，
+            也可以稍后使用 <code>prm-judge visualize</code> 重新生成相同的报告。
+          </p>
+
+          <p>在一次运行完成后生成可视化结果：</p>
+          <pre><code>prm-judge visualize --run-root eval/results/run_YYMMDD_HHMMSS</code></pre>
+        </section>
+
+        <section id="zh-defaults">
+          <h2>默认设置</h2>
+          <p>
+            默认设置的选择目标是让首次运行简单且可复现。在为速度、采样密度或不同 PRM 后端
+            调优之前，可以把它作为基线配置。
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>设置</th>
+                  <th>默认值</th>
+                  <th>适用调整场景</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>PRM 后端</td>
+                  <td><code>dopamine</code></td>
+                  <td>当你需要 <code>robometer</code> 这样的序列式后端，或自定义适配器时。</td>
+                </tr>
+                <tr>
+                  <td>Dopamine 模式</td>
+                  <td><code>backward</code></td>
+                  <td>当目标证据较弱，或你需要局部逐步进度估计时。</td>
+                </tr>
+                <tr>
+                  <td>帧间隔</td>
+                  <td><code>72</code></td>
+                  <td>当短任务或快速任务需要更密集的曲线，或长视频需要更快推理时。</td>
+                </tr>
+                <tr>
+                  <td>批大小</td>
+                  <td><code>10</code></td>
+                  <td>当显存受限，或希望在更大 GPUs 上获得更高吞吐时。</td>
+                </tr>
+                <tr>
+                  <td>GPU 选择</td>
+                  <td><code>GPUS=0</code></td>
+                  <td>当你有多个本地 GPUs，并希望把案例分片到不同设备时。</td>
+                </tr>
+                <tr>
+                  <td>异常值移除</td>
+                  <td>局部中位数替换</td>
+                  <td>当你的 PRM 已经稳定，或你正在审计原始模型行为时。</td>
+                </tr>
+                <tr>
+                  <td>平滑</td>
+                  <td><code>[0.1, 0.2, 0.4, 0.2, 0.1]</code></td>
+                  <td>当噪声很大或进度变化很快，需要更窄或更宽的时间窗口时。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="zh-choose-backend">
+          <h2>选择后端</h2>
+          <p>
+            该工具包可以使用不同 PRM 后端评估执行过程。默认 Dopamine 后端已经适合首次运行；
+            当任务需要不同进度估计器时，你可以切换到 RoboMeter、recorded 曲线或自己的 PRM。
+            一旦后端生成进度曲线，后续后处理和指标流水线都是共享的。
+          </p>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>使用场景</th>
+                  <th>推荐后端</th>
+                  <th>原因</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>首次运行或常规批量评估</td>
+                  <td><code>dopamine</code> 配合 <code>EVAL_MODE=backward</code></td>
+                  <td>稳定的默认选择，提供简单的一条命令路径，并且可用于单视角或三视角。</td>
+                </tr>
+                <tr>
+                  <td>重复或依赖上下文的动作</td>
+                  <td><code>robometer</code></td>
+                  <td>序列式评判相比局部成对比较可以使用更长的时间上下文。</td>
+                </tr>
+                <tr>
+                  <td>不加载模型调试指标</td>
+                  <td><code>recorded</code></td>
+                  <td>使用 manifest 中的 <code>progress</code> 或 <code>progress_path</code>。</td>
+                </tr>
+                <tr>
+                  <td>你自己的 PRM 或奖励模型</td>
+                  <td>自定义适配器</td>
+                  <td>返回 <code>[0, 1]</code> 中的绝对进度，或在计算指标前配置归一化。适配器步骤见 <a href="#zh-custom-prm">自定义 PRM</a>。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="zh-modes">
+          <h2>Dopamine 模式</h2>
+          <p>
+            Robo-Dopamine 是成对比较式 PRM。它通过三种比较模式之一对采样状态
+            打分，构建进度曲线。
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>模式</th>
+                  <th>比较对象</th>
+                  <th>进度解释方式</th>
+                  <th>适用场景</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>backward</code></td>
+                  <td>将目标图像作为 <code>before</code>，当前采样状态作为 <code>after</code>。</td>
+                  <td>模型分数会用 <code>progress = 1 + score</code> 转换为进度。</td>
+                  <td>默认 v1.5 模式。适用于可提供目标图像或目标占位图的情况。</td>
+                </tr>
+                <tr>
+                  <td><code>forward</code></td>
+                  <td>将起始帧作为 <code>before</code>，当前采样状态作为 <code>after</code>。</td>
+                  <td>模型分数被视为当前绝对进度估计。</td>
+                  <td>当从起点到当前状态的变化比到目标图像的距离更容易判断时使用。</td>
+                </tr>
+                <tr>
+                  <td><code>incremental</code></td>
+                  <td>将上一采样状态作为 <code>before</code>，当前采样状态作为 <code>after</code>。</td>
+                  <td>模型分数被视为局部进度变化，并随时间累积。</td>
+                  <td>用于局部逐步变化分析。如果相邻采样点过于相似，可考虑更大的 <code>FRAME_INTERVAL</code>。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>示例：</p>
+          <pre><code>EVAL_MODE=backward MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh
+EVAL_MODE=forward MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh
+EVAL_MODE=incremental FRAME_INTERVAL=96 MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh</code></pre>
+
+          <div class="callout">
+            成对比较式评判在重复或依赖上下文的动作中可能表现受限，因为局部成对比较可能无法揭示
+            策略是否正在取得进度，还是只是在来回移动。对于这些案例，可以与 RoboMeter
+            这类序列式后端的结果进行比较。
+          </div>
+        </section>
+
+        <section id="zh-multi-view">
+          <h2>视角和目标图像</h2>
+          <p>
+            多视角和目标图像输入是可选的，但在操作任务中，
+            当进度会被单一摄像头遮挡时，它们通常可以提升评判质量。
+          </p>
+
+          <h3>推荐视角名称</h3>
+          <ul>
+            <li><code>high</code>：第三人称或俯视视角。这是 RoboMeter 的默认视角。</li>
+            <li><code>left</code>：左腕部相机。</li>
+            <li><code>right</code>：右腕部相机。</li>
+          </ul>
+
+          <p>
+            对于 Robo-Dopamine，manifest 加载器会将 <code>high</code>、<code>left</code>
+            和 <code>right</code> 映射到 <code>cam_high</code>、<code>cam_left_wrist</code>
+            和 <code>cam_right_wrist</code>。如果只提供了一个 <code>video</code>，
+            适配器会将其复用于所有相机槽位，因此快速测试也可以运行。
+          </p>
+
+          <p>
+            对于 RoboMeter，当前 HTTP 适配器会从 manifest 中选择一个视角进行评估。
+            对于多视角输入，默认使用 <code>cam_high</code>。你可以传入
+            <code>left</code> 和 <code>right</code> 等别名，也可以传入
+            <code>cam_left_wrist</code> 等规范名称。如果请求了非默认视角但该视角缺失，
+            案例会失败，而不是静默回退到其他相机。
+          </p>
+          <pre><code>PRM=robometer ROBOMETER_VIEW=left MANIFEST=cases.jsonl bash eval/run_eval.sh</code></pre>
+
+          <h3>何时添加目标图像</h3>
+          <ul>
+            <li>当期望的最终布局很具体时使用 <code>goal_image</code>，例如对象布局、颜色顺序或目标容器。</li>
+            <li>对于语言指令已经足够的简单语义任务，可以省略。</li>
+            <li>如果省略，而后端需要图像字段，运行器可以回退到 <code>eval/examples/blank.png</code>。</li>
+          </ul>
+        </section>
+
+        <section id="zh-multi-gpu">
+          <h2>Multi-GPU</h2>
+          <p>
+            默认使用一个 GPU，以保持命令可预测。在更大的批次上，可以设置
+            <code>GPUS</code> 或传入 <code>--gpus</code>，将案例分片到本地设备。
+          </p>
+
+          <pre><code>GPUS=0,1,2,3 MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh</code></pre>
+
+          <p>
+            每个 worker 会在分配到的 GPU 上加载一个 PRM 实例，处理自己的分片，
+            运行器最后合并分片输出。这是简单的本地数据并行，
+            通常足以处理评估批次。
+          </p>
+
+          <p>
+            也可以让运行器自动选择 GPUs。在当前实现中，<code>GPUS=auto</code> 会查询
+            <code>nvidia-smi</code>，选择已用显存低于 1024 MiB 的设备；
+            如果没有找到这样的设备，则回退到 GPU 0。
+          </p>
+          <pre><code>GPUS=auto MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh</code></pre>
+
+          <p>
+            对于 RoboMeter multi-GPU runs，每个分片会使用
+            <code>ROBOMETER_SERVER_PORT + shard_index</code> 作为自动启动服务器的端口。
+            因此，当同一台机器上运行多个评估时，请选择空闲的基础端口。
+          </p>
+        </section>
+
+        <section id="zh-progress-standard">
+          <h2>进度标准</h2>
+          <p>
+            指标栈消费归一化绝对进度曲线。每个 PRM 适配器最终都应产生：
+          </p>
+          <pre><code>progress[t] in [0, 1]</code></pre>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>PRM 输出</th>
+                  <th>计算指标前的转换方式</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>[0, 1]</code> 中的绝对进度</td>
+                  <td>直接使用，然后裁剪小的数值溢出。</td>
+                </tr>
+                <tr>
+                  <td><code>[0, 100]</code> 中的绝对进度</td>
+                  <td>使用 <code>--normalize 0_100</code> 除以 100。</td>
+                </tr>
+                <tr>
+                  <td>逐步增量进度</td>
+                  <td>使用 <code>--source-type delta</code>，随时间累积，然后裁剪到 <code>[0, 1]</code>。</td>
+                </tr>
+                <tr>
+                  <td>未校准的奖励或相似度</td>
+                  <td>在指标计算前添加适配器专用校准。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            不要强制曲线单调。回退和振荡是有意义的信号，
+            会被回撤、恢复、停滞和 regret 指标使用。
+            结果应同时存储 <code>progress_raw</code> 和 <code>progress_processed</code>。
+          </p>
+        </section>
+
+        <section id="zh-postprocess">
+          <h2>后处理</h2>
+          <p>默认流水线是模块化的：</p>
+          <ol>
+            <li>将 PRM 输出归一化为 <code>[0, 1]</code> 中的绝对进度。</li>
+            <li>将数值裁剪到 <code>[0, 1]</code>。</li>
+            <li>用局部中位数替换孤立的局部异常值。默认阈值为 <code>0.35</code>。</li>
+            <li>使用加权时间窗口进行平滑。</li>
+          </ol>
+
+          <pre><code>p'_t = 0.1*p_{t-2} + 0.2*p_{t-1} + 0.4*p_t + 0.2*p_{t+1} + 0.1*p_{t+2}</code></pre>
+
+          <p>
+            这个默认设置旨在减少孤立尖峰和锯齿状伪影，同时不掩盖真实回退。
+            当人类能看到清晰上升趋势，但局部成对判断在有进度和无进度之间交替时，
+            它尤其有用。
+          </p>
+
+          <p>当你在调试原始 PRM 行为时，可以禁用后处理：</p>
+          <pre><code>prm-judge eval --manifest cases.jsonl --outlier-method none --smoothing none</code></pre>
+
+          <p>从 CLI 修改平滑权重：</p>
+          <pre><code>prm-judge eval --manifest cases.jsonl --smoothing-weights 0.05,0.15,0.6,0.15,0.05</code></pre>
+
+          <p>
+            权重列表应为奇数长度、非负，并且总和为正。它会被自动归一化。
+            如果需要更深度的自定义，请编辑 <code>eval/prm_judge/curves.py</code>，
+            尤其是 <code>parse_smoothing_weights</code>、<code>weighted_smooth</code>
+            和 <code>PostprocessConfig.smoothing_weights</code>。
+          </p>
+        </section>
+
+        <section id="zh-metrics">
+          <h2>指标</h2>
+          <p>
+            除非另有说明，指标会从处理后的进度曲线计算得到。
+            使用原始曲线进行调试，使用处理后曲线生成默认评估报告。
+          </p>
+
+          <h3>案例级指标</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>指标</th>
+                  <th>解释</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>MaxP</code></td>
+                  <td>达到的最大进度。对于失败但接近成功的执行案例很有用。</td>
+                </tr>
+                <tr>
+                  <td><code>M25</code>, <code>M50</code>, <code>M75</code></td>
+                  <td>里程碑指示器，表示执行过程是否跨过对应进度阈值。</td>
+                </tr>
+                <tr>
+                  <td><code>SR</code></td>
+                  <td>成功阈值下的成功指示器，默认 <code>0.99</code>。</td>
+                </tr>
+                <tr>
+                  <td><code>PPL</code></td>
+                  <td>以最佳达到进度为锚点的进度加权路径长度。</td>
+                </tr>
+                <tr>
+                  <td><code>CRA</code></td>
+                  <td>回退之后的 cumulative regret。应在相似成功或进度条件下比较。</td>
+                </tr>
+                <tr>
+                  <td><code>Stag</code></td>
+                  <td>近停滞状态转换的比例。应结合视频长度和数据采集方式一起解读。</td>
+                </tr>
+                <tr>
+                  <td><code>MDD</code></td>
+                  <td>最大进度回撤。</td>
+                </tr>
+                <tr>
+                  <td><code>Rec</code></td>
+                  <td>最深回撤谷底之后恢复的进度。</td>
+                </tr>
+                <tr>
+                  <td><code>DRR</code></td>
+                  <td>稳健性分数，近似为 <code>(Rec + epsilon) / (MDD + epsilon)</code>，并裁剪到 1。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>组级 v1.5 指标</h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>指标</th>
+                  <th>适用对象</th>
+                  <th>含义</th>
+                  <th>默认公式</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>MaxP-F</code></td>
+                  <td>失败轨迹</td>
+                  <td>失败执行案例在失败前走到了多远。</td>
+                  <td>对 <code>SR_trace = 0</code> 的轨迹取 <code>MaxP</code> 均值。</td>
+                </tr>
+                <tr>
+                  <td><code>FNS</code></td>
+                  <td>失败轨迹</td>
+                  <td>失败执行案例的近成功质量，结合最佳达到进度和里程碑跨越情况。</td>
+                  <td><code>0.5 * MaxP + 0.3 * M75 + 0.2 * M50</code>；成功轨迹贡献 <code>0</code>。</td>
+                </tr>
+                <tr>
+                  <td><code>SQS</code></td>
+                  <td>成功轨迹</td>
+                  <td>成功案例中的执行质量，奖励高效、低 regret、低停滞曲线。</td>
+                  <td><code>0.5 * PPL + 0.3 * (1 - CRA) + 0.2 * (1 - Stag)</code>；失败轨迹贡献 <code>0</code>。</td>
+                </tr>
+                <tr>
+                  <td><code>RBS</code></td>
+                  <td>全部轨迹</td>
+                  <td>最大回撤之后的稳健性。</td>
+                  <td>轨迹 <code>min(1, (Rec + epsilon) / (MDD + epsilon))</code> 的均值。</td>
+                </tr>
+                <tr>
+                  <td><code>OAS</code></td>
+                  <td>全部轨迹</td>
+                  <td>综合成功、失败案例进度、恢复和成功质量的整体审计分数。</td>
+                  <td><code>0.3 * SQS_trace + 0.2 * FNS_trace + 0.2 * RBS_trace + 0.3 * SR_trace</code>，再对轨迹求均值。</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout">
+            有些诊断是有条件的。例如，<code>CRA</code> 在比较达成相似进度的执行案例
+            时最有信息量。完全停滞的曲线可能 regret 很低，但仍然是差的执行过程。
+            默认情况下，成功分组使用 <code>MaxP >= --success-threshold</code>；
+            只有当基准标签应定义 success 和 failure 时，才使用
+            <code>--success-source label</code>。
+          </div>
+        </section>
+
+       <section id="zh-custom-prm">
+          <h2>自定义 PRM</h2>
+          <p>
+            工具包将两个职责分离：PRM 适配器生成进度曲线，
+            指标栈基于标准化曲线计算诊断结果。因此，除了 Dopamine 以外，
+            也可以使用其他 PRMs。
+          </p>
+
+          <h3>最小集成步骤</h3>
+          <ol>
+            <li>在 <code>eval/prm_judge/prm/</code> 下创建新的适配器文件，并继承 <code>BasePRMAdapter</code>。</li>
+            <li>实现 <code>predict(case, output_dir)</code>，让它读取 manifest 案例、运行你的 PRM，并返回 <code>ProgressTrace</code>。</li>
+            <li>在 <code>eval/prm_judge/cli.py</code> 中注册后端名称：将其加入 <code>--prm</code> 选项列表，并在 <code>build_adapter</code> 中创建适配器。</li>
+            <li>确保返回的进度是绝对 <code>[0, 1]</code>，或者使用匹配的 <code>--normalize</code> 和 <code>--source-type</code> 选项运行。</li>
+            <li>使用 <code>prm-judge eval --prm your_backend --manifest cases.jsonl</code> 进行评估。</li>
+          </ol>
+
+          <h3>适配器检查清单</h3>
+          <ul>
+            <li>读取 <code>EvalCase</code> 字段，例如视频、任务文本、目标图像和元数据。</li>
+            <li>运行你的 PRM，并返回与采样帧或视频时间对齐的进度序列。</li>
+            <li>判断输出是绝对进度、逐步增量，还是其他分数。</li>
+            <li>判断尺度是 <code>[0, 1]</code>、<code>[0, 100]</code>，还是未校准。</li>
+            <li>优先返回 <code>[0, 1]</code> 中的绝对进度。如果不是，请为整次运行传入匹配的 <code>--normalize</code> 和 <code>--source-type</code> 选项。</li>
+          </ul>
+
+          <pre><code>from prm_judge.prm.base import BasePRMAdapter
+from prm_judge.schema import EvalCase, ProgressTrace
+
+class MyAdapter(BasePRMAdapter):
+    def predict(self, case: EvalCase, output_dir):
+        scores = run_my_model(case.videos, case.task, case.goal_image)
+        return ProgressTrace(
+            case_id=case.case_id,
+            progress=scores,
+            source_scale="0_1",
+            source_type="absolute",
+        )</code></pre>
+
+          <p>
+            <code>eval/prm_judge/prm/</code> 下的现有适配器可以作为模板。
+            <code>recorded.py</code> 是最小示例，<code>robometer.py</code>
+            展示了如何包装外部模型服务。请在你的适配器旁边记录模型的输出尺度、
+            语义、必需视角、目标图像行为和运行时要求。
+          </p>
+
+          <h3>以 RoboMeter 为例</h3>
+          <p>
+            RoboMeter 通过 HTTP 适配器集成为序列式后端。它将
+            <code>outputs_progress.progress_pred</code> 读取为 <code>[0, 1]</code>
+            中的绝对进度曲线。由于它会基于更长的序列进行推理，
+            因此对于局部成对评判不够充分的重复动作案例，
+            它是一个有用的比较对象。
+          </p>
+          <p>
+            当复用已有 RoboMeter 服务器时，PRM-as-a-Judge 会检查 <code>/model_info</code>，
+            并要求服务器模型路径与 <code>PRM_PATH</code> 匹配。这有助于避免误用旧 checkpoint
+            进行评估。适配器会以 <code>.npy</code> multipart files 上传帧数组，
+            从而让长视频请求更易处理。
+          </p>
+        </section>
+
+        <section id="zh-recipes">
+          <h2>常用命令</h2>
+
+          <h3>不移动文件，批量评估大量视频</h3>
+          <pre><code>MANIFEST=/data/my_rollouts/cases.jsonl \
+PRM_PATH=/models/Robo-Dopamine-GRM-8B-Pro \
+OUTPUT_ROOT=eval/results/my_rollouts \
+bash eval/run_eval.sh</code></pre>
+
+          <h3>使用全部四个本地 GPUs</h3>
+          <pre><code>GPUS=0,1,2,3 MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh</code></pre>
+
+          <h3>为短操作任务运行更密集的曲线</h3>
+          <pre><code>FRAME_INTERVAL=36 MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh</code></pre>
+
+          <h3>使用 benchmark labels 进行成功分组</h3>
+          <pre><code>prm-judge eval --manifest cases.jsonl --success-source label --visualize</code></pre>
+
+          <h3>花费 GPU 时间前检查 manifest</h3>
+          <pre><code>prm-judge eval --manifest cases.jsonl --prm recorded --dry-run --limit 10</code></pre>
+
+          <h3>比较原始进度和处理后进度</h3>
+          <pre><code>prm-judge eval --manifest cases.jsonl --outlier-method none --smoothing none --visualize
+prm-judge eval --manifest cases.jsonl --visualize</code></pre>
+        </section>
+
+      </article>
     </main>
   </div>
+
+  <script>
+    (function () {
+      var body = document.body;
+      var button = document.getElementById('langToggle');
+      var storageKey = 'prmJudgeDocLanguage';
+
+      function setLanguage(lang) {
+        var normalized = lang === 'zh' ? 'zh' : 'en';
+        body.setAttribute('data-lang', normalized);
+        document.documentElement.setAttribute('lang', normalized === 'zh' ? 'zh-CN' : 'en');
+        document.title = normalized === 'zh'
+          ? 'PRM-as-a-Judge v1.5 用户指南'
+          : 'PRM-as-a-Judge v1.5 User Guide';
+        try {
+          window.localStorage.setItem(storageKey, normalized);
+        } catch (error) {
+          // Ignore storage errors in restricted browser contexts.
+        }
+      }
+
+      var initialLanguage = 'en';
+      try {
+        initialLanguage = window.localStorage.getItem(storageKey) || 'en';
+      } catch (error) {
+        initialLanguage = 'en';
+      }
+
+      setLanguage(initialLanguage);
+
+      button.addEventListener('click', function () {
+        setLanguage(body.getAttribute('data-lang') === 'zh' ? 'en' : 'zh');
+      });
+    })();
+  </script>
 </body>
 </html>
