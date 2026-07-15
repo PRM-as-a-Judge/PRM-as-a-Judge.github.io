@@ -253,7 +253,7 @@ bash eval/run_eval.sh</code></pre>
           <h3>Main View with a Single-Arm Robot Wrist View</h3>
           <pre><code>{"case_id":"case_002","task_name":"put_can","task":"put the can into the basket","video":"high.mp4","wrist_video":"wrist.mp4"}</code></pre>
 
-          <h3>Main View with Separate Left and Right Wrist Views</h3>
+          <h3>Main View with Bimanual Robot Wrist Views</h3>
           <pre><code>{"case_id":"case_003","task_name":"put_can","task":"put the can into the basket","video":"high.mp4","left_wrist_video":"left.mp4","right_wrist_video":"right.mp4"}</code></pre>
 
           <h3>With Goal Image and Benchmark Label</h3>
@@ -594,11 +594,11 @@ EVAL_MODE=incremental FRAME_INTERVAL=96 MANIFEST=cases.jsonl PRM_PATH=/path/to/p
           </ul>
 
           <p>
-            Use <code>wrist_video</code> for a single-arm robot or the separate left/right
+            Use <code>wrist_video</code> for a single-arm robot or the left/right wrist
             pair for a bimanual robot, not both.
             For Robo-Dopamine, the adapter expands <code>video</code> into the main
             camera slot, reuses <code>wrist_video</code> for both wrist slots, or maps
-            the separate wrist fields one-to-one. If only <code>video</code> is provided,
+            the bimanual left/right wrist fields one-to-one. If only <code>video</code> is provided,
             the adapter reuses it for all camera slots so quick tests still work.
             Older <code>videos</code> objects with <code>high</code>, <code>left</code>,
             and <code>right</code> remain readable for compatibility.
@@ -1047,7 +1047,7 @@ bash eval/run_eval.sh</code></pre>
           <h3>主视角加单臂机器人腕部视角</h3>
           <pre><code>{"case_id":"case_002","task_name":"put_can","task":"put the can into the basket","video":"high.mp4","wrist_video":"wrist.mp4"}</code></pre>
 
-          <h3>主视角加独立左右腕视角</h3>
+          <h3>主视角加双臂机器人左右腕视角</h3>
           <pre><code>{"case_id":"case_003","task_name":"put_can","task":"put the can into the basket","video":"high.mp4","left_wrist_video":"left.mp4","right_wrist_video":"right.mp4"}</code></pre>
 
           <h3>带目标图像和基准标签</h3>
@@ -1384,10 +1384,10 @@ EVAL_MODE=incremental FRAME_INTERVAL=96 MANIFEST=cases.jsonl PRM_PATH=/path/to/p
           </ul>
 
           <p>
-            单臂机器人使用 <code>wrist_video</code>，双臂机器人使用独立左右腕字段，
+            单臂机器人使用 <code>wrist_video</code>，双臂机器人使用左右腕字段，
             两种形式二选一，不能同时使用。
             对于 Robo-Dopamine，适配器会将 <code>video</code> 用作主相机，
-            将 <code>wrist_video</code> 同时用于两个腕部槽位，或者将独立左右腕字段
+            将 <code>wrist_video</code> 同时用于两个腕部槽位，或者将双臂机器人的左右腕字段
             一一映射。如果只提供 <code>video</code>，适配器会将其复用于所有相机槽位，
             因此快速测试也可以运行。旧版包含 <code>high</code>、<code>left</code>
             和 <code>right</code> 的 <code>videos</code> 对象仍可兼容读取。
