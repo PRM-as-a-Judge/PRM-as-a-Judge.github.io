@@ -250,14 +250,17 @@ bash eval/run_eval.sh</code></pre>
           <h3>Single View</h3>
           <pre><code>{"case_id":"case_001","task_name":"put_can","task":"put the can into the basket","video":"videos/case_001.mp4"}</code></pre>
 
-          <h3>Multi-View</h3>
-          <pre><code>{"case_id":"case_002","task_name":"put_can","task":"put the can into the basket","videos":{"high":"high.mp4","left":"left.mp4","right":"right.mp4"}}</code></pre>
+          <h3>Main View with a Single-Arm Robot Wrist View</h3>
+          <pre><code>{"case_id":"case_002","task_name":"put_can","task":"put the can into the basket","video":"high.mp4","wrist_video":"wrist.mp4"}</code></pre>
+
+          <h3>Main View with Separate Left and Right Wrist Views</h3>
+          <pre><code>{"case_id":"case_003","task_name":"put_can","task":"put the can into the basket","video":"high.mp4","left_wrist_video":"left.mp4","right_wrist_video":"right.mp4"}</code></pre>
 
           <h3>With Goal Image and Benchmark Label</h3>
-          <pre><code>{"case_id":"case_003","task_name":"arrange_flowers","task":"arrange the flowers in the vase","videos":{"high":"h.mp4","left":"l.mp4","right":"r.mp4"},"goal_image":"goal.png","label":"success","benchmark":"RoboTwin","model":"pi0"}</code></pre>
+          <pre><code>{"case_id":"case_004","task_name":"arrange_flowers","task":"arrange the flowers in the vase","video":"h.mp4","wrist_video":"w.mp4","goal_image":"goal.png","label":"success","benchmark":"RoboTwin","model":"pi0"}</code></pre>
 
           <h3>With Precomputed Progress</h3>
-          <pre><code>{"case_id":"case_004","task_name":"open_drawer","task":"open the drawer","video":"drawer.mp4","progress_path":"curves/case_004.json"}</code></pre>
+          <pre><code>{"case_id":"case_005","task_name":"open_drawer","task":"open the drawer","video":"drawer.mp4","progress_path":"curves/case_005.json"}</code></pre>
 
           <div class="table-wrap">
             <table>
@@ -281,13 +284,23 @@ bash eval/run_eval.sh</code></pre>
                 </tr>
                 <tr>
                   <td><code>video</code></td>
-                  <td>&#9679; Required: choose one of <code>video</code> or <code>videos</code></td>
-                  <td>Single rollout video path. The Dopamine adapter can reuse it for all camera slots.</td>
+                  <td>&#9679; Required</td>
+                  <td>Main rollout video path, normally a third-person or overhead view. If no wrist fields are provided, the Dopamine adapter reuses it for all camera slots.</td>
+                </tr>
+                <tr>
+                  <td><code>wrist_video</code></td>
+                  <td>&#9675; Optional</td>
+                  <td>The wrist-camera path of a single-arm robot. Dopamine duplicates it into the two wrist input slots required by the backend. Do not combine it with the bimanual wrist fields.</td>
+                </tr>
+                <tr>
+                  <td><code>left_wrist_video</code> / <code>right_wrist_video</code></td>
+                  <td>&#9675; Optional pair</td>
+                  <td>Left and right wrist-camera paths for a bimanual robot. The two fields must be provided together and cannot be combined with <code>wrist_video</code>.</td>
                 </tr>
                 <tr>
                   <td><code>videos</code></td>
-                  <td>&#9679; Required: choose one of <code>video</code> or <code>videos</code></td>
-                  <td>Object containing view-specific paths, usually <code>high</code>, <code>left</code>, and <code>right</code>.</td>
+                  <td>Legacy compatibility only</td>
+                  <td>Older objects using aliases such as <code>high</code>, <code>left</code>, and <code>right</code> remain readable, but new manifests should use the four top-level video fields.</td>
                 </tr>
                 <tr>
                   <td><code>task_name</code></td>
@@ -573,30 +586,37 @@ EVAL_MODE=incremental FRAME_INTERVAL=96 MANIFEST=cases.jsonl PRM_PATH=/path/to/p
             single camera.
           </p>
 
-          <h3>Recommended view names</h3>
+          <h3>Canonical video fields</h3>
           <ul>
-            <li><code>high</code>: third-person or overhead view. This is the default view for RoboMeter.</li>
-            <li><code>left</code>: left wrist camera.</li>
-            <li><code>right</code>: right wrist camera.</li>
+            <li><code>video</code>: required main, third-person, or overhead view. This is the default view for RoboMeter.</li>
+            <li><code>wrist_video</code>: the only wrist camera of a single-arm robot. Dopamine duplicates it into the backend's two wrist input slots.</li>
+            <li><code>left_wrist_video</code> and <code>right_wrist_video</code>: the left and right wrist cameras of a bimanual robot; provide both fields together.</li>
           </ul>
 
           <p>
-            For Robo-Dopamine, the manifest loader maps <code>high</code>,
-            <code>left</code>, and <code>right</code> to <code>cam_high</code>,
-            <code>cam_left_wrist</code>, and <code>cam_right_wrist</code>. If only one
-            <code>video</code> is provided, the adapter reuses it for all camera slots
-            so quick tests still work.
+            Use <code>wrist_video</code> for a single-arm robot or the separate left/right
+            pair for a bimanual robot, not both.
+            For Robo-Dopamine, the adapter expands <code>video</code> into the main
+            camera slot, reuses <code>wrist_video</code> for both wrist slots, or maps
+            the separate wrist fields one-to-one. If only <code>video</code> is provided,
+            the adapter reuses it for all camera slots so quick tests still work.
+            Older <code>videos</code> objects with <code>high</code>, <code>left</code>,
+            and <code>right</code> remain readable for compatibility.
           </p>
 
           <p>
             For RoboMeter, the current HTTP adapter evaluates one selected view from
-            the manifest. With multi-view input it uses <code>cam_high</code> by
-            default. You may pass aliases such as <code>left</code> and
-            <code>right</code>, or canonical names such as
-            <code>cam_left_wrist</code>. If you request a non-default view and that
-            view is missing, the case fails instead of silently using another camera.
+            the manifest and uses <code>video</code> by default. Set
+            <code>ROBOMETER_VIEW</code> to <code>wrist_video</code>,
+            <code>left_wrist_video</code>, or <code>right_wrist_video</code> to choose
+            another view. For a single-arm case, its <code>wrist_video</code> can
+            satisfy either left- or right-wrist selection required by the adapter.
+            Old aliases such as
+            <code>high</code>, <code>left</code>, and <code>right</code> are still accepted.
+            Other missing non-default views raise an error instead of silently using
+            another camera.
           </p>
-          <pre><code>PRM=robometer ROBOMETER_VIEW=left MANIFEST=cases.jsonl bash eval/run_eval.sh</code></pre>
+          <pre><code>PRM=robometer ROBOMETER_VIEW=left_wrist_video MANIFEST=cases.jsonl bash eval/run_eval.sh</code></pre>
 
           <h3>When to add a goal image</h3>
           <ul>
@@ -1024,14 +1044,17 @@ bash eval/run_eval.sh</code></pre>
           <h3>单视角</h3>
           <pre><code>{"case_id":"case_001","task_name":"put_can","task":"put the can into the basket","video":"videos/case_001.mp4"}</code></pre>
 
-          <h3>多视角</h3>
-          <pre><code>{"case_id":"case_002","task_name":"put_can","task":"put the can into the basket","videos":{"high":"high.mp4","left":"left.mp4","right":"right.mp4"}}</code></pre>
+          <h3>主视角加单臂机器人腕部视角</h3>
+          <pre><code>{"case_id":"case_002","task_name":"put_can","task":"put the can into the basket","video":"high.mp4","wrist_video":"wrist.mp4"}</code></pre>
+
+          <h3>主视角加独立左右腕视角</h3>
+          <pre><code>{"case_id":"case_003","task_name":"put_can","task":"put the can into the basket","video":"high.mp4","left_wrist_video":"left.mp4","right_wrist_video":"right.mp4"}</code></pre>
 
           <h3>带目标图像和基准标签</h3>
-          <pre><code>{"case_id":"case_003","task_name":"arrange_flowers","task":"arrange the flowers in the vase","videos":{"high":"h.mp4","left":"l.mp4","right":"r.mp4"},"goal_image":"goal.png","label":"success","benchmark":"RoboTwin","model":"pi0"}</code></pre>
+          <pre><code>{"case_id":"case_004","task_name":"arrange_flowers","task":"arrange the flowers in the vase","video":"h.mp4","wrist_video":"w.mp4","goal_image":"goal.png","label":"success","benchmark":"RoboTwin","model":"pi0"}</code></pre>
 
           <h3>带预计算进度</h3>
-          <pre><code>{"case_id":"case_004","task_name":"open_drawer","task":"open the drawer","video":"drawer.mp4","progress_path":"curves/case_004.json"}</code></pre>
+          <pre><code>{"case_id":"case_005","task_name":"open_drawer","task":"open the drawer","video":"drawer.mp4","progress_path":"curves/case_005.json"}</code></pre>
 
           <div class="table-wrap">
             <table>
@@ -1055,13 +1078,23 @@ bash eval/run_eval.sh</code></pre>
                 </tr>
                 <tr>
                   <td><code>video</code></td>
-                  <td>&#9679; 必需：在 <code>video</code> 和 <code>videos</code> 中选择一个</td>
-                  <td>单个执行视频路径。Dopamine 适配器可以将其复用于所有相机槽位。</td>
+                  <td>&#9679; 必需</td>
+                  <td>主视角执行视频路径，通常为第三人称或俯视视角。如果没有提供腕部字段，Dopamine 适配器会将其复用于所有相机槽位。</td>
+                </tr>
+                <tr>
+                  <td><code>wrist_video</code></td>
+                  <td>&#9675; 可选</td>
+                  <td>单臂机器人的唯一腕部相机路径。Dopamine 会将它复制到后端要求的两个腕部输入槽位。不能与双臂机器人的左右腕字段同时使用。</td>
+                </tr>
+                <tr>
+                  <td><code>left_wrist_video</code> / <code>right_wrist_video</code></td>
+                  <td>&#9675; 可选但必须成对</td>
+                  <td>双臂机器人的左腕和右腕相机路径。两个字段必须同时提供，并且不能与 <code>wrist_video</code> 同时使用。</td>
                 </tr>
                 <tr>
                   <td><code>videos</code></td>
-                  <td>&#9679; 必需：在 <code>video</code> 和 <code>videos</code> 中选择一个</td>
-                  <td>包含视角专用路径的对象，通常为 <code>high</code>、<code>left</code> 和 <code>right</code>。</td>
+                  <td>仅用于旧格式兼容</td>
+                  <td>旧版 <code>high</code>、<code>left</code> 和 <code>right</code> 等视角对象仍可读取，但新 manifest 应使用四个顶层视频字段。</td>
                 </tr>
                 <tr>
                   <td><code>task_name</code></td>
@@ -1343,28 +1376,33 @@ EVAL_MODE=incremental FRAME_INTERVAL=96 MANIFEST=cases.jsonl PRM_PATH=/path/to/p
             当进度会被单一摄像头遮挡时，它们通常可以提升评判质量。
           </p>
 
-          <h3>推荐视角名称</h3>
+          <h3>规范视频字段</h3>
           <ul>
-            <li><code>high</code>：第三人称或俯视视角。这是 RoboMeter 的默认视角。</li>
-            <li><code>left</code>：左腕部相机。</li>
-            <li><code>right</code>：右腕部相机。</li>
+            <li><code>video</code>：必需的主视角、第三人称或俯视视角，也是 RoboMeter 的默认视角。</li>
+            <li><code>wrist_video</code>：单臂机器人的唯一腕部相机。Dopamine 会将它复制到后端要求的两个腕部输入槽位。</li>
+            <li><code>left_wrist_video</code> 和 <code>right_wrist_video</code>：双臂机器人的左腕和右腕相机，必须成对提供。</li>
           </ul>
 
           <p>
-            对于 Robo-Dopamine，manifest 加载器会将 <code>high</code>、<code>left</code>
-            和 <code>right</code> 映射到 <code>cam_high</code>、<code>cam_left_wrist</code>
-            和 <code>cam_right_wrist</code>。如果只提供了一个 <code>video</code>，
-            适配器会将其复用于所有相机槽位，因此快速测试也可以运行。
+            单臂机器人使用 <code>wrist_video</code>，双臂机器人使用独立左右腕字段，
+            两种形式二选一，不能同时使用。
+            对于 Robo-Dopamine，适配器会将 <code>video</code> 用作主相机，
+            将 <code>wrist_video</code> 同时用于两个腕部槽位，或者将独立左右腕字段
+            一一映射。如果只提供 <code>video</code>，适配器会将其复用于所有相机槽位，
+            因此快速测试也可以运行。旧版包含 <code>high</code>、<code>left</code>
+            和 <code>right</code> 的 <code>videos</code> 对象仍可兼容读取。
           </p>
 
           <p>
             对于 RoboMeter，当前 HTTP 适配器会从 manifest 中选择一个视角进行评估。
-            对于多视角输入，默认使用 <code>cam_high</code>。你可以传入
-            <code>left</code> 和 <code>right</code> 等别名，也可以传入
-            <code>cam_left_wrist</code> 等规范名称。如果请求了非默认视角但该视角缺失，
-            案例会失败，而不是静默回退到其他相机。
+            默认使用 <code>video</code>。可以将 <code>ROBOMETER_VIEW</code> 设置为
+            <code>wrist_video</code>、<code>left_wrist_video</code> 或
+            <code>right_wrist_video</code>。对于单臂机器人，<code>wrist_video</code>
+            可以满足适配器要求的左腕或右腕选择。旧的 <code>high</code>、<code>left</code>
+            和 <code>right</code> 别名仍然可用。其他非默认视角缺失时，案例会报错，
+            而不是静默回退到其他相机。
           </p>
-          <pre><code>PRM=robometer ROBOMETER_VIEW=left MANIFEST=cases.jsonl bash eval/run_eval.sh</code></pre>
+          <pre><code>PRM=robometer ROBOMETER_VIEW=left_wrist_video MANIFEST=cases.jsonl bash eval/run_eval.sh</code></pre>
 
           <h3>何时添加目标图像</h3>
           <ul>
