@@ -1,0 +1,129 @@
+.guide-switcher {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .45rem;
+  margin: 0 0 .9rem;
+}
+
+.guide-switcher a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.35rem;
+  padding: .45rem .6rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  background: #fff;
+  color: #4f5e73;
+  font-size: .84rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.guide-switcher a:hover {
+  background: var(--accent-soft);
+  color: #214f94;
+  text-decoration: none;
+}
+
+.guide-switcher a.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: #214f94;
+}
+
+.quick-paths {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem;
+  margin: 1rem 0;
+}
+
+.quick-path {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcff;
+  padding: 1rem;
+}
+
+.quick-path h3 {
+  margin: 0 0 .45rem;
+}
+
+.quick-path p {
+  margin: 0 0 .75rem;
+}
+
+.step-note {
+  color: var(--muted);
+  font-size: .92rem;
+}
+
+.next-guide {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.4rem;
+  padding: 1rem;
+  border: 1px solid #d7e2f2;
+  border-radius: 8px;
+  background: var(--accent-soft);
+}
+
+.next-guide p {
+  margin: 0;
+}
+
+.next-guide a {
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.report-gallery {
+  display: grid;
+  gap: 1.4rem;
+  margin: 1.5rem 0 .25rem;
+}
+
+.report-shot {
+  margin: 0;
+}
+
+.report-shot a {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(24, 37, 63, .08);
+}
+
+.report-shot a:hover {
+  border-color: var(--line-strong);
+  text-decoration: none;
+}
+
+.report-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.report-shot figcaption {
+  margin-top: .55rem;
+  color: var(--muted);
+  font-size: .91rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 700px) {
+  .quick-paths {
+    grid-template-columns: 1fr;
+  }
+
+  .next-guide {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
