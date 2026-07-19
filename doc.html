@@ -145,15 +145,14 @@
         <p class="eyebrow">快速开始</p>
         <h1>PRM-as-a-Judge v1.5</h1>
         <p>
-          使用 Robo-Dopamine 运行仓库内的 3 个机器人执行案例，并生成进度曲线、
-          评测指标、汇总结果和交互式报告。
+          使用 Robo-Dopamine 运行仓库内的 3 个机器人执行案例，并生成进度曲线、评测指标、汇总结果和交互式报告。
         </p>
       </header>
 
       <article class="doc-content lang-en">
         <section id="overview">
           <h2>Choose a Workflow</h2>
-          <pre><code>Bundled videos &amp; tasks → Robo-Dopamine → progress curves → metrics &amp; report</code></pre>
+          <pre><code>Bundled videos &amp; tasks → Judge Model → progress curves → metrics &amp; report</code></pre>
           <div class="quick-paths">
             <div class="quick-path">
               <h3>Notebook</h3>
@@ -201,21 +200,26 @@ bash eval/run_eval.sh</code></pre>
           <h3>6. Open the interactive report</h3>
           <pre><code>python eval/run_judge.py serve \
   --run-root eval/results/run_YYMMDD_HHMMSS</code></pre>
-          <p>Open the report URL printed by the command.</p>
+          <p>
+            After the run completes, open the report URL printed by the command. The final performance
+            report includes the Model Leaderboard shown below, which summarizes the core metrics for
+            every evaluated model. You can also use the interactive report to filter and inspect every
+            case, including its rollout video, progress curve, and per-case metrics.
+          </p>
 
-          <div class="report-gallery" aria-label="Interactive report example">
+          <div class="report-gallery" aria-label="Final performance report example">
             <figure class="report-shot">
-              <a href="assets/images/report-trajectory-explorer.webp" target="_blank" rel="noopener">
+              <a href="assets/images/report-metrics-overview.webp" target="_blank" rel="noopener">
                 <img
-                  src="assets/images/report-trajectory-explorer.webp"
-                  alt="Interactive trajectory explorer showing a rollout video, progress curve, and case metrics"
+                  src="assets/images/report-metrics-overview.webp"
+                  alt="Final Model Leaderboard summarizing performance metrics across evaluated policy models"
                   loading="lazy"
-                  width="1600"
-                  height="955">
+                  width="2300"
+                  height="1032">
               </a>
               <figcaption>
-                After the run completes, use the interactive report to inspect the rollout video,
-                progress curve, and per-case metrics together.
+                <strong>Final performance report.</strong> The Model Leaderboard provides the final
+                model-level performance summary for the evaluation run.
               </figcaption>
             </figure>
           </div>
@@ -238,7 +242,7 @@ bash eval/run_eval.sh</code></pre>
       <article class="doc-content lang-zh">
         <section id="zh-overview">
           <h2>选择使用方式</h2>
-          <pre><code>示例视频与任务 → Robo-Dopamine → 进度曲线 → 指标与报告</code></pre>
+          <pre><code>示例视频与任务 → Judge Model → 进度曲线 → 指标与报告</code></pre>
           <div class="quick-paths">
             <div class="quick-path">
               <h3>Notebook</h3>
@@ -286,20 +290,23 @@ bash eval/run_eval.sh</code></pre>
           <h3>6. 打开交互式报告</h3>
           <pre><code>python eval/run_judge.py serve \
   --run-root eval/results/run_YYMMDD_HHMMSS</code></pre>
-          <p>在浏览器中打开命令输出的报告地址。</p>
+          <p>
+            评测完成后，在浏览器中打开命令输出的报告地址。最终性能报告会生成下图所示的
+            Model Leaderboard，汇总展示每个被评测模型的核心指标；还可以通过交互式报告筛选并逐条查看每个案例（case）的执行视频、进度曲线和单案例指标。
+          </p>
 
-          <div class="report-gallery" aria-label="交互式报告示例">
+          <div class="report-gallery" aria-label="最终性能报告示例">
             <figure class="report-shot">
-              <a href="assets/images/report-trajectory-explorer.webp" target="_blank" rel="noopener">
+              <a href="assets/images/report-metrics-overview.webp" target="_blank" rel="noopener">
                 <img
-                  src="assets/images/report-trajectory-explorer.webp"
-                  alt="同时展示执行视频、进度曲线和单案例指标的交互式轨迹查看器"
+                  src="assets/images/report-metrics-overview.webp"
+                  alt="汇总展示各策略模型性能指标的最终 Model Leaderboard"
                   loading="lazy"
-                  width="1600"
-                  height="955">
+                  width="2300"
+                  height="1032">
               </a>
               <figcaption>
-                运行完成后，可以在交互式报告中同步查看执行视频、进度曲线和单案例指标。
+                <strong>最终性能报告。</strong>Model Leaderboard 汇总展示本次评测中各模型的最终性能指标。
               </figcaption>
             </figure>
           </div>

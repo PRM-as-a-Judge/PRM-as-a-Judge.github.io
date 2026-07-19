@@ -41,9 +41,27 @@
       margin-left: 1ch;
     }
 
+    .doc-hero.lang-en h1 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.35rem;
+      font-weight: 700;
+      line-height: 1.04;
+      white-space: nowrap;
+    }
+
+    @media (min-width: 881px) and (max-width: 1120px) {
+      .doc-hero.lang-en h1 {
+        font-size: clamp(1.65rem, 3vw, 2.1rem);
+      }
+    }
+
     @media (max-width: 880px) {
       .sidebar-group-title {
         grid-column: 1 / -1;
+      }
+
+      .doc-hero.lang-en h1 {
+        font-size: clamp(.85rem, 4.5vw, 2.3rem);
       }
     }
   </style>
@@ -139,6 +157,7 @@
         <p class="sidebar-group-title">Extension &amp; Reference</p>
         <a href="#custom-prm">Integrate a Custom PRM</a>
         <a href="#recipes">Command Reference</a>
+        <a href="#faq">FAQ</a>
       </nav>
       <nav class="sidebar-panel lang-zh">
         <p class="sidebar-title">高级指南</p>
@@ -158,6 +177,7 @@
         <p class="sidebar-group-title">扩展与参考</p>
         <a href="#zh-custom-prm">接入自定义 PRM</a>
         <a href="#zh-recipes">常用命令速查</a>
+        <a href="#zh-faq">常见问题（FAQ）</a>
       </nav>
     </aside>
 
@@ -182,8 +202,7 @@
           详细介绍如何根据数据形式、计算资源、评测目标和 PRM 模型调整 PRM-as-a-Judge。
         </p>
         <p>
-          如果尚未完成首次评测，请先按照<a href="doc.html">快速开始</a>运行默认流程，
-          再调整本页介绍的配置。
+          如果尚未完成首次评测，请先按照<a href="doc.html">快速开始</a>运行默认流程，再调整本页介绍的配置。
         </p>
       </header>
 
@@ -235,17 +254,17 @@
                 <tr>
                   <td><code>video</code></td>
                   <td><strong>&#9679; Required</strong></td>
-                  <td>Main rollout video path, normally a third-person or overhead view. If no wrist fields are provided, the Dopamine adapter reuses it for all camera slots.</td>
+                  <td>Main-view rollout video path. It may be a third-person, overhead, or other view that clearly shows the operation process.</td>
                 </tr>
                 <tr>
                   <td><code>wrist_video</code></td>
                   <td>&#9675; Optional</td>
-                  <td>The wrist-camera path of a single-arm robot. Dopamine duplicates it into the two wrist input slots required by the model interface. <strong>Do not combine it with the bimanual wrist fields.</strong></td>
+                  <td>Wrist-camera path for a single-arm robot. If the selected Judge Model supports multi-view input, it automatically uses the main-view and wrist-view videos together. <strong>Do not combine it with the bimanual wrist fields.</strong></td>
                 </tr>
                 <tr>
                   <td><code>left_wrist_video</code> / <code>right_wrist_video</code></td>
                   <td>&#9675; Optional pair</td>
-                  <td>Left and right wrist-camera paths for a bimanual robot. <strong>The two fields must be provided together and cannot be combined with <code>wrist_video</code>.</strong></td>
+                  <td>Left- and right-wrist camera paths for a bimanual robot. If the selected Judge Model supports multi-view input, it automatically uses the main-view, left-wrist, and right-wrist videos together. <strong>The two fields must be provided together and cannot be combined with <code>wrist_video</code>.</strong></td>
                 </tr>
                 <tr>
                   <td><code>task_name</code></td>
@@ -365,20 +384,73 @@
   --port 8000</code></pre>
           <p>Open <code>http://127.0.0.1:8000/report.html</code>. For a remote server, keep the report service on loopback and create a tunnel from your workstation:</p>
           <pre><code>ssh -L 8000:127.0.0.1:8000 user@server</code></pre>
+          <p>
+            After the run completes, the final performance report presents a Model Leaderboard that
+            summarizes the core metrics for every evaluated model. You can also use the interactive
+            trajectory explorer to filter and inspect individual cases, including their rollout videos,
+            progress curves, live-frame values, and per-case metrics.
+          </p>
 
           <div class="report-gallery" aria-label="Visualization report examples">
             <figure class="report-shot">
               <a href="assets/images/report-metrics-overview.webp" target="_blank" rel="noopener">
                 <img
                   src="assets/images/report-metrics-overview.webp"
-                  alt="PRM-as-a-Judge report showing milestone, contribution, and outcome metric charts"
+                  alt="Final Model Leaderboard summarizing performance metrics across evaluated policy models"
                   loading="lazy"
-                  width="1600"
-                  height="1000">
+                  width="2300"
+                  height="1032">
               </a>
               <figcaption>
-                <strong>Report overview.</strong> Compare milestone reachability, metric contributions,
-                and success/failure profiles across evaluated policy models.
+                <strong>Final performance report.</strong> The Model Leaderboard summarizes the core
+                metrics for every evaluated policy model.
+              </figcaption>
+            </figure>
+
+            <figure class="report-shot">
+              <a href="assets/images/report-metric-results.webp" target="_blank" rel="noopener">
+                <img
+                  src="assets/images/report-metric-results.webp"
+                  alt="Metric Results dashboard showing Milestone Reachability and OAS Contribution charts"
+                  loading="lazy"
+                  width="2286"
+                  height="1162">
+              </a>
+              <figcaption>
+                <strong>Metric results.</strong> An example completed-run report comparing milestone
+                reachability and the weighted contributions to OAS across evaluated models.
+              </figcaption>
+            </figure>
+
+            <figure class="report-shot">
+              <a href="assets/images/report-conditional-profile.webp" target="_blank" rel="noopener">
+                <img
+                  src="assets/images/report-conditional-profile.webp"
+                  alt="Success and failure conditional profiles comparing applicable metrics across models"
+                  loading="lazy"
+                  width="2290"
+                  height="990">
+              </a>
+              <figcaption>
+                <strong>Success/failure conditional profiles.</strong> Compare failure-only diagnostics
+                on failed trajectories and execution-quality metrics on successful trajectories, with
+                the applicable sample count shown for each model.
+              </figcaption>
+            </figure>
+
+            <figure class="report-shot">
+              <a href="assets/images/report-failure-localization.webp" target="_blank" rel="noopener">
+                <img
+                  src="assets/images/report-failure-localization.webp"
+                  alt="Failure Localization and Drawdown chart with a MaxP-at-failure distribution and significant-drawdown rate"
+                  loading="lazy"
+                  width="2296"
+                  height="832">
+              </a>
+              <figcaption>
+                <strong>Failure localization and drawdown.</strong> Filter by model and task to inspect
+                where failed trajectories stopped, their average MaxP-F, and the significant-drawdown
+                rate at the selected MDD threshold.
               </figcaption>
             </figure>
 
@@ -572,12 +644,6 @@ bash eval/run_eval.sh</code></pre>
 EVAL_MODE=forward MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh
 EVAL_MODE=backward MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh</code></pre>
 
-          <div class="callout">
-            Pair-style judging can struggle with repeated or context-dependent motions
-            because a local pair may not reveal whether the policy is making progress
-            or simply moving back and forth. For these cases, compare results with a
-            sequence-style PRM model such as RoboMeter.
-          </div>
         </section>
 
         <section id="multi-view">
@@ -836,6 +902,7 @@ bash eval/run_eval.sh</code></pre>
             Use <code>--success-source label</code> only when benchmark labels should
             define success and failure.
           </div>
+
         </section>
 
        <section id="custom-prm">
@@ -843,7 +910,7 @@ bash eval/run_eval.sh</code></pre>
           <p>
             The toolkit separates two responsibilities: a PRM adapter produces a
             progress curve, and the metric stack computes diagnostics from the
-            standardized curve. This makes it possible to use PRMs beyond Dopamine.
+            standardized curve. This common interface supports both built-in and custom Judge Models.
           </p>
 
           <div class="callout">
@@ -934,14 +1001,53 @@ bash eval/run_eval.sh</code></pre>
 prm-judge eval --manifest cases.jsonl --visualize</code></pre>
         </section>
 
+        <section id="faq">
+          <h2>FAQ</h2>
+
+          <h3>1. What is <code>goal_image</code> used for?</h3>
+          <p>
+            <code>goal_image</code> is an optional parameter specific to Robo-Dopamine. It provides an
+            explicit visual reference for the completed task state, helping the model understand what
+            success should look like, reduce goal ambiguity, and improve progress-judgment accuracy.
+            Robo-Dopamine uses it as <code>REFERENCE END</code>; in <code>backward</code> mode, the goal
+            image is also compared directly with the current sampled state. Other Judge Model adapters
+            do not necessarily use this field.
+          </p>
+          <p>
+            In practice, set <code>goal_image</code> in the manifest when a reliable success-state
+            reference is available, preferably the final frame of a manually verified successful
+            demonstration or a separately captured target state. If no reliable goal image is
+            available, omit the field; the Robo-Dopamine adapter will use
+            <code>eval/examples/blank.png</code> as a placeholder, although the evaluation will not
+            benefit from an explicit goal reference. Do not use the final frame of the rollout being
+            evaluated unless that rollout is known to have succeeded, because a failure state could
+            otherwise be treated as the task goal and reduce judgment accuracy.
+          </p>
+
+          <h3>2. How does Robo-Dopamine estimate progress, and when should I use a sequence-style model?</h3>
+          <p>
+            Robo-Dopamine is a pair-style Judge Model. Depending on <code>EVAL_MODE</code>,
+            it compares two sampled images or states—for example, adjacent samples, the initial
+            state and the current state, or the current state and a goal reference—to estimate
+            relative progress. These pairwise judgments are then linked into a progress curve.
+          </p>
+          <p>
+            This local comparison works well for many robot manipulation tasks, but it can be
+            ambiguous for repeated or oscillatory motions and other tasks that depend strongly on
+            temporal context. Two images alone may not reveal whether the robot is making sustained
+            progress, repeating an action cycle, or simply moving back and forth. For these tasks,
+            use or compare against a sequence-style Judge Model such as RoboMeter, which can reason
+            over a longer temporal context.
+          </p>
+        </section>
+
       </article>
 
       <article class="doc-content lang-zh">
         <section id="zh-manifest">
           <h2>Manifest 格式</h2>
           <p>
-            默认输入为 JSONL manifest 文件，<strong>每一行描述一个执行案例</strong>。
-            路径可以是绝对路径，也可以是相对于 manifest 文件的相对路径。
+            默认输入为 JSONL manifest 文件，<strong>每一行描述一个执行案例</strong>。路径可以是绝对路径，也可以是相对于 manifest 文件的相对路径。
           </p>
 
           <h3>单视角</h3>
@@ -983,17 +1089,17 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
                 <tr>
                   <td><code>video</code></td>
                   <td><strong>&#9679; 必需</strong></td>
-                  <td>主视角执行视频路径，通常为第三人称或俯视视角。如果没有提供腕部字段，Dopamine 适配器会将其复用于所有相机槽位。</td>
+                  <td>主视角执行视频路径，可以为第三人称、俯视视角或其他能清晰展示操作过程的视角。</td>
                 </tr>
                 <tr>
                   <td><code>wrist_video</code></td>
                   <td>&#9675; 可选</td>
-                  <td>单臂机器人的唯一腕部相机路径。Dopamine 会将它复制到模型接口要求的两个腕部输入槽位。<strong>不能与双臂机器人的左右腕字段同时使用。</strong></td>
+                  <td>单臂机器人的腕部相机路径。如果所选 Judge Model 支持多视角输入，会自动同时使用主视角和腕部视角视频。<strong>不能与双臂机器人的左右腕字段同时使用。</strong></td>
                 </tr>
                 <tr>
                   <td><code>left_wrist_video</code> / <code>right_wrist_video</code></td>
                   <td>&#9675; 可选但必须成对</td>
-                  <td>双臂机器人的左腕和右腕相机路径。<strong>两个字段必须同时提供，并且不能与 <code>wrist_video</code> 同时使用。</strong></td>
+                  <td>双臂机器人的左腕和右腕相机路径。如果所选 Judge Model 支持多视角输入，会自动同时使用主视角、左腕和右腕视频。<strong>两个字段必须同时提供，并且不能与 <code>wrist_video</code> 同时使用。</strong></td>
                 </tr>
                 <tr>
                   <td><code>task_name</code></td>
@@ -1081,9 +1187,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
                 <tr>
                   <td><code>visualizations/report.html</code></td>
                   <td>
-                    启用 <code>--visualize</code> 或 <code>VISUALIZE=1</code> 时生成的本地交互式 HTML 报告。
-                    在浏览器中打开后，可以查看执行视频、进度曲线、实时帧指标、里程碑，
-                    以及可排序的模型级、模型-任务级和单案例指标表。
+                    启用 <code>--visualize</code> 或 <code>VISUALIZE=1</code> 时生成的本地交互式 HTML 报告。在浏览器中打开后，可以查看执行视频、进度曲线、实时帧指标、里程碑，以及可排序的模型级、模型-任务级和单案例指标表。
                   </td>
                 </tr>
                 <tr>
@@ -1112,19 +1216,64 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
   --port 8000</code></pre>
           <p>打开 <code>http://127.0.0.1:8000/report.html</code>。如果评估在远端服务器上运行，请保持服务只绑定 loopback，并从本机建立 SSH tunnel：</p>
           <pre><code>ssh -L 8000:127.0.0.1:8000 user@server</code></pre>
+          <p>
+            评测完成后，最终性能报告会生成 Model Leaderboard，汇总展示每个被评测模型的核心指标；还可以通过交互式轨迹查看器筛选并逐条查看每个案例（case）的执行视频、进度曲线、实时帧数值和单案例指标。
+          </p>
 
           <div class="report-gallery" aria-label="可视化报告示例">
             <figure class="report-shot">
               <a href="assets/images/report-metrics-overview.webp" target="_blank" rel="noopener">
                 <img
                   src="assets/images/report-metrics-overview.webp"
-                  alt="PRM-as-a-Judge 报告中的里程碑、指标贡献和成功失败对比图"
+                  alt="汇总展示各策略模型性能指标的最终 Model Leaderboard"
                   loading="lazy"
-                  width="1600"
-                  height="1000">
+                  width="2300"
+                  height="1032">
               </a>
               <figcaption>
-                <strong>报告总览。</strong>对比不同策略模型的里程碑达成情况、指标贡献和成功/失败轨迹特征。
+                <strong>最终性能报告。</strong>Model Leaderboard 汇总展示每个被评测策略模型的核心指标。
+              </figcaption>
+            </figure>
+
+            <figure class="report-shot">
+              <a href="assets/images/report-metric-results.webp" target="_blank" rel="noopener">
+                <img
+                  src="assets/images/report-metric-results.webp"
+                  alt="同时展示里程碑达成情况和 OAS 指标贡献的 Metric Results 报告"
+                  loading="lazy"
+                  width="2286"
+                  height="1162">
+              </a>
+              <figcaption>
+                <strong>指标结果。</strong>一次完整评测运行的示例报告，用于比较不同模型的里程碑达成情况以及各项指标对 OAS 的加权贡献。
+              </figcaption>
+            </figure>
+
+            <figure class="report-shot">
+              <a href="assets/images/report-conditional-profile.webp" target="_blank" rel="noopener">
+                <img
+                  src="assets/images/report-conditional-profile.webp"
+                  alt="按模型比较成功轨迹和失败轨迹条件指标的报告"
+                  loading="lazy"
+                  width="2290"
+                  height="990">
+              </a>
+              <figcaption>
+                <strong>成功/失败条件画像。</strong>分别比较失败轨迹适用的诊断指标和成功轨迹的执行质量指标，并显示每个模型对应的适用样本数。
+              </figcaption>
+            </figure>
+
+            <figure class="report-shot">
+              <a href="assets/images/report-failure-localization.webp" target="_blank" rel="noopener">
+                <img
+                  src="assets/images/report-failure-localization.webp"
+                  alt="展示失败位置分布和显著回撤率的 Failure Localization and Drawdown 报告"
+                  loading="lazy"
+                  width="2296"
+                  height="832">
+              </a>
+              <figcaption>
+                <strong>失败定位与回撤。</strong>按模型和任务筛选，查看失败轨迹停止的位置、平均 MaxP-F，以及所选 MDD 阈值下的显著回撤率。
               </figcaption>
             </figure>
 
@@ -1147,8 +1296,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
         <section id="zh-defaults">
           <h2>默认设置</h2>
           <p>
-            下表列出 <code>eval/run_eval.sh</code> 的主要默认配置。<strong>首次运行建议先保持默认值</strong>；
-            确认评测流程正常后，再根据视频长度、GPU 显存和评测目标进行调整。
+            下表列出 <code>eval/run_eval.sh</code> 的主要默认配置。<strong>首次运行建议先保持默认值</strong>；确认评测流程正常后，再根据视频长度、GPU 显存和评测目标进行调整。
           </p>
 
           <div class="table-wrap">
@@ -1205,8 +1353,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
           <h2>选择 PRM 评测方式</h2>
           <p>
             该工具包支持多种进度评测方式：<code>dopamine</code> 使用 Robo-Dopamine 模型并作为默认选择；
-            <code>robometer</code> 使用 RoboMeter 模型；<code>recorded</code> 不加载模型，直接读取预计算曲线；
-            自定义适配器则可以接入你自己的 PRM。获得进度曲线后，所有方式共享相同的后处理和指标流水线。
+            <code>robometer</code> 使用 RoboMeter 模型；<code>recorded</code> 不加载模型，直接读取预计算曲线；自定义适配器则可以接入你自己的 PRM。获得进度曲线后，所有方式共享相同的后处理和指标流水线。
           </p>
 
           <div class="table-wrap">
@@ -1245,8 +1392,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
 
           <h3>使用 RoboMeter 运行</h3>
           <p>
-            RoboMeter 是序列式 PRM 模型。运行器可以启动本地 RoboMeter HTTP 服务器，
-            等待 <code>/health</code>，评估案例，并在运行结束后关闭服务器。
+            RoboMeter 是序列式 PRM 模型。运行器可以启动本地 RoboMeter HTTP 服务器，等待 <code>/health</code>，评估案例，并在运行结束后关闭服务器。
           </p>
           <pre><code>PRM=robometer \
 MANIFEST=/path/to/cases.jsonl \
@@ -1260,8 +1406,7 @@ ROBOMETER_AUTO_START=0 \
 bash eval/run_eval.sh</code></pre>
 
           <div class="callout">
-            当 <code>PRM=robometer</code> 时，<code>eval/run_eval.sh</code> 会同时为运行器
-            和自动启动的服务器使用 <code>ROBOMETER_PYTHON</code>，确保可用
+            当 <code>PRM=robometer</code> 时，<code>eval/run_eval.sh</code> 会同时为运行器和自动启动的服务器使用 <code>ROBOMETER_PYTHON</code>，确保可用
             <code>decord</code> 或 <code>opencv-python</code> 等视频依赖。如果直接调用
             <code>prm-judge</code>，请在能够解码你的视频的环境中运行。
           </div>
@@ -1270,8 +1415,7 @@ bash eval/run_eval.sh</code></pre>
         <section id="zh-modes">
           <h2>Dopamine 模式</h2>
           <p>
-            Robo-Dopamine 是成对比较式 PRM。它通过三种比较模式之一对采样状态
-            打分，构建进度曲线。
+            Robo-Dopamine 是成对比较式 PRM。它通过三种比较模式之一对采样状态打分，构建进度曲线。
           </p>
           <div class="table-wrap">
             <table>
@@ -1311,11 +1455,6 @@ bash eval/run_eval.sh</code></pre>
 EVAL_MODE=forward MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh
 EVAL_MODE=backward MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh</code></pre>
 
-          <div class="callout">
-            成对比较式评判在重复或依赖上下文的动作中可能表现受限，因为局部成对比较可能无法揭示
-            策略是否正在取得进度，还是只是在来回移动。对于这些案例，可以与 RoboMeter
-            这类序列式 PRM 模型的结果进行比较。
-          </div>
         </section>
 
         <section id="zh-multi-view">
@@ -1360,10 +1499,8 @@ EVAL_MODE=backward MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval
 
           <h3>选择 RoboMeter 视角</h3>
           <p>
-            RoboMeter 每次评估一个视频视角，默认使用 <code>video</code>。如需评估腕部视角，
-            可以通过 <code>ROBOMETER_VIEW</code> 指定 <code>wrist_video</code>、
-            <code>left_wrist_video</code> 或 <code>right_wrist_video</code>。
-            所选字段必须存在，否则该案例会报错。
+            RoboMeter 每次评估一个视频视角，默认使用 <code>video</code>。如需评估腕部视角，可以通过 <code>ROBOMETER_VIEW</code> 指定 <code>wrist_video</code>、
+            <code>left_wrist_video</code> 或 <code>right_wrist_video</code>。所选字段必须存在，否则该案例会报错。
           </p>
           <pre><code>PRM=robometer \
 ROBOMETER_VIEW=left_wrist_video \
@@ -1373,8 +1510,7 @@ bash eval/run_eval.sh</code></pre>
           <h3>目标图像的作用</h3>
           <p>
             <code>goal_image</code> 是任务完成状态的视觉参考。Robo-Dopamine 将其作为
-            <code>REFERENCE END</code>，用于帮助模型判断当前状态在任务开始到完成过程中的位置；
-            在 <code>backward</code> 模式中，目标图像还会直接与当前采样状态比较。
+            <code>REFERENCE END</code>，用于帮助模型判断当前状态在任务开始到完成过程中的位置；在 <code>backward</code> 模式中，目标图像还会直接与当前采样状态比较。
           </p>
           <ul>
             <li>有可靠的成功状态图像时，可以在 manifest 中填写 <code>goal_image</code>，例如使用成功演示轨迹的最后一帧。</li>
@@ -1393,22 +1529,18 @@ bash eval/run_eval.sh</code></pre>
           <pre><code>GPUS=0,1,2,3 MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh</code></pre>
 
           <p>
-            每个 worker 会在分配到的 GPU 上加载一个 PRM 实例，处理自己的分片，
-            运行器最后合并分片输出。这是简单的本地数据并行，
-            通常足以处理评估批次。
+            每个 worker 会在分配到的 GPU 上加载一个 PRM 实例，处理自己的分片，运行器最后合并分片输出。这是简单的本地数据并行，通常足以处理评估批次。
           </p>
 
           <p>
             也可以让运行器自动选择 GPUs。在当前实现中，<code>GPUS=auto</code> 会查询
-            <code>nvidia-smi</code>，选择已用显存低于 1024 MiB 的设备；
-            如果没有找到这样的设备，则回退到 GPU 0。
+            <code>nvidia-smi</code>，选择已用显存低于 1024 MiB 的设备；如果没有找到这样的设备，则回退到 GPU 0。
           </p>
           <pre><code>GPUS=auto MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval.sh</code></pre>
 
           <p>
             对于 RoboMeter multi-GPU runs，每个分片会使用
-            <code>ROBOMETER_SERVER_PORT + shard_index</code> 作为自动启动服务器的端口。
-            因此，当同一台机器上运行多个评估时，请选择空闲的基础端口。
+            <code>ROBOMETER_SERVER_PORT + shard_index</code> 作为自动启动服务器的端口。因此，当同一台机器上运行多个评估时，请选择空闲的基础端口。
           </p>
         </section>
 
@@ -1449,9 +1581,7 @@ bash eval/run_eval.sh</code></pre>
           </div>
 
           <p>
-            <strong>不要强制曲线单调。</strong>回退和振荡是有意义的信号，
-            会被回撤、恢复、停滞和 regret 指标使用。
-            结果应同时存储 <code>progress_raw</code> 和 <code>progress_processed</code>。
+            <strong>不要强制曲线单调。</strong>回退和振荡是有意义的信号，会被回撤、恢复、停滞和 regret 指标使用。结果应同时存储 <code>progress_raw</code> 和 <code>progress_processed</code>。
           </p>
         </section>
 
@@ -1468,9 +1598,7 @@ bash eval/run_eval.sh</code></pre>
           <pre><code>p'_t = 0.1*p_{t-2} + 0.2*p_{t-1} + 0.4*p_t + 0.2*p_{t+1} + 0.1*p_{t+2}</code></pre>
 
           <p>
-            默认的异常值处理和平滑用于减少单个异常点和短时间内的频繁波动，但不会强制进度曲线
-            持续上升，因此真实的任务退步仍会保留。例如，当视频中的任务整体在持续推进，
-            但模型对相邻采样帧的评分时高时低时，这些处理可以让曲线更稳定地反映整体趋势。
+            默认的异常值处理和平滑用于减少单个异常点和短时间内的频繁波动，但不会强制进度曲线持续上升，因此真实的任务退步仍会保留。例如，当视频中的任务整体在持续推进，但模型对相邻采样帧的评分时高时低时，这些处理可以让曲线更稳定地反映整体趋势。
           </p>
 
           <p>当你在调试原始 PRM 行为时，可以禁用后处理：</p>
@@ -1480,9 +1608,7 @@ bash eval/run_eval.sh</code></pre>
           <pre><code>prm-judge eval --manifest cases.jsonl --smoothing-weights 0.05,0.15,0.6,0.15,0.05</code></pre>
 
           <p>
-            权重列表应为奇数长度、非负，并且总和为正。它会被自动归一化。
-            如果需要更深度的自定义，请编辑 <code>eval/prm_judge/curves.py</code>，
-            尤其是 <code>parse_smoothing_weights</code>、<code>weighted_smooth</code>
+            权重列表应为奇数长度、非负，并且总和为正。它会被自动归一化。如果需要更深度的自定义，请编辑 <code>eval/prm_judge/curves.py</code>，尤其是 <code>parse_smoothing_weights</code>、<code>weighted_smooth</code>
             和 <code>PostprocessConfig.smoothing_weights</code>。
           </p>
         </section>
@@ -1490,8 +1616,7 @@ bash eval/run_eval.sh</code></pre>
         <section id="zh-metrics">
           <h2>指标</h2>
           <p>
-            默认情况下，指标计算和评测报告都使用经过异常值处理与平滑的进度曲线。
-            原始曲线会保留在结果中，主要用于检查 PRM 的直接输出和排查问题。
+            默认情况下，指标计算和评测报告都使用经过异常值处理与平滑的进度曲线。原始曲线会保留在结果中，主要用于检查 PRM 的直接输出和排查问题。
           </p>
           <p><code>↑</code> 表示数值越高越好，<code>↓</code> 表示数值越低越好。</p>
 
@@ -1555,25 +1680,22 @@ bash eval/run_eval.sh</code></pre>
           </div>
 
           <div class="callout">
-            有些诊断是有条件的。例如，<code>CRA</code> 在比较达成相似进度的执行案例
-            时最有信息量。完全停滞的曲线可能 regret 很低，但仍然是差的执行过程。
+            有些诊断是有条件的。例如，<code>CRA</code> 在比较达成相似进度的执行案例时最有信息量。完全停滞的曲线可能 regret 很低，但仍然是差的执行过程。
             <strong>默认情况下，成功分组使用 <code>MaxP >= --success-threshold</code>。</strong>
             只有当基准标签应定义 success 和 failure 时，才使用
             <code>--success-source label</code>。
           </div>
+
         </section>
 
        <section id="zh-custom-prm">
           <h2>自定义 PRM</h2>
           <p>
-            工具包将两个职责分离：PRM 适配器生成进度曲线，
-            指标栈基于标准化曲线计算诊断结果。因此，除了 Dopamine 以外，
-            也可以使用其他 PRMs。
+            工具包将两个职责分离：PRM 适配器生成进度曲线，指标栈基于标准化曲线计算诊断结果。通过这一统一接口，可以使用内置或自定义的 Judge Model。
           </p>
 
           <div class="callout">
-            在本开发章节中，<strong>后端</strong>是指注册到 <code>--prm</code> 下的实现。
-            它既可以调用 PRM 模型，也可以像 <code>recorded</code> 一样直接读取预计算进度曲线。
+            在本开发章节中，<strong>后端</strong>是指注册到 <code>--prm</code> 下的实现。它既可以调用 PRM 模型，也可以像 <code>recorded</code> 一样直接读取预计算进度曲线。
           </div>
 
           <h3>最小集成步骤</h3>
@@ -1610,23 +1732,18 @@ class MyAdapter(BasePRMAdapter):
           <p>
             <code>eval/prm_judge/prm/</code> 下的现有适配器可以作为模板。
             <code>recorded.py</code> 是最小示例，<code>robometer.py</code>
-            展示了如何包装外部模型服务。请在你的适配器旁边记录模型的输出尺度、
-            语义、必需视角、目标图像行为和运行时要求。
+            展示了如何包装外部模型服务。请在你的适配器旁边记录模型的输出尺度、语义、必需视角、目标图像行为和运行时要求。
           </p>
 
           <h3>以 RoboMeter 为例</h3>
           <p>
             RoboMeter 通过 HTTP 适配器集成为序列式后端。它将
             <code>outputs_progress.progress_pred</code> 读取为 <code>[0, 1]</code>
-            中的绝对进度曲线。由于它会基于更长的序列进行推理，
-            因此对于局部成对评判不够充分的重复动作案例，
-            它是一个有用的比较对象。
+            中的绝对进度曲线。由于它会基于更长的序列进行推理，因此对于局部成对评判不够充分的重复动作案例，它是一个有用的比较对象。
           </p>
           <p>
-            当复用已有 RoboMeter 服务器时，PRM-as-a-Judge 会检查 <code>/model_info</code>，
-            并要求服务器模型路径与 <code>PRM_PATH</code> 匹配。这有助于避免误用旧 checkpoint
-            进行评估。适配器会以 <code>.npy</code> multipart files 上传帧数组，
-            从而让长视频请求更易处理。
+            当复用已有 RoboMeter 服务器时，PRM-as-a-Judge 会检查 <code>/model_info</code>，并要求服务器模型路径与 <code>PRM_PATH</code> 匹配。这有助于避免误用旧 checkpoint
+            进行评估。适配器会以 <code>.npy</code> multipart files 上传帧数组，从而让长视频请求更易处理。
           </p>
         </section>
 
@@ -1654,6 +1771,30 @@ bash eval/run_eval.sh</code></pre>
           <h3>比较原始进度和处理后进度</h3>
           <pre><code>prm-judge eval --manifest cases.jsonl --outlier-method none --smoothing none --visualize
 prm-judge eval --manifest cases.jsonl --visualize</code></pre>
+        </section>
+
+        <section id="zh-faq">
+          <h2>常见问题（FAQ）</h2>
+
+          <h3>1. 目标图像（<code>goal_image</code>）的作用是什么？</h3>
+          <p>
+            <code>goal_image</code> 是 Robo-Dopamine 专用的可选参数。它为模型提供明确的任务完成状态视觉参考，帮助模型理解“成功状态应该是什么样”，减少目标歧义，并提升进度判断的准确性。
+            Robo-Dopamine 会将其作为 <code>REFERENCE END</code>；在 <code>backward</code> 模式中，目标图像还会直接与当前采样状态进行比较。其他 Judge Model 适配器不一定使用该字段。
+          </p>
+          <p>
+            在实际使用中，如果有可靠的成功状态参考，建议在 manifest 中填写
+            <code>goal_image</code>，优先选择经过人工确认的成功演示轨迹最后一帧，或单独拍摄的标准目标状态。如果没有可靠的目标图像，可以省略该字段；Robo-Dopamine 适配器会使用
+            <code>eval/examples/blank.png</code> 作为占位图，但此时无法获得明确目标参考带来的判断增益。不要直接使用待评测轨迹的最后一帧，除非已经确认该轨迹成功，否则模型可能把失败状态误当成任务目标，反而降低判断准确性。
+          </p>
+
+          <h3>2. Robo-Dopamine 如何判断进度，哪些任务更适合序列式模型？</h3>
+          <p>
+            Robo-Dopamine 是成对比较式 Judge Model。它会根据 <code>EVAL_MODE</code>
+            比较两张采样图像或状态，例如相邻采样点、初始状态与当前状态，或当前状态与目标参考，得到相对进度判断，再将连续的成对判断连接成进度曲线。
+          </p>
+          <p>
+            这种局部比较适合许多机器人操作任务，但对于往复运动、周期性动作或强依赖上下文的任务，两张图像可能无法区分机器人是在持续取得进展、重复一个动作周期，还是仅仅来回移动，因此判断可能不够准确。此类任务可以使用 RoboMeter 这类序列式 Judge Model，或将其结果作为对照；序列式模型能够利用更长的时间上下文进行判断。
+          </p>
         </section>
 
       </article>
