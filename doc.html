@@ -3,23 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PRM-as-a-Judge v1.5 Quick Start</title>
+  <title>PRM-as-a-Judge Quick Start</title>
   <meta name="description" content="Run the bundled PRM-as-a-Judge examples from installation to interactive evaluation report.">
   <link rel="stylesheet" href="assets/doc.css">
   <link rel="stylesheet" href="assets/doc-extra.css">
   <style>
     .sidebar-group-title {
       margin: .8rem .45rem .15rem;
-      color: #98a2b3;
-      font-size: .68rem;
+      color: #596579;
+      font-size: .86rem;
       font-weight: 800;
-      letter-spacing: .08em;
+      letter-spacing: .04em;
       line-height: 1.3;
       text-transform: uppercase;
     }
 
+    .sidebar-title {
+      color: #596579;
+      font-size: .86rem;
+    }
+
     .sidebar-title + .sidebar-group-title {
       margin-top: .15rem;
+    }
+
+    .sidebar-panel > a {
+      margin-left: 1rem;
+      padding-left: .7rem;
+      border-left: 1px solid var(--line);
+      border-radius: 0 6px 6px 0;
+      color: #98a2b3;
+      font-size: .82rem;
+      font-weight: 500;
+    }
+
+    .sidebar-panel > a.active,
+    .sidebar-panel > a:hover {
+      border-left-color: var(--accent);
     }
 
     pre.jsonl-example {
@@ -101,7 +121,7 @@
   </style>
 </head>
 
-<body data-lang="en" data-page="quickstart" data-title-en="PRM-as-a-Judge v1.5 Quick Start" data-title-zh="PRM-as-a-Judge v1.5 快速开始">
+<body data-lang="en" data-page="quickstart" data-title-en="PRM-as-a-Judge Quick Start" data-title-zh="PRM-as-a-Judge 快速开始">
   <nav class="site-nav">
     <a href="index.html"><span class="lang-en">Home</span><span class="lang-zh">首页</span></a>
     <a href="blog.html"><span class="lang-en">Blog</span><span class="lang-zh">博客</span></a>
@@ -122,30 +142,32 @@
       <nav class="sidebar-panel lang-en">
         <p class="sidebar-title">Quick Start</p>
         <a href="#overview">Choose a Workflow</a>
-        <a href="#quick-start">Run the Demo</a>
+        <a href="#quick-start">Run the Bundled Demo</a>
+        <a href="#community">WeChat Community</a>
       </nav>
       <nav class="sidebar-panel lang-zh">
         <p class="sidebar-title">快速开始</p>
         <a href="#zh-overview">选择使用方式</a>
-        <a href="#zh-quick-start">运行示例</a>
+        <a href="#zh-quick-start">运行仓库内示例</a>
+        <a href="#zh-community">微信群</a>
       </nav>
     </aside>
 
     <main class="doc-main">
       <header class="doc-hero lang-en">
         <p class="eyebrow">Quick Start</p>
-        <h1>PRM-as-a-Judge v1.5</h1>
+        <h1>PRM-as-a-Judge</h1>
         <p>
-          Run three bundled robot rollout cases with Robo-Dopamine and produce progress curves,
+          Evaluate three bundled robot rollout cases with a Process Reward Model (PRM) and generate progress curves,
           metrics, summaries, and an interactive report.
         </p>
       </header>
 
       <header class="doc-hero lang-zh">
         <p class="eyebrow">快速开始</p>
-        <h1>PRM-as-a-Judge v1.5</h1>
+        <h1>PRM-as-a-Judge</h1>
         <p>
-          使用 Robo-Dopamine 运行仓库内的 3 个机器人执行案例，并生成进度曲线、评测指标、汇总结果和交互式报告。
+          使用过程奖励模型（Process Reward Model，PRM）评测仓库内的 3 个机器人执行案例，并生成进度曲线、评测指标、汇总结果和交互式报告。
         </p>
       </header>
 
@@ -178,7 +200,7 @@ cd PRM-as-a-Judge</code></pre>
           <pre><code>conda create -n prm-judge python=3.10 -y
 conda activate prm-judge</code></pre>
 
-          <h3>3. Install Robo-Dopamine dependencies</h3>
+          <h3>3. Install the demo dependencies</h3>
           <pre><code>python -m pip install --upgrade pip
 python -m pip install -e ".[dopamine]" \
   -c constraints/dopamine-cu128-py310.txt
@@ -186,7 +208,7 @@ python -m pip check</code></pre>
 
           <h3>4. Download the checkpoint</h3>
           <p>
-            The default model is <a href="https://huggingface.co/tanhuajie2001/Robo-Dopamine-GRM-2.0-8B-Preview">Robo-Dopamine-GRM-2.0-8B-Preview</a>.
+            The bundled demo uses <a href="https://huggingface.co/tanhuajie2001/Robo-Dopamine-GRM-2.0-8B-Preview">Robo-Dopamine-GRM-2.0-8B-Preview</a> as its default PRM checkpoint.
           </p>
           <pre><code>PRM_PATH=$(hf download tanhuajie2001/Robo-Dopamine-GRM-2.0-8B-Preview)</code></pre>
 
@@ -222,7 +244,43 @@ bash eval/run_eval.sh</code></pre>
                 model-level performance summary for the evaluation run.
               </figcaption>
             </figure>
+
+            <figure class="report-shot">
+              <a href="assets/images/report-failure-localization.webp" target="_blank" rel="noopener">
+                <img
+                  src="assets/images/report-failure-localization.webp"
+                  alt="Failure Localization and Drawdown chart showing where failed rollouts stopped and their drawdown rate"
+                  loading="lazy"
+                  width="2296"
+                  height="832">
+              </a>
+              <figcaption>
+                <strong>Failure localization and drawdown.</strong> Inspect where failed rollouts
+                stopped, their average MaxP-F, and the significant-drawdown rate.
+              </figcaption>
+            </figure>
+
+            <figure class="report-shot">
+              <a href="assets/images/report-trajectory-explorer.webp" target="_blank" rel="noopener">
+                <img
+                  src="assets/images/report-trajectory-explorer.webp"
+                  alt="Interactive trajectory explorer showing a rollout video, progress curve, and case metrics"
+                  loading="lazy"
+                  width="1600"
+                  height="955">
+              </a>
+              <figcaption>
+                <strong>Interactive trajectory explorer.</strong> Inspect rollout videos together
+                with progress curves, live-frame values, per-case metrics, and milestones.
+              </figcaption>
+            </figure>
           </div>
+
+          <p>
+            The report also supports failure localization and drawdown analysis, together with
+            case-level inspection in the interactive trajectory explorer. See the
+            <a href="advanced.html#outputs">Advanced Guide</a> for the complete visualization reference.
+          </p>
 
           <h3>7. Evaluate your own rollout</h3>
           <p>Create a JSONL manifest containing a case ID, task description, and video path:</p>
@@ -235,6 +293,20 @@ bash eval/run_eval.sh</code></pre>
           <div class="next-guide">
             <p>Configure additional views, evaluation modes, GPUs, curve processing, metrics, or another PRM.</p>
             <a href="advanced.html">Continue to the Advanced Guide →</a>
+          </div>
+        </section>
+
+        <section id="community">
+          <h2>WeChat Community</h2>
+          <p>Join the group to discuss setup, evaluation, and rollout analysis with the community.</p>
+          <div class="community-card">
+            <a href="https://github.com/Yuheng2000/PRM-as-a-Judge#wechat-community" target="_blank" rel="noopener noreferrer">
+              <img
+                src="https://raw.githubusercontent.com/Yuheng2000/PRM-as-a-Judge/main/figs/weixin.jpg"
+                alt="WeChat group QR code"
+                loading="lazy">
+            </a>
+            <p>Scan the QR code to join the WeChat community.</p>
           </div>
         </section>
       </article>
@@ -268,7 +340,7 @@ cd PRM-as-a-Judge</code></pre>
           <pre><code>conda create -n prm-judge python=3.10 -y
 conda activate prm-judge</code></pre>
 
-          <h3>3. 安装 Robo-Dopamine 依赖</h3>
+          <h3>3. 安装示例所需依赖</h3>
           <pre><code>python -m pip install --upgrade pip
 python -m pip install -e ".[dopamine]" \
   -c constraints/dopamine-cu128-py310.txt
@@ -276,7 +348,7 @@ python -m pip check</code></pre>
 
           <h3>4. 下载 checkpoint</h3>
           <p>
-            默认模型为 <a href="https://huggingface.co/tanhuajie2001/Robo-Dopamine-GRM-2.0-8B-Preview">Robo-Dopamine-GRM-2.0-8B-Preview</a>。
+            仓库内示例默认使用 <a href="https://huggingface.co/tanhuajie2001/Robo-Dopamine-GRM-2.0-8B-Preview">Robo-Dopamine-GRM-2.0-8B-Preview</a> 作为 PRM checkpoint。
           </p>
           <pre><code>PRM_PATH=$(hf download tanhuajie2001/Robo-Dopamine-GRM-2.0-8B-Preview)</code></pre>
 
@@ -309,7 +381,39 @@ bash eval/run_eval.sh</code></pre>
                 <strong>最终性能报告。</strong>Model Leaderboard 汇总展示本次评测中各模型的最终性能指标。
               </figcaption>
             </figure>
+
+            <figure class="report-shot">
+              <a href="assets/images/report-failure-localization.webp" target="_blank" rel="noopener">
+                <img
+                  src="assets/images/report-failure-localization.webp"
+                  alt="展示失败轨迹停止位置、平均 MaxP-F 和显著回撤率的失败定位与回撤报告"
+                  loading="lazy"
+                  width="2296"
+                  height="832">
+              </a>
+              <figcaption>
+                <strong>失败定位与回撤。</strong>查看失败轨迹停止的位置、平均 MaxP-F 和显著回撤率。
+              </figcaption>
+            </figure>
+
+            <figure class="report-shot">
+              <a href="assets/images/report-trajectory-explorer.webp" target="_blank" rel="noopener">
+                <img
+                  src="assets/images/report-trajectory-explorer.webp"
+                  alt="同时展示执行视频、进度曲线和单案例指标的交互式轨迹查看器"
+                  loading="lazy"
+                  width="1600"
+                  height="955">
+              </a>
+              <figcaption>
+                <strong>交互式轨迹查看器。</strong>同步查看执行视频、进度曲线、实时帧数值、单案例指标和里程碑。
+              </figcaption>
+            </figure>
           </div>
+
+          <p>
+            报告还支持失败定位与回撤分析，以及通过交互式轨迹查看器逐案例检查执行过程。更多可视化模块和使用说明见<a href="advanced.html#zh-outputs">高级指南</a>。
+          </p>
 
           <h3>7. 评测自己的轨迹</h3>
           <p>创建包含案例 ID、任务描述和视频路径的 JSONL manifest：</p>
@@ -322,6 +426,20 @@ bash eval/run_eval.sh</code></pre>
           <div class="next-guide">
             <p>配置更多视角、评测模式、GPU、曲线处理、指标或其他 PRM。</p>
             <a href="advanced.html">继续阅读高级指南 →</a>
+          </div>
+        </section>
+
+        <section id="zh-community">
+          <h2>微信群</h2>
+          <p>欢迎加入微信群，与社区交流环境配置、评测和轨迹分析问题。</p>
+          <div class="community-card">
+            <a href="https://github.com/Yuheng2000/PRM-as-a-Judge#wechat-community" target="_blank" rel="noopener noreferrer">
+              <img
+                src="https://raw.githubusercontent.com/Yuheng2000/PRM-as-a-Judge/main/figs/weixin.jpg"
+                alt="微信群二维码"
+                loading="lazy">
+            </a>
+            <p>扫描二维码加入微信群。</p>
           </div>
         </section>
       </article>

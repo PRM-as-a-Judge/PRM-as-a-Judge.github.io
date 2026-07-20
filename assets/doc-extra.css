@@ -117,6 +117,34 @@
   line-height: 1.55;
 }
 
+.community-card {
+  max-width: 390px;
+  margin: 1rem auto 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fbfcff;
+  text-align: center;
+}
+
+.community-card a {
+  display: inline-block;
+}
+
+.community-card img {
+  display: block;
+  width: min(100%, 320px);
+  height: auto;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+
+.community-card p {
+  margin: .8rem 0 0;
+  color: var(--muted);
+  font-size: .91rem;
+}
+
 @media (max-width: 700px) {
   .quick-paths {
     grid-template-columns: 1fr;

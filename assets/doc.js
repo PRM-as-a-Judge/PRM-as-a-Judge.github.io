@@ -8,12 +8,15 @@
   var hashId = decodeURIComponent(window.location.hash.slice(1));
   var advancedIds = new Set([
     'manifest', 'outputs', 'defaults', 'choose-backend', 'modes', 'multi-view',
-    'multi-gpu', 'progress-standard', 'postprocess', 'metrics', 'custom-prm', 'recipes',
+    'multi-gpu', 'progress-standard', 'postprocess', 'metrics', 'custom-prm', 'recipes', 'faq',
     'zh-manifest', 'zh-outputs', 'zh-defaults', 'zh-choose-backend', 'zh-modes',
     'zh-multi-view', 'zh-multi-gpu', 'zh-progress-standard', 'zh-postprocess',
-    'zh-metrics', 'zh-custom-prm', 'zh-recipes'
+    'zh-metrics', 'zh-custom-prm', 'zh-recipes', 'zh-faq'
   ]);
-  var quickStartIds = new Set(['overview', 'quick-start', 'zh-overview', 'zh-quick-start']);
+  var quickStartIds = new Set([
+    'overview', 'quick-start', 'community',
+    'zh-overview', 'zh-quick-start', 'zh-community'
+  ]);
 
   if (page === 'quickstart' && advancedIds.has(hashId)) {
     window.location.replace('advanced.html' + window.location.hash);

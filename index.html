@@ -179,6 +179,36 @@
     .home-collab a:hover {
       color: #E8641B;
     }
+
+    .home-community {
+      text-align: center;
+    }
+
+    .home-community-card {
+      max-width: 360px;
+      margin: 0 auto;
+      padding: 1.25rem;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+
+    .home-community-card a {
+      display: inline-block;
+    }
+
+    .home-community-card img {
+      display: block;
+      width: min(100%, 280px);
+      height: auto;
+      margin: 0 auto;
+      border-radius: 6px;
+    }
+
+    .home-community-card p {
+      margin: 0.85rem 0 0;
+      color: #666;
+      font-size: 0.95rem;
+    }
   </style>
 </head>
 
@@ -210,6 +240,10 @@
       <h2>News 🎉</h2>
       <ul class="news-list">
         <li>
+          <span class="news-date">July 20, 2026</span>
+          <a href="doc.html">PRM-as-a-Judge user guide is now available — Follow a streamlined Quick Start and a detailed Advanced Guide from manifest input to progress curves, metrics, and interactive reports.</a>
+        </li>
+        <li>
           <span class="news-date">June 30, 2026</span>
           <a href="blog-prm-as-a-judge-15-coming.html">PRM-as-a-Judge 1.5 is coming — PPL correction, higher-level trajectory diagnostics, and Orca collaboration</a>
         </li>
@@ -226,6 +260,19 @@
           <a href="leaderboard.html">RoboChallenge task leaderboard now available — Check out rankings and submit your results</a>
         </li>
       </ul>
+    </section>
+
+    <section class="home-section home-community" id="wechat-community">
+      <h2>WeChat Community</h2>
+      <div class="home-community-card">
+        <a href="https://github.com/Yuheng2000/PRM-as-a-Judge#wechat-community" target="_blank" rel="noopener noreferrer">
+          <img
+            src="https://raw.githubusercontent.com/Yuheng2000/PRM-as-a-Judge/main/figs/weixin.jpg"
+            alt="WeChat group QR code"
+            loading="lazy">
+        </a>
+        <p>Scan the QR code to join the WeChat community.</p>
+      </div>
     </section>
 
     <section class="home-collab">

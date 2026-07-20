@@ -4,23 +4,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PRM-as-a-Judge v1.5 Advanced Guide</title>
+  <title>PRM-as-a-Judge Advanced Guide</title>
   <meta name="description" content="Advanced PRM-as-a-Judge guide covering manifests, evaluation modes, views, multi-GPU execution, curve processing, metrics, and custom PRM integration.">
   <link rel="stylesheet" href="assets/doc.css">
   <link rel="stylesheet" href="assets/doc-extra.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <style>
     .sidebar-group-title {
       margin: .8rem .45rem .15rem;
-      color: #98a2b3;
-      font-size: .68rem;
+      color: #596579;
+      font-size: .86rem;
       font-weight: 800;
-      letter-spacing: .08em;
+      letter-spacing: .04em;
       line-height: 1.3;
       text-transform: uppercase;
     }
 
+    .sidebar-title {
+      color: #596579;
+      font-size: .86rem;
+    }
+
     .sidebar-title + .sidebar-group-title {
       margin-top: .15rem;
+    }
+
+    .sidebar-panel > a {
+      margin-left: 1rem;
+      padding-left: .7rem;
+      border-left: 1px solid var(--line);
+      border-radius: 0 6px 6px 0;
+      color: #98a2b3;
+      font-size: .82rem;
+      font-weight: 500;
+    }
+
+    .sidebar-panel > a.active,
+    .sidebar-panel > a:hover {
+      border-left-color: var(--accent);
     }
 
     pre.jsonl-example {
@@ -47,6 +68,62 @@
       font-weight: 700;
       line-height: 1.04;
       white-space: nowrap;
+    }
+
+    .doc-hero.lang-zh h1 {
+      font-size: clamp(1.85rem, 3.25vw, 2.65rem);
+    }
+
+    .metric-table {
+      min-width: 0;
+      max-width: 100%;
+      table-layout: fixed;
+    }
+
+    #metrics .table-wrap,
+    #zh-metrics .table-wrap {
+      overflow-x: visible;
+    }
+
+    .metric-table .metric-scope {
+      white-space: nowrap;
+    }
+
+    .metric-formula-cell {
+      padding-right: .5rem;
+      padding-left: .5rem;
+    }
+
+    .metric-formula-scroll {
+      max-width: 100%;
+      overflow: visible;
+      padding: .2rem 0 .42rem;
+    }
+
+    .metric-formula-line {
+      display: block;
+      width: max-content;
+      min-width: max-content;
+      padding: .12rem .08rem;
+      white-space: nowrap;
+    }
+
+    .metric-formula-line .katex {
+      font-size: .88em;
+    }
+
+    .metric-formula-note {
+      margin-left: .4rem;
+      color: var(--muted);
+      font-size: .78rem;
+      white-space: nowrap;
+    }
+
+    .metric-table th:nth-child(4),
+    .metric-table td:nth-child(4) {
+      white-space: normal;
+      overflow-wrap: anywhere;
+      word-break: normal;
     }
 
     @media (min-width: 881px) and (max-width: 1120px) {
@@ -122,7 +199,7 @@
 </style>
 </head>
 
-<body data-lang="en" data-page="advanced" data-title-en="PRM-as-a-Judge v1.5 Advanced Guide" data-title-zh="PRM-as-a-Judge v1.5 高级指南">
+<body data-lang="en" data-page="advanced" data-title-en="PRM-as-a-Judge Advanced Guide" data-title-zh="PRM-as-a-Judge 进阶配置">
   <nav class="site-nav">
   <a href="index.html"><span class="lang-en">Home</span><span class="lang-zh">首页</span></a>
   <a href="blog.html"><span class="lang-en">Blog</span><span class="lang-zh">博客</span></a>
@@ -142,41 +219,41 @@
       <nav class="sidebar-panel lang-en">
         <p class="sidebar-title">Advanced Guide</p>
         <p class="sidebar-group-title">Inputs &amp; Outputs</p>
-        <a href="#manifest">Write a Manifest</a>
-        <a href="#outputs">Inspect Output Files</a>
-        <p class="sidebar-group-title">Evaluation Setup</p>
-        <a href="#defaults">Review Default Settings</a>
-        <a href="#choose-backend">Choose a PRM Evaluation Method</a>
-        <a href="#modes">Configure Dopamine Modes</a>
-        <a href="#multi-view">Configure Views &amp; Goal Images</a>
-        <a href="#multi-gpu">Run with Multi-GPU</a>
+        <a href="#manifest">Input: Manifest Format</a>
+        <a href="#outputs">Output: Evaluation Results</a>
+        <p class="sidebar-group-title">Evaluation Configuration</p>
+        <a href="#defaults">Default Settings</a>
+        <a href="#choose-backend">PRM Evaluation Methods</a>
+        <a href="#modes">Dopamine Modes</a>
+        <a href="#multi-view">Video Views and Goal Images</a>
+        <a href="#multi-gpu">Multi-GPU</a>
         <p class="sidebar-group-title">Progress &amp; Metrics</p>
-        <a href="#progress-standard">Understand Progress Format</a>
-        <a href="#postprocess">Process Progress Curves</a>
-        <a href="#metrics">Interpret Metrics</a>
-        <p class="sidebar-group-title">Extension &amp; Reference</p>
-        <a href="#custom-prm">Integrate a Custom PRM</a>
+        <a href="#progress-standard">Progress Curve Standard</a>
+        <a href="#postprocess">Progress Curve Processing</a>
+        <a href="#metrics">Evaluation Metrics</a>
+        <p class="sidebar-group-title">Extensions &amp; Reference</p>
+        <a href="#custom-prm">Custom PRM</a>
         <a href="#recipes">Command Reference</a>
         <a href="#faq">FAQ</a>
       </nav>
       <nav class="sidebar-panel lang-zh">
         <p class="sidebar-title">高级指南</p>
         <p class="sidebar-group-title">输入与输出</p>
-        <a href="#zh-manifest">编写 Manifest</a>
-        <a href="#zh-outputs">查看输出文件</a>
+        <a href="#zh-manifest">输入：Manifest 格式</a>
+        <a href="#zh-outputs">输出：评测结果</a>
         <p class="sidebar-group-title">评测配置</p>
-        <a href="#zh-defaults">了解默认配置</a>
-        <a href="#zh-choose-backend">选择 PRM 评测方式</a>
-        <a href="#zh-modes">配置 Dopamine 模式</a>
-        <a href="#zh-multi-view">配置视角与目标图像</a>
-        <a href="#zh-multi-gpu">使用 Multi-GPU</a>
+        <a href="#zh-defaults">默认设置</a>
+        <a href="#zh-choose-backend">PRM 评测方式</a>
+        <a href="#zh-modes">Dopamine 模式</a>
+        <a href="#zh-multi-view">视频视角与目标图像</a>
+        <a href="#zh-multi-gpu">Multi-GPU</a>
         <p class="sidebar-group-title">进度与指标</p>
-        <a href="#zh-progress-standard">理解进度曲线规范</a>
-        <a href="#zh-postprocess">处理进度曲线</a>
-        <a href="#zh-metrics">理解评测指标</a>
+        <a href="#zh-progress-standard">进度曲线规范</a>
+        <a href="#zh-postprocess">进度曲线处理</a>
+        <a href="#zh-metrics">评测指标</a>
         <p class="sidebar-group-title">扩展与参考</p>
-        <a href="#zh-custom-prm">接入自定义 PRM</a>
-        <a href="#zh-recipes">常用命令速查</a>
+        <a href="#zh-custom-prm">自定义 PRM</a>
+        <a href="#zh-recipes">常用命令</a>
         <a href="#zh-faq">常见问题（FAQ）</a>
       </nav>
     </aside>
@@ -187,7 +264,7 @@
         <h1>Configure and Extend PRM-as-a-Judge</h1>
         <p>
           Detailed reference for adapting PRM-as-a-Judge to your data, compute resources,
-          evaluation goals, and PRM models.
+          evaluation goals, and choice of Process Reward Model (PRM).
         </p>
         <p>
           If this is your first run, complete the <a href="doc.html">Quick Start</a> before
@@ -197,9 +274,9 @@
 
       <header class="doc-hero lang-zh">
         <p class="eyebrow">高级指南</p>
-        <h1>配置与扩展 PRM-as-a-Judge</h1>
+        <h1>PRM-as-a-Judge 进阶配置</h1>
         <p>
-          详细介绍如何根据数据形式、计算资源、评测目标和 PRM 模型调整 PRM-as-a-Judge。
+          详细介绍如何根据数据形式、计算资源、评测目标和过程奖励模型（Process Reward Model，PRM）的选择调整 PRM-as-a-Judge。
         </p>
         <p>
           如果尚未完成首次评测，请先按照<a href="doc.html">快速开始</a>运行默认流程，再调整本页介绍的配置。
@@ -208,7 +285,7 @@
 
       <article class="doc-content lang-en">
         <section id="manifest">
-          <h2>Manifest Format</h2>
+          <h2>Input: Manifest Format</h2>
           <p>
             The default input is a JSONL manifest. <strong>Each line describes one rollout case.</strong>
             Paths may be absolute or relative to the manifest file.
@@ -279,7 +356,7 @@
                 <tr>
                   <td><code>label</code></td>
                   <td>&#9675; Optional</td>
-                  <td>Known outcome of the rollout: <code>success</code> or <code>failure</code>. By default, success is inferred from the progress curve; with <code>--success-source label</code>, this field defines the success and failure groups used in summaries and related metrics.</td>
+                  <td>Known outcome of the rollout: <code>success</code> or <code>failure</code>. By default, a single progress threshold separates successful and failed cases, but the same threshold may not be suitable for every rollout. When reliable Benchmark labels are available, set <code>--success-source label</code> to use the labels for SR and to assign successful and failed rollouts to SQS and FNS, respectively.</td>
                 </tr>
                 <tr>
                   <td><code>benchmark</code></td>
@@ -302,7 +379,7 @@
         </section>
 
         <section id="outputs">
-          <h2>Outputs</h2>
+          <h2>Output: Evaluation Results</h2>
           <p><strong>Outputs are written to <code>eval/results/run_YYMMDD_HHMMSS/</code> by default.</strong></p>
           <div class="table-wrap">
             <table>
@@ -530,7 +607,7 @@
         </section>
 
         <section id="choose-backend">
-          <h2>Choose a PRM Evaluation Method</h2>
+          <h2>PRM Evaluation Methods</h2>
           <p>
             The toolkit supports several progress-evaluation methods. <code>dopamine</code> uses the
             Robo-Dopamine model and is the default; <code>robometer</code> uses the RoboMeter model;
@@ -550,14 +627,14 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>First run or ordinary batch evaluation</td>
+                  <td>Fine-grained process changes or routine batch evaluation</td>
                   <td><strong><code>dopamine</code> (Robo-Dopamine) with <code>EVAL_MODE=incremental</code></strong></td>
-                  <td>Stable default, simple one-command path, and supports main-only, single-arm, and bimanual video layouts.</td>
+                  <td>Compares adjacent sampled states, making it suitable for capturing local, fine-grained progress and regression.</td>
                 </tr>
                 <tr>
-                  <td>Repeated or context-dependent motion</td>
+                  <td>Long-horizon, repetitive, or context-dependent actions</td>
                   <td><code>robometer</code> (RoboMeter)</td>
-                  <td>Sequence-style judging can use longer temporal context than local pair comparison.</td>
+                  <td>Uses temporal context from video sequences, making it suitable when adjacent states alone cannot distinguish sustained progress, repeated actions, or back-and-forth motion.</td>
                 </tr>
                 <tr>
                   <td>Debugging metrics without loading a model</td>
@@ -565,7 +642,7 @@
                   <td>Uses <code>progress</code> or <code>progress_path</code> from the manifest.</td>
                 </tr>
                 <tr>
-                  <td>Your own PRM or reward model</td>
+                  <td>Integrating another PRM</td>
                   <td>Custom adapter</td>
                   <td>Return absolute progress in <code>[0, 1]</code>, or configure normalization before metrics. See <a href="#custom-prm">Custom PRM</a> for the adapter steps.</td>
                 </tr>
@@ -746,7 +823,7 @@ bash eval/run_eval.sh</code></pre>
         </section>
 
         <section id="progress-standard">
-          <h2>Progress Standard</h2>
+          <h2>Progress Curve Standard</h2>
           <p>
             The metric stack consumes <strong>normalized absolute progress curves</strong>. Every PRM
             adapter should eventually produce:
@@ -826,67 +903,115 @@ bash eval/run_eval.sh</code></pre>
         </section>
 
         <section id="metrics">
-          <h2>Metrics</h2>
+          <h2>Evaluation Metrics</h2>
           <p>
             By default, metrics and evaluation reports use the progress curve after outlier
             handling and smoothing. The raw curve is retained in the outputs mainly for inspecting
             the PRM's direct predictions and troubleshooting.
           </p>
           <p><code>↑</code> means higher is better; <code>↓</code> means lower is better.</p>
+          <p>
+            In the formulas below, <code>p_0 = 0, p_1, ..., p_T</code> is the processed normalized
+            progress curve, <code>θ</code> is the success threshold, <code>δ = 0.005</code> is the
+            default stagnation threshold, and <code>1[·]</code> is the indicator function.
+          </p>
 
           <div class="table-wrap">
-            <table>
+            <table class="metric-table">
+              <colgroup>
+                <col style="width: 7.5rem">
+                <col style="width: 7rem">
+                <col style="width: 19.625rem">
+                <col>
+              </colgroup>
               <thead>
                 <tr>
                   <th>Metric</th>
-                  <th>Scope</th>
+                  <th class="metric-scope">Scope</th>
+                  <th>Formula</th>
                   <th>Interpretation</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><code>MaxP ↑</code></td>
-                  <td>All rollouts</td>
+                  <td class="metric-scope">All rollouts</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{MaxP}=\max_{1\le t\le T}p_t"></span></div></td>
                   <td>Highest progress reached. A higher value means the rollout came closer to completing the task.</td>
                 </tr>
                 <tr>
                   <td><code>M25 ↑</code>, <code>M50 ↑</code>, <code>M75 ↑</code></td>
-                  <td>All rollouts</td>
+                  <td class="metric-scope">All rollouts</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="M_q=\mathbf{1}[\mathrm{MaxP}\ge q],\quad q\in\{0.25,0.50,0.75\}"></span></div></td>
                   <td>Whether a rollout reached the 25%, 50%, and 75% progress milestones; aggregates report the proportion of rollouts reaching each milestone.</td>
                 </tr>
                 <tr>
                   <td><code>SR ↑</code></td>
-                  <td>All rollouts</td>
+                  <td class="metric-scope">All rollouts</td>
+                  <td class="metric-formula-cell">
+                    <div class="metric-formula-scroll">
+                      <span class="metric-formula-line"><span class="math-latex" data-latex="s_i=\mathbf{1}[\mathrm{MaxP}_i\ge\theta]"></span><span class="metric-formula-note">default</span></span>
+                      <span class="metric-formula-line"><span class="math-latex" data-latex="s_i=\mathbf{1}[\mathrm{label}_i=\mathrm{success}]"></span><span class="metric-formula-note">label source</span></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{SR}=\frac{1}{N}\sum_{i=1}^{N}s_i"></span>
+                    </div>
+                  </td>
                   <td>Whether a rollout reached the success threshold, which defaults to <code>0.99</code>; aggregates report the success rate.</td>
                 </tr>
                 <tr>
                   <td><code>PPL ↑</code></td>
-                  <td>All rollouts</td>
+                  <td class="metric-scope">All rollouts</td>
+                  <td class="metric-formula-cell">
+                    <div class="metric-formula-scroll">
+                      <span class="metric-formula-line math-latex" data-latex="L=\sum_{t=1}^{T}|p_t-p_{t-1}|"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{PPL}=\begin{cases}\mathrm{MaxP}^{2}/L,&amp;L&gt;0\\0,&amp;L=0\end{cases}"></span>
+                    </div>
+                  </td>
                   <td>Measures path efficiency while making progress. Higher values indicate that useful progress is more concentrated.</td>
                 </tr>
                 <tr>
                   <td><code>CRA ↓</code></td>
-                  <td>All rollouts</td>
+                  <td class="metric-scope">All rollouts</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{CRA}=\frac{1}{T}\sum_{t=1}^{T}\max\!\left(0,\max_{k\le t}p_k-p_t\right)"></span></div></td>
                   <td>Measures cumulative loss caused by regressions. Lower is better; compare rollouts that reached similar progress.</td>
                 </tr>
                 <tr>
                   <td><code>Stag ↓</code></td>
-                  <td>All rollouts</td>
+                  <td class="metric-scope">All rollouts</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{Stag}=\frac{1}{T}\sum_{t=1}^{T}\mathbf{1}[|p_t-p_{t-1}|\lt\delta]"></span></div></td>
                   <td>Fraction of steps with almost no progress change. Lower values indicate less stagnation.</td>
                 </tr>
                 <tr>
                   <td><code>RBS ↑</code></td>
-                  <td>All rollouts</td>
+                  <td class="metric-scope">All rollouts</td>
+                  <td class="metric-formula-cell">
+                    <div class="metric-formula-scroll">
+                      <span class="metric-formula-line math-latex" data-latex="d_t=\max_{k\le t}p_k-p_t,\quad t^*=\arg\max_t d_t"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{MDD}=d_{t^*},\quad \mathrm{Rec}=\max_{t\ge t^*}p_t-p_{t^*}"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{RBS}=\begin{cases}1,&amp;\mathrm{MDD}\le\varepsilon\\\min\!\left(1,\frac{\mathrm{Rec}+\varepsilon}{\mathrm{MDD}+\varepsilon}\right),&amp;\mathrm{otherwise}\end{cases}"></span>
+                    </div>
+                  </td>
                   <td>Measures recovery after the largest progress regression. Higher values indicate more complete recovery.</td>
                 </tr>
                 <tr>
                   <td><code>FNS ↑</code></td>
-                  <td>Failed rollouts</td>
+                  <td class="metric-scope">Failed rollouts</td>
+                  <td class="metric-formula-cell">
+                    <div class="metric-formula-scroll">
+                      <span class="metric-formula-line math-latex" data-latex="I_f=1-s"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{FNS}=I_f(0.5\,\mathrm{MaxP}+0.3\,M75+0.2\,M50)"></span>
+                    </div>
+                  </td>
                   <td>Measures how close a failed rollout came to success by combining its highest progress and milestone completion.</td>
                 </tr>
                 <tr>
                   <td><code>SQS ↑</code></td>
-                  <td>Successful rollouts</td>
+                  <td class="metric-scope">Successful rollouts</td>
+                  <td class="metric-formula-cell">
+                    <div class="metric-formula-scroll">
+                      <span class="metric-formula-line math-latex" data-latex="I_s=s"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{SQS}=I_s[0.5\,\mathrm{PPL}+0.3(1-\mathrm{CRA})+0.2(1-\mathrm{Stag})]"></span>
+                    </div>
+                  </td>
                   <td>Measures execution quality among successful rollouts, rewarding efficient, low-regret, and low-stagnation behavior.</td>
                 </tr>
               </tbody>
@@ -976,7 +1101,7 @@ class MyAdapter(BasePRMAdapter):
         </section>
 
         <section id="recipes">
-          <h2>Recipes</h2>
+          <h2>Command Reference</h2>
 
           <h3>Batch evaluate many videos without moving files</h3>
           <pre><code>MANIFEST=/data/my_rollouts/cases.jsonl \
@@ -1045,7 +1170,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
 
       <article class="doc-content lang-zh">
         <section id="zh-manifest">
-          <h2>Manifest 格式</h2>
+          <h2>输入：Manifest 格式</h2>
           <p>
             默认输入为 JSONL manifest 文件，<strong>每一行描述一个执行案例</strong>。路径可以是绝对路径，也可以是相对于 manifest 文件的相对路径。
           </p>
@@ -1114,7 +1239,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
                 <tr>
                   <td><code>label</code></td>
                   <td>&#9675; 可选</td>
-                  <td>表示该执行轨迹的已知结果：<code>success</code>（成功）或 <code>failure</code>（失败）。默认评测根据进度曲线判断成功；设置 <code>--success-source label</code> 后，程序将使用该字段划分成功和失败案例，用于分类汇总和相关指标计算。</td>
+                  <td>轨迹的已知结果：<code>success</code>（成功）或 <code>failure</code>（失败）。默认使用统一的进度阈值区分成功和失败案例，但该阈值不一定适用于所有轨迹。若 Benchmark 提供可靠标签，可设置 <code>--success-source label</code>，使用标签计算 SR，并分别划分用于计算 SQS 和 FNS 的成功与失败轨迹。</td>
                 </tr>
                 <tr>
                   <td><code>benchmark</code></td>
@@ -1137,7 +1262,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
         </section>
 
         <section id="zh-outputs">
-          <h2>输出结果</h2>
+          <h2>输出：评测结果</h2>
           <p><strong>默认情况下，输出会写入 <code>eval/results/run_YYMMDD_HHMMSS/</code>。</strong></p>
           <div class="table-wrap">
             <table>
@@ -1350,7 +1475,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
         </section>
 
         <section id="zh-choose-backend">
-          <h2>选择 PRM 评测方式</h2>
+          <h2>PRM 评测方式</h2>
           <p>
             该工具包支持多种进度评测方式：<code>dopamine</code> 使用 Robo-Dopamine 模型并作为默认选择；
             <code>robometer</code> 使用 RoboMeter 模型；<code>recorded</code> 不加载模型，直接读取预计算曲线；自定义适配器则可以接入你自己的 PRM。获得进度曲线后，所有方式共享相同的后处理和指标流水线。
@@ -1367,14 +1492,14 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
               </thead>
               <tbody>
                 <tr>
-                  <td>首次运行或常规批量评估</td>
+                  <td>细粒度过程变化或常规批量评测</td>
                   <td><strong><code>dopamine</code>（Robo-Dopamine）配合 <code>EVAL_MODE=incremental</code></strong></td>
-                  <td>稳定的默认选择，提供简单的一条命令路径，并支持仅主视角、单臂和双臂视频布局。</td>
+                  <td>比较相邻采样状态，适合捕捉局部、细粒度的进展与回退。</td>
                 </tr>
                 <tr>
-                  <td>重复或依赖上下文的动作</td>
+                  <td>长时、重复或依赖上下文的动作</td>
                   <td><code>robometer</code>（RoboMeter）</td>
-                  <td>序列式评判相比局部成对比较可以使用更长的时间上下文。</td>
+                  <td>利用视频序列中的时间上下文，适合仅凭相邻状态难以区分持续进展、重复动作或往返运动的轨迹。</td>
                 </tr>
                 <tr>
                   <td>不加载模型调试指标</td>
@@ -1382,7 +1507,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
                   <td>使用 manifest 中的 <code>progress</code> 或 <code>progress_path</code>。</td>
                 </tr>
                 <tr>
-                  <td>你自己的 PRM 或奖励模型</td>
+                  <td>接入其他 PRM</td>
                   <td>自定义适配器</td>
                   <td>返回 <code>[0, 1]</code> 中的绝对进度，或在计算指标前配置归一化。适配器步骤见 <a href="#zh-custom-prm">自定义 PRM</a>。</td>
                 </tr>
@@ -1458,7 +1583,7 @@ EVAL_MODE=backward MANIFEST=cases.jsonl PRM_PATH=/path/to/prm bash eval/run_eval
         </section>
 
         <section id="zh-multi-view">
-          <h2>视角与目标图像</h2>
+          <h2>视频视角与目标图像</h2>
           <p>
             每个案例必须提供 <code>video</code> 作为主视角。腕部视角和 <code>goal_image</code>
             均为可选：腕部视频可以补充抓取、接触和遮挡区域的细节；目标图像用于说明任务期望达到的最终状态。
@@ -1545,7 +1670,7 @@ bash eval/run_eval.sh</code></pre>
         </section>
 
         <section id="zh-progress-standard">
-          <h2>进度标准</h2>
+          <h2>进度曲线规范</h2>
           <p>
             指标栈消费<strong>归一化绝对进度曲线</strong>。每个 PRM 适配器最终都应产生：
           </p>
@@ -1614,65 +1739,113 @@ bash eval/run_eval.sh</code></pre>
         </section>
 
         <section id="zh-metrics">
-          <h2>指标</h2>
+          <h2>评测指标</h2>
           <p>
             默认情况下，指标计算和评测报告都使用经过异常值处理与平滑的进度曲线。原始曲线会保留在结果中，主要用于检查 PRM 的直接输出和排查问题。
           </p>
           <p><code>↑</code> 表示数值越高越好，<code>↓</code> 表示数值越低越好。</p>
+          <p>
+            以下公式中，<code>p_0 = 0, p_1, ..., p_T</code> 表示处理后的归一化进度曲线，
+            <code>θ</code> 表示成功阈值，<code>δ = 0.005</code> 表示默认停滞阈值，
+            <code>1[·]</code> 表示指示函数。
+          </p>
 
           <div class="table-wrap">
-            <table>
+            <table class="metric-table">
+              <colgroup>
+                <col style="width: 7.5rem">
+                <col style="width: 7rem">
+                <col style="width: 19.625rem">
+                <col>
+              </colgroup>
               <thead>
                 <tr>
                   <th>指标</th>
-                  <th>适用范围</th>
+                  <th class="metric-scope">适用范围</th>
+                  <th>公式</th>
                   <th>说明</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td><code>MaxP ↑</code></td>
-                  <td>全部轨迹</td>
+                  <td class="metric-scope">全部轨迹</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{MaxP}=\max_{1\le t\le T}p_t"></span></div></td>
                   <td>轨迹达到的最高进度。数值越高，表示执行过程越接近完成任务。</td>
                 </tr>
                 <tr>
                   <td><code>M25 ↑</code>、<code>M50 ↑</code>、<code>M75 ↑</code></td>
-                  <td>全部轨迹</td>
+                  <td class="metric-scope">全部轨迹</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="M_q=\mathbf{1}[\mathrm{MaxP}\ge q],\quad q\in\{0.25,0.50,0.75\}"></span></div></td>
                   <td>是否达到 25%、50% 和 75% 的进度里程碑；汇总时表示达到相应里程碑的轨迹比例。</td>
                 </tr>
                 <tr>
                   <td><code>SR ↑</code></td>
-                  <td>全部轨迹</td>
+                  <td class="metric-scope">全部轨迹</td>
+                  <td class="metric-formula-cell">
+                    <div class="metric-formula-scroll">
+                      <span class="metric-formula-line"><span class="math-latex" data-latex="s_i=\mathbf{1}[\mathrm{MaxP}_i\ge\theta]"></span><span class="metric-formula-note">默认</span></span>
+                      <span class="metric-formula-line"><span class="math-latex" data-latex="s_i=\mathbf{1}[\mathrm{label}_i=\mathrm{success}]"></span><span class="metric-formula-note">使用标签</span></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{SR}=\frac{1}{N}\sum_{i=1}^{N}s_i"></span>
+                    </div>
+                  </td>
                   <td>是否达到成功阈值，默认阈值为 <code>0.99</code>；汇总时表示成功率。</td>
                 </tr>
                 <tr>
                   <td><code>PPL ↑</code></td>
-                  <td>全部轨迹</td>
+                  <td class="metric-scope">全部轨迹</td>
+                  <td class="metric-formula-cell">
+                    <div class="metric-formula-scroll">
+                      <span class="metric-formula-line math-latex" data-latex="L=\sum_{t=1}^{T}|p_t-p_{t-1}|"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{PPL}=\begin{cases}\mathrm{MaxP}^{2}/L,&amp;L&gt;0\\0,&amp;L=0\end{cases}"></span>
+                    </div>
+                  </td>
                   <td>衡量轨迹在取得进展时的路径效率，数值越高表示有效进展越集中。</td>
                 </tr>
                 <tr>
                   <td><code>CRA ↓</code></td>
-                  <td>全部轨迹</td>
+                  <td class="metric-scope">全部轨迹</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{CRA}=\frac{1}{T}\sum_{t=1}^{T}\max\!\left(0,\max_{k\le t}p_k-p_t\right)"></span></div></td>
                   <td>衡量进度回退带来的累计损失，数值越低越好；应在达到相近进度的轨迹之间比较。</td>
                 </tr>
                 <tr>
                   <td><code>Stag ↓</code></td>
-                  <td>全部轨迹</td>
+                  <td class="metric-scope">全部轨迹</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{Stag}=\frac{1}{T}\sum_{t=1}^{T}\mathbf{1}[|p_t-p_{t-1}|\lt\delta]"></span></div></td>
                   <td>近乎没有进度变化的步骤比例，数值越低表示停滞越少。</td>
                 </tr>
                 <tr>
                   <td><code>RBS ↑</code></td>
-                  <td>全部轨迹</td>
+                  <td class="metric-scope">全部轨迹</td>
+                  <td class="metric-formula-cell">
+                    <div class="metric-formula-scroll">
+                      <span class="metric-formula-line math-latex" data-latex="d_t=\max_{k\le t}p_k-p_t,\quad t^*=\arg\max_t d_t"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{MDD}=d_{t^*},\quad \mathrm{Rec}=\max_{t\ge t^*}p_t-p_{t^*}"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{RBS}=\begin{cases}1,&amp;\mathrm{MDD}\le\varepsilon\\\min\!\left(1,\frac{\mathrm{Rec}+\varepsilon}{\mathrm{MDD}+\varepsilon}\right),&amp;\mathrm{otherwise}\end{cases}"></span>
+                    </div>
+                  </td>
                   <td>衡量轨迹在最大进度回退后的恢复程度，数值越高表示恢复越充分。</td>
                 </tr>
                 <tr>
                   <td><code>FNS ↑</code></td>
-                  <td>失败轨迹</td>
+                  <td class="metric-scope">失败轨迹</td>
+                  <td class="metric-formula-cell">
+                    <div class="metric-formula-scroll">
+                      <span class="metric-formula-line math-latex" data-latex="I_f=1-s"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{FNS}=I_f(0.5\,\mathrm{MaxP}+0.3\,M75+0.2\,M50)"></span>
+                    </div>
+                  </td>
                   <td>衡量失败轨迹距离成功有多近，综合最高进度和里程碑完成情况。</td>
                 </tr>
                 <tr>
                   <td><code>SQS ↑</code></td>
-                  <td>成功轨迹</td>
+                  <td class="metric-scope">成功轨迹</td>
+                  <td class="metric-formula-cell">
+                    <div class="metric-formula-scroll">
+                      <span class="metric-formula-line math-latex" data-latex="I_s=s"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{SQS}=I_s[0.5\,\mathrm{PPL}+0.3(1-\mathrm{CRA})+0.2(1-\mathrm{Stag})]"></span>
+                    </div>
+                  </td>
                   <td>衡量成功轨迹的执行质量，奖励高效、低回退和低停滞的过程。</td>
                 </tr>
               </tbody>
@@ -1801,6 +1974,25 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
     </main>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script>
+    (function () {
+      document.querySelectorAll('.math-latex').forEach(function (element) {
+        var latex = element.getAttribute('data-latex');
+        if (!latex) return;
+
+        if (typeof katex === 'undefined') {
+          element.textContent = latex;
+          return;
+        }
+
+        katex.render(latex, element, {
+          throwOnError: false,
+          displayMode: false
+        });
+      });
+    }());
+  </script>
   <script src="assets/doc.js"></script>
 </body>
 </html>
