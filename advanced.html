@@ -577,6 +577,11 @@
                   <td>The default <code>incremental</code> mode compares adjacent sampled frames. Use <code>forward</code> to anchor progress estimates to the initial state; use <code>backward</code> when a reliable goal image is available and progress should be evaluated relative to the goal.</td>
                 </tr>
                 <tr>
+                  <td>Success threshold</td>
+                  <td><code>--success-threshold 0.99</code></td>
+                  <td>Without a reliable <code>label</code>, success is determined by whether <code>MaxP</code> reaches the default threshold of <code>0.99</code>. Because the <code>MaxP</code> distribution may vary across tasks, adjust the threshold when necessary.</td>
+                </tr>
+                <tr>
                   <td>Frame sampling interval</td>
                   <td><code>FRAME_INTERVAL=72</code></td>
                   <td>Decrease it for denser progress curves on short videos or fast actions; increase it to speed up inference on long videos.</td>
@@ -1131,38 +1136,38 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
 
           <h3>1. What is <code>goal_image</code> used for?</h3>
           <p>
-            <code>goal_image</code> is an optional parameter specific to Robo-Dopamine. It provides an
-            explicit visual reference for the completed task state, helping the model understand what
+            <code>goal_image</code> is an <strong><em>optional parameter</em></strong> specific to <strong>Robo-Dopamine</strong>. It provides an
+            <strong>explicit visual reference for the completed task state</strong>, helping the model understand what
             success should look like, reduce goal ambiguity, and improve progress-judgment accuracy.
-            Robo-Dopamine uses it as <code>REFERENCE END</code>; in <code>backward</code> mode, the goal
-            image is also compared directly with the current sampled state. Other Judge Model adapters
-            do not necessarily use this field.
+            <strong>Robo-Dopamine</strong> uses it as <code>REFERENCE END</code>; in <code>backward</code> mode, the goal
+            image is also compared directly with the current sampled state. <em>Other Judge Model adapters
+            do not necessarily use this field.</em>
           </p>
           <p>
-            In practice, set <code>goal_image</code> in the manifest when a reliable success-state
-            reference is available, preferably the final frame of a manually verified successful
-            demonstration or a separately captured target state. If no reliable goal image is
-            available, omit the field; the Robo-Dopamine adapter will use
+            In practice, set <code>goal_image</code> in the manifest when a <strong>reliable success-state
+            reference</strong> is available, preferably <em>the final frame of a manually verified successful
+            demonstration</em> or <em>a separately captured target state</em>. If no reliable goal image is
+            available, omit the field; the <strong>Robo-Dopamine</strong> adapter will use
             <code>eval/examples/blank.png</code> as a placeholder, although the evaluation will not
-            benefit from an explicit goal reference. Do not use the final frame of the rollout being
-            evaluated unless that rollout is known to have succeeded, because a failure state could
+            benefit from an explicit goal reference. <strong>Do not use the final frame of the rollout being
+            evaluated unless that rollout is known to have succeeded</strong>, because a failure state could
             otherwise be treated as the task goal and reduce judgment accuracy.
           </p>
 
-          <h3>2. How does Robo-Dopamine estimate progress, and when should I use a sequence-style model?</h3>
+          <h3>2. How does Robo-Dopamine estimate progress, and when should I use another PRM as the judge?</h3>
           <p>
-            Robo-Dopamine is a pair-style Judge Model. Depending on <code>EVAL_MODE</code>,
+            <strong>Robo-Dopamine</strong> is a <strong><em>pair-wise Judge Model</em></strong>. Depending on <code>EVAL_MODE</code>,
             it compares two sampled images or states—for example, adjacent samples, the initial
             state and the current state, or the current state and a goal reference—to estimate
-            relative progress. These pairwise judgments are then linked into a progress curve.
+            relative progress. These pair-wise judgments are then linked into a progress curve.
           </p>
           <p>
-            This local comparison works well for many robot manipulation tasks, but it can be
-            ambiguous for repeated or oscillatory motions and other tasks that depend strongly on
-            temporal context. Two images alone may not reveal whether the robot is making sustained
-            progress, repeating an action cycle, or simply moving back and forth. For these tasks,
-            use or compare against a sequence-style Judge Model such as RoboMeter, which can reason
-            over a longer temporal context.
+            This local comparison works well for many robot manipulation tasks.
+            <strong>However, it can be ambiguous for repeated or oscillatory motions and tasks that
+            depend strongly on temporal context.</strong> Two images alone may not reveal whether the
+            robot is making sustained progress, repeating an action cycle, or simply moving back and
+            forth. For these tasks, consider a <strong><em>sequence-style PRM</em></strong> that evaluates
+            a longer video sequence, such as <strong>RoboMeter</strong>, or use it as a comparison.
           </p>
         </section>
 
@@ -1443,6 +1448,11 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
                   <td>Dopamine 模式</td>
                   <td><strong><code>EVAL_MODE=incremental</code></strong></td>
                   <td>默认使用 <code>incremental</code> 比较相邻采样帧。需要以起始状态为锚点观察累计进展时改为 <code>forward</code>；有可靠的目标图像、希望根据当前状态与目标的差距评估进度时改为 <code>backward</code>。</td>
+                </tr>
+                <tr>
+                  <td>成功阈值</td>
+                  <td><code>--success-threshold 0.99</code></td>
+                  <td>没有可靠的 <code>label</code> 时，程序根据 <code>MaxP</code> 是否达到默认阈值 <code>0.99</code> 判断成功。不同任务的 <code>MaxP</code> 分布可能不同，可根据实际情况调整该阈值。</td>
                 </tr>
                 <tr>
                   <td>帧采样间隔</td>
@@ -1951,22 +1961,22 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
 
           <h3>1. 目标图像（<code>goal_image</code>）的作用是什么？</h3>
           <p>
-            <code>goal_image</code> 是 Robo-Dopamine 专用的可选参数。它为模型提供明确的任务完成状态视觉参考，帮助模型理解“成功状态应该是什么样”，减少目标歧义，并提升进度判断的准确性。
-            Robo-Dopamine 会将其作为 <code>REFERENCE END</code>；在 <code>backward</code> 模式中，目标图像还会直接与当前采样状态进行比较。其他 Judge Model 适配器不一定使用该字段。
+            <code>goal_image</code> 是 <strong>Robo-Dopamine</strong> 专用的<strong><em>可选参数</em></strong>。它为模型提供<strong>明确的任务完成状态视觉参考</strong>，帮助模型理解“成功状态应该是什么样”，减少目标歧义，并提升进度判断的准确性。
+            <strong>Robo-Dopamine</strong> 会将其作为 <code>REFERENCE END</code>；在 <code>backward</code> 模式中，目标图像还会直接与当前采样状态进行比较。<em>其他 Judge Model 适配器不一定使用该字段。</em>
           </p>
           <p>
-            在实际使用中，如果有可靠的成功状态参考，建议在 manifest 中填写
-            <code>goal_image</code>，优先选择经过人工确认的成功演示轨迹最后一帧，或单独拍摄的标准目标状态。如果没有可靠的目标图像，可以省略该字段；Robo-Dopamine 适配器会使用
-            <code>eval/examples/blank.png</code> 作为占位图，但此时无法获得明确目标参考带来的判断增益。不要直接使用待评测轨迹的最后一帧，除非已经确认该轨迹成功，否则模型可能把失败状态误当成任务目标，反而降低判断准确性。
+            在实际使用中，如果有<strong>可靠的成功状态参考</strong>，建议在 manifest 中填写
+            <code>goal_image</code>，优先选择<em>经过人工确认的成功演示轨迹最后一帧</em>，或<em>单独拍摄的标准目标状态</em>。如果没有可靠的目标图像，可以省略该字段；<strong>Robo-Dopamine</strong> 适配器会使用
+            <code>eval/examples/blank.png</code> 作为占位图，但此时无法获得明确目标参考带来的判断增益。<strong>不要直接使用待评测轨迹的最后一帧，除非已经确认该轨迹成功</strong>，否则模型可能把失败状态误当成任务目标，反而降低判断准确性。
           </p>
 
-          <h3>2. Robo-Dopamine 如何判断进度，哪些任务更适合序列式模型？</h3>
+          <h3>2. Robo-Dopamine 如何判断进度，何时应使用其他 PRM 作为 Judge？</h3>
           <p>
-            Robo-Dopamine 是成对比较式 Judge Model。它会根据 <code>EVAL_MODE</code>
+            <strong>Robo-Dopamine</strong> 是一种<strong><em>成对比较式（pair-wise）Judge Model</em></strong>。它会根据 <code>EVAL_MODE</code>
             比较两张采样图像或状态，例如相邻采样点、初始状态与当前状态，或当前状态与目标参考，得到相对进度判断，再将连续的成对判断连接成进度曲线。
           </p>
           <p>
-            这种局部比较适合许多机器人操作任务，但对于往复运动、周期性动作或强依赖上下文的任务，两张图像可能无法区分机器人是在持续取得进展、重复一个动作周期，还是仅仅来回移动，因此判断可能不够准确。此类任务可以使用 RoboMeter 这类序列式 Judge Model，或将其结果作为对照；序列式模型能够利用更长的时间上下文进行判断。
+            这种局部比较适合许多机器人操作任务。<strong>但是，对于往复运动、周期性动作或强依赖时间上下文的任务，成对比较可能产生歧义。</strong>两张图像可能无法区分机器人是在持续取得进展、重复一个动作周期，还是仅仅来回移动。对于这类任务，可以使用能够分析更长视频序列的<strong><em>序列式（sequence-style）PRM</em></strong>，例如 <strong>RoboMeter</strong>，或将其评测结果作为对照。
           </p>
         </section>
 
