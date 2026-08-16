@@ -1,0 +1,3088 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>PRM-as-a-Judge</title>
+  <meta name="description"
+        content="PRM-as-a-Judge: A dense evaluation paradigm that turns trajectory videos into a goldmine of progress signals.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+  <link rel="apple-touch-icon" href="assets/images/logo.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Source Sans 3", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #fafafa;
+      color: #1a1a1a;
+      line-height: 1.7;
+    }
+
+    .site-nav {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      max-width: 1180px;
+      margin: 0 auto;
+      border-bottom: 1px solid #e8e8e8;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(250, 250, 250, 0.94);
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+    }
+
+    .site-nav a {
+      color: #666;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .site-nav a:hover {
+      color: #1a1a1a;
+    }
+
+    .site-nav a.active {
+      color: #1a1a1a;
+      font-weight: 500;
+    }
+
+    .blog-container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    .blog-layout {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      column-gap: 2.1rem;
+      align-items: start;
+    }
+
+    .blog-toc {
+      position: sticky;
+      top: 1.25rem;
+      align-self: start;
+      max-height: calc(100vh - 2.5rem);
+      overflow: auto;
+      padding-right: 0.4rem;
+    }
+
+    .toc-title {
+      margin: 0 0 0.55rem 0;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #7d7d7d;
+    }
+
+    .toc-nav {
+      margin: 0;
+      padding: 0.35rem 0 0.25rem 0;
+      border-left: 2px solid #e2e2e2;
+    }
+
+    .toc-item {
+      margin: 0;
+      padding: 0;
+    }
+
+    .toc-link {
+      display: block;
+      text-decoration: none;
+      color: #6a6a6a;
+      font-size: 0.83rem;
+      line-height: 1.35;
+      padding: 0.24rem 0 0.24rem 0.7rem;
+      border-left: 2px solid transparent;
+      margin-left: -2px;
+      transition: color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .toc-link:hover {
+      color: #2f2f2f;
+    }
+
+    .toc-link.active {
+      color: #1d1d1d;
+      border-left-color: #a3a3a3;
+      font-weight: 600;
+    }
+
+    .toc-link-h3 {
+      font-size: 0.79rem;
+      padding-left: 1.25rem;
+      color: #7a7a7a;
+    }
+
+    .blog-main {
+      max-width: 830px;
+      min-width: 0;
+      --card-radius: 10px;
+      --card-border: #dfe5ee;
+      --card-shadow: 0 1px 2px rgba(23, 35, 56, 0.04);
+    }
+
+    .blog-hero {
+      max-width: 820px;
+      margin-bottom: 1.45rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid #e2e7ee;
+    }
+
+    .hero-eyebrow {
+      margin: 0 0 0.35rem 0;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .hero-title {
+      margin: 0;
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.96rem;
+      line-height: 1.2;
+      font-weight: 700;
+      color: #1a1a1a;
+      max-width: none;
+    }
+
+    .hero-title-with-logo {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.38rem;
+    }
+
+    .hero-title-logo {
+      height: 2.9rem;
+      width: auto;
+      flex-shrink: 0;
+      transform: translateY(-0.16rem);
+      margin-right: 0;
+    }
+
+    .hero-subtitle {
+      margin: 0.62rem 0 0.85rem 0;
+      color: #555;
+      font-size: 0.98rem;
+      max-width: 39rem;
+      line-height: 1.56;
+    }
+
+    .metadata-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid #dfdfdf;
+      background: #f8f8f8;
+      color: #444;
+      font-size: 0.86rem;
+      text-decoration: none;
+    }
+
+    .meta-chip .chip-key {
+      color: #777;
+      font-weight: 600;
+    }
+
+    .meta-chip .chip-value {
+      color: #333;
+      font-weight: 500;
+    }
+
+    .meta-chip.chip-link:hover {
+      border-color: #c9c9c9;
+      color: #1a1a1a;
+    }
+
+    .hero-cta-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.44rem;
+      margin-bottom: 0.88rem;
+    }
+
+    .hero-cta-links .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.42rem 0.72rem;
+      border-radius: 8px;
+      border: 1px solid #d7deea;
+      background: #fff;
+      color: #33425a;
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 600;
+      line-height: 1;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .hero-cta-links .hero-cta:hover {
+      background: #f3f6fb;
+      border-color: #c8d3e3;
+      color: #27364f;
+    }
+
+    .hero-cta-links .hero-cta.hero-cta-primary {
+      background: #2f5fa7;
+      border-color: #2f5fa7;
+      color: #fff;
+    }
+
+    .hero-cta-links .hero-cta.hero-cta-primary:hover {
+      background: #274f8c;
+      border-color: #274f8c;
+      color: #fff;
+    }
+
+    .hero-cta-links .hero-cta.hero-cta-secondary {
+      background: #fff;
+    }
+
+    .hero-cta-sep {
+      color: #b0b0b0;
+      font-size: 0.88rem;
+      user-select: none;
+    }
+
+    .tldr-card {
+      border: 1px solid #d9e0ea;
+      border-left: 3px solid #b7c3d6;
+      border-radius: 10px;
+      background: #fcfdff;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.05);
+      padding: 0.72rem 0.86rem;
+      color: #3d4655;
+      font-size: 0.92rem;
+      line-height: 1.55;
+    }
+
+    .tldr-card .tldr-label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 700;
+      color: #333;
+      letter-spacing: 0.02em;
+    }
+
+    .tldr-card p {
+      display: block;
+      margin: 0;
+    }
+
+    .blog-header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .blog-title {
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.85rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: 1rem;
+    }
+
+    .title-with-logo {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.1rem;
+    }
+
+    .title-logo {
+      height: 3.2rem;
+      width: auto;
+      flex-shrink: 0;
+      transform: translateY(-0.3rem);
+      margin-right: -0.55rem;
+    }
+
+    .title-text {
+      display: block;
+    }
+
+    .blog-meta {
+      font-size: 1rem;
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-meta a {
+      color: #666;
+      text-decoration: none;
+    }
+
+    .blog-meta a:hover {
+      color: #333;
+      text-decoration: underline;
+    }
+
+    .blog-meta .icon {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 0.35rem;
+      vertical-align: middle;
+    }
+
+    .blog-byline {
+      font-size: 1rem;
+      color: #666;
+    }
+
+    .meta-card {
+      margin-top: 0.2rem;
+      padding: 0.55rem 0 0.45rem 0.95rem;
+      border-left: 3px solid #cfcfcf;
+      background: transparent;
+      font-size: 0.95rem;
+    }
+
+    .meta-row {
+      display: grid;
+      grid-template-columns: 6.4rem minmax(0, 1fr);
+      column-gap: 0.65rem;
+      align-items: baseline;
+      margin: 0;
+    }
+
+    .meta-row + .meta-row {
+      margin-top: 0.45rem;
+      padding-top: 0.2rem;
+    }
+
+    .meta-label {
+      color: #666;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .meta-value {
+      color: #555;
+      font-style: italic;
+      min-width: 0;
+    }
+
+    .meta-value a {
+      color: #2d63d8;
+      text-decoration: none;
+      font-style: italic;
+    }
+
+    .meta-value a:hover {
+      color: #1d4fbf;
+      text-decoration: underline;
+    }
+
+    .meta-note {
+      color: #666;
+      margin-left: 0.2rem;
+      font-style: italic;
+      font-size: 0.96em;
+    }
+
+    @media (max-width: 640px) {
+      .blog-hero {
+        max-width: none;
+      }
+
+      .hero-title {
+        max-width: none;
+        font-size: 1.78rem;
+      }
+
+      .hero-cta-links .hero-cta {
+        padding: 0.4rem 0.62rem;
+        font-size: 0.8rem;
+      }
+
+      .meta-row {
+        grid-template-columns: 5.5rem minmax(0, 1fr);
+        column-gap: 0.5rem;
+      }
+    }
+
+    @media (max-width: 1080px) {
+      .site-nav {
+        max-width: 860px;
+      }
+
+      .blog-container {
+        max-width: 860px;
+      }
+
+      .blog-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .blog-toc {
+        display: none;
+      }
+
+      .blog-main {
+        max-width: none;
+      }
+    }
+
+    .hero-figure {
+      margin: 0 0 2rem 0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .hero-figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .gist-box {
+      background: #f5f5f5;
+      border-left: 4px solid #333;
+      padding: 1.25rem 1.5rem;
+      margin: 2rem 0;
+      font-style: italic;
+      color: #333;
+    }
+
+    .blog-section {
+      font-family: "STIX Two Text", "Times New Roman", Times, serif;
+      text-align: justify;
+    }
+
+    .blog-section h2 {
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-top: 2.22rem;
+      margin-bottom: 0.86rem;
+      color: #1a1a1a;
+      text-align: left;
+      scroll-margin-top: 1rem;
+      line-height: 1.25;
+    }
+
+    .blog-section h3 {
+      font-family: "Source Serif 4", Georgia, serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 1.45rem;
+      margin-bottom: 0.62rem;
+      color: #1a1a1a;
+      text-align: left;
+      scroll-margin-top: 1rem;
+      line-height: 1.3;
+    }
+
+    .blog-section > h2:first-of-type {
+      margin-top: 1.28rem;
+    }
+
+    .blog-section p {
+      margin-bottom: 0.92rem;
+    }
+
+    .blog-section h2.closing-section-heading {
+      margin-top: 1.86rem;
+      padding-top: 0.82rem;
+      border-top: 1px solid #e6ebf3;
+    }
+
+    .blog-section h2.closing-section-heading.conclusion-heading {
+      margin-top: 1.58rem;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .pipeline-breakdown,
+    .conclusion-directions {
+      margin: 0.34rem 0 1rem;
+      padding-left: 1.22rem;
+    }
+
+    .pipeline-breakdown li,
+    .conclusion-directions li {
+      margin: 0.42rem 0;
+      padding-left: 0.12rem;
+      line-height: 1.53;
+      color: #4f5d72;
+    }
+
+    .pipeline-breakdown {
+      margin-top: -0.28rem;
+    }
+
+    .better-prm-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.58rem;
+      margin: 0.48rem 0 0.86rem;
+    }
+
+    .better-prm-card {
+      padding: 0.62rem 0.64rem;
+      border: 1px solid #dfe5ee;
+      border-top: 3px solid #7894bf;
+      border-radius: 9px;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.04);
+    }
+
+    .better-prm-card h4 {
+      margin: 0 0 0.28rem;
+      font-size: 0.85rem;
+      line-height: 1.3;
+      color: #33445c;
+    }
+
+    .better-prm-card p {
+      margin: 0;
+      font-size: 0.75rem;
+      line-height: 1.45;
+      color: #5a6679;
+    }
+
+    @media (max-width: 768px) {
+      .better-prm-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 480px) {
+      .better-prm-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .concluding-note {
+      margin: 0.76rem 0 0.2rem;
+      padding: 0.54rem 0.66rem;
+      border-radius: 10px;
+      border: 1px solid #d8e3f2;
+      background: #f7fbff;
+      color: #41536c;
+      font-size: 0.9rem;
+      line-height: 1.48;
+    }
+
+    .concluding-note strong {
+      color: #2f4666;
+      font-weight: 700;
+    }
+
+    .collab-contact-note {
+      margin: 0.52rem 0 0.2rem;
+      padding: 0.5rem 0.64rem;
+      border: 1px solid #dfe6f2;
+      border-radius: 10px;
+      background: #fbfdff;
+      color: #4a576d;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .collab-contact-note a {
+      color: #2f5fa7;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      font-weight: 600;
+    }
+
+    .collab-contact-note a:hover {
+      color: #244f8c;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
+      gap: 0.56rem;
+      margin: 0.5rem 0 0.18rem;
+    }
+
+    .author-list-card {
+      margin: 0.5rem 0 0.18rem;
+      padding: 0.72rem 0.82rem;
+    }
+
+    .author-inline-list {
+      margin: 0;
+      font-size: 0.86rem;
+      line-height: 1.8;
+      color: #354156;
+    }
+
+    .author-inline-list sup,
+    .author-role-notes sup {
+      font-size: 0.72em;
+      vertical-align: super;
+      line-height: 0;
+    }
+
+    .author-role-notes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 1rem;
+      margin-top: 0.58rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid #e7ebf2;
+      font-size: 0.75rem;
+      line-height: 1.45;
+      color: #2f4f7f;
+      font-weight: 700;
+    }
+
+    .project-lead-note {
+      color: inherit;
+      font-weight: inherit;
+    }
+
+    .team-card {
+      border: 1px solid #dfe5ee;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 1px 1px rgba(23, 35, 56, 0.03);
+      padding: 0.54rem 0.62rem;
+      text-align: left;
+    }
+
+    .team-card h3 {
+      margin: 0 0 0.24rem;
+      font-size: 0.96rem;
+      font-family: "Source Serif 4", Georgia, serif;
+      color: #29374f;
+    }
+
+    .team-note,
+    .team-inline-list {
+      margin: 0;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: #5a667b;
+    }
+
+    .team-list {
+      margin: 0.35rem 0 0;
+      padding-left: 1.08rem;
+    }
+
+    .team-list li {
+      margin-bottom: 0.22rem;
+      font-size: 0.84rem;
+      color: #2f3a4b;
+    }
+
+    .team-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .citation-card {
+      margin-top: 0.46rem;
+      border: 1px solid #dfe5ee;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.04);
+      overflow: hidden;
+    }
+
+    .citation-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.5rem 0.62rem;
+      border-bottom: 1px solid #e4e9f1;
+      background: #f8fbff;
+    }
+
+    .citation-kind {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #3f4f66;
+      letter-spacing: 0.01em;
+    }
+
+    .citation-copy-btn {
+      border: 1px solid #c9d5e8;
+      border-radius: 8px;
+      background: #fff;
+      color: #2f5fa7;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.26rem 0.58rem;
+      cursor: pointer;
+      line-height: 1.2;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .citation-copy-btn:hover {
+      background: #eef4ff;
+      border-color: #b9cae4;
+      color: #274f8c;
+    }
+
+    .citation-copy-btn.copied {
+      background: #e8f5ec;
+      border-color: #b8dcc2;
+      color: #2f7446;
+    }
+
+    .blog-section .citation-card .citation-block {
+      margin: 0;
+      border: 0;
+      border-radius: 0;
+      background: #fff;
+      box-shadow: none;
+      padding: 0.68rem 0.78rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: #33445f;
+      overflow-x: auto;
+    }
+
+    .blog-section .citation-card .citation-block code {
+      font-family: inherit;
+      white-space: pre;
+    }
+
+    .citation-status {
+      margin: 0;
+      padding: 0.36rem 0.72rem 0.5rem;
+      border-top: 1px solid #eef2f7;
+      background: #fcfdff;
+      font-size: 0.75rem;
+      color: #6a768a;
+      line-height: 1.3;
+    }
+
+    @media (max-width: 980px) {
+      .team-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .team-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .citation-head {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .key-takeaway {
+      margin: 0.95rem 0 1.15rem;
+      padding: 0.7rem 0.88rem;
+      border-left: 3px solid #b8c4d7;
+      border-radius: 10px;
+      border: 1px solid #dce3ed;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.04);
+      color: #384150;
+      line-height: 1.58;
+    }
+
+    .key-takeaway strong {
+      font-weight: 700;
+      color: #222;
+    }
+
+    .figure-card {
+      margin: 1rem 0 1.24rem;
+      padding: 0.42rem;
+      border: 1px solid #dfe5ee;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.04);
+      overflow: hidden;
+    }
+
+    .figure-card.figure-card-tight {
+      padding: 0.32rem;
+    }
+
+    .figure-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #e6ebf3;
+      background: #fff;
+    }
+
+    .figure-card .blog-figcaption,
+    .figure-card .chart-caption,
+    .figure-card .panel-caption {
+      margin-top: 0.4rem;
+      margin-bottom: 0;
+      font-size: 0.78rem;
+      color: #5f6a7b;
+      line-height: 1.38;
+      font-style: normal;
+    }
+
+    .figure-card .figure-note {
+      margin-top: 0.24rem;
+      font-size: 0.74rem;
+      color: #748196;
+      line-height: 1.35;
+    }
+
+    .blog-figure.explainer-figure {
+      width: min(76%, 680px);
+      margin: 1.02rem auto 1.32rem;
+    }
+
+    .blog-figure.explainer-figure img {
+      width: 100%;
+    }
+
+    .blog-figure.explainer-figure .blog-figcaption {
+      text-align: center;
+      margin-top: 0.42rem;
+    }
+
+    .section-lead {
+      margin: 0.35rem 0 0.85rem;
+      font-size: 0.95rem;
+      color: #4a4a4a;
+      line-height: 1.55;
+    }
+
+    .section-lead strong {
+      color: #252525;
+      font-weight: 700;
+    }
+
+    .section-link-note {
+      margin: -0.12rem 0 0.9rem;
+      font-size: 0.9rem;
+      color: #55627a;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    .section-link-note a {
+      color: #2f5fa7;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      font-weight: 600;
+    }
+
+    .section-link-note a:hover {
+      color: #274f8c;
+    }
+
+    .blog-figure.core-idea-figure {
+      width: 86%;
+      margin: 0.96rem auto 1.3rem;
+    }
+
+    .blog-figure.core-idea-figure img {
+      width: 100%;
+    }
+
+    .blog-figure.core-idea-figure .blog-figcaption {
+      text-align: center;
+      margin-top: 0.42rem;
+    }
+
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.95rem;
+      margin: 0.88rem 0 1.02rem;
+    }
+
+    .principle-card {
+      border: 1px solid #dfe5ee;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.04);
+      padding: 0.82rem 0.92rem;
+      color: #333;
+    }
+
+    .principle-card-title {
+      margin: 0 0 0.45rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1f1f1f;
+      font-family: "Source Serif 4", Georgia, serif;
+    }
+
+    .principle-card p {
+      margin: 0.35rem 0;
+      line-height: 1.6;
+    }
+
+    .equation-card {
+      margin: 0.52rem 0;
+      border: 1px solid #e1e6ee;
+      border-radius: 8px;
+      background: #f9fbff;
+      padding: 0.5rem 0.62rem;
+    }
+
+    .equation-card .formula-block {
+      margin: 0;
+    }
+
+    .equation-card .math-inline {
+      margin: 0;
+      background: #ffffff;
+      border: 1px solid #ececec;
+    }
+
+    .plain-english {
+      margin: 0.45rem 0 0;
+      font-size: 0.88rem;
+      color: #5b677a;
+      line-height: 1.5;
+    }
+
+    .plain-english strong {
+      font-weight: 700;
+      color: #3c4b62;
+    }
+
+    .relation-transition {
+      margin: 0.54rem 0 0.2rem;
+      color: #404d62;
+      font-size: 0.92rem;
+      line-height: 1.52;
+      text-align: left;
+    }
+
+    .relation-formula {
+      margin: 0.02rem 0 0.18rem;
+      width: 100%;
+      text-align: center;
+      display: block;
+    }
+
+    .relation-formula .math-inline {
+      margin: 0 auto;
+      padding: 0.14rem 0.24rem;
+      background: transparent;
+      border: 0;
+      font-size: 0.98em;
+      display: block;
+      width: max-content;
+      max-width: 100%;
+    }
+
+    .relation-formula .katex-display {
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .relation-note {
+      margin: 0 0 1rem;
+      font-size: 0.84rem;
+      color: #5f6d82;
+      line-height: 1.45;
+      text-align: left;
+    }
+
+    .opd-tier-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.82rem;
+      margin: 0.74rem 0 0.9rem;
+      align-items: stretch;
+    }
+
+    .opd-tier-card {
+      border: 1px solid #e2e8f1;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.03);
+      padding: 0.82rem 0.88rem 0.86rem;
+      color: #2f3543;
+      text-align: left;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+      gap: 0.34rem;
+    }
+
+    .opd-tier-card.tier-outcome {
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 36%);
+    }
+
+    .opd-tier-card.tier-process {
+      background: linear-gradient(180deg, #f7fbf8 0%, #ffffff 36%);
+    }
+
+    .opd-tier-card.tier-diagnosis {
+      background: linear-gradient(180deg, #fffaf7 0%, #ffffff 36%);
+    }
+
+    .opd-tier-title {
+      margin: 0;
+      font-size: 1.03rem;
+      font-weight: 700;
+      color: #222a37;
+      font-family: "Source Serif 4", Georgia, serif;
+      text-align: left;
+    }
+
+    .opd-tier-def {
+      margin: 0;
+      font-size: 0.83rem;
+      color: #4d586d;
+      line-height: 1.48;
+      text-align: left;
+    }
+
+    .opd-tier-question {
+      margin: 0;
+      font-size: 0.79rem;
+      color: #415676;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-align: left;
+    }
+
+    .opd-map-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 0.84rem;
+      margin: 0.74rem 0 0.88rem;
+    }
+
+    .opd-map-row {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.9fr) minmax(0, 2.1fr);
+      gap: 0.84rem;
+      align-items: stretch;
+    }
+
+    .opd-map-row .opd-tier-card {
+      min-height: 100%;
+      justify-content: center;
+    }
+
+    .opd-row-metrics {
+      display: grid;
+      gap: 0.84rem;
+      align-items: stretch;
+    }
+
+    .opd-row-metrics.metrics-two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .opd-row-metrics.metrics-one {
+      grid-template-columns: 1fr;
+    }
+
+    .opd-metric-card {
+      border: 1px solid #dfe5ee;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.03);
+      padding: 0.68rem 0.76rem 0.74rem;
+      color: #2f3543;
+      overflow: visible;
+      text-align: left;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+
+    .opd-metric-card::before {
+      content: "";
+      display: block;
+      height: 3px;
+      border-radius: 999px;
+      margin: -0.68rem -0.76rem 0.48rem;
+      background: var(--metric-accent, #8a99b2);
+    }
+
+    .opd-metric-card.metric-outcome {
+      --metric-accent: #5a83c8;
+    }
+
+    .opd-metric-card.metric-process {
+      --metric-accent: #4d9c7a;
+    }
+
+    .opd-metric-card.metric-diagnosis {
+      --metric-accent: #c27b58;
+    }
+
+    .opd-metric-head {
+      margin-bottom: 0.26rem;
+      min-height: 2.2rem;
+    }
+
+    .opd-metric-short {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1f2c43;
+      line-height: 1.1;
+      font-family: "Source Serif 4", Georgia, serif;
+      text-align: left;
+    }
+
+    .opd-metric-full {
+      margin: 0.1rem 0 0;
+      font-size: 0.76rem;
+      color: #68748a;
+      line-height: 1.35;
+      text-align: left;
+      min-height: 2.05em;
+    }
+
+    .opd-metric-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 0.34rem;
+      min-height: 1.55rem;
+    }
+
+    .opd-metric-badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid #d9e1ec;
+      background: #f8fbff;
+      padding: 0.09rem 0.42rem;
+      font-size: 0.71rem;
+      color: #5b667a;
+      font-weight: 600;
+      line-height: 1.2;
+    }
+
+    .opd-metric-card .equation-card {
+      margin: 0.26rem 0 0.36rem;
+      padding: 0.26rem 0.3rem;
+      background: #f8fbff;
+      border-color: #e3e8f1;
+      overflow: visible;
+      min-height: 3.45rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .opd-metric-card .equation-card .math-inline {
+      padding: 0.18rem 0.26rem;
+      font-size: 0.78em;
+      overflow-x: auto;
+      overflow-y: visible;
+      white-space: nowrap;
+      border-color: #e7edf6;
+      background: #fbfdff;
+      text-align: center;
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    .opd-metric-card .formula-block {
+      margin: 0;
+      overflow-x: auto;
+      overflow-y: visible;
+      text-align: center;
+      width: 100%;
+    }
+
+    .opd-metric-plain {
+      margin: 0.02rem 0 0;
+      font-size: 0.8rem;
+      line-height: 1.43;
+      color: #516075;
+      text-align: left;
+    }
+
+    .opd-pref-note {
+      margin: 0.02rem 0 0.8rem;
+      font-size: 0.8rem;
+      color: #5a6780;
+      text-align: left;
+    }
+
+    .opd-reading-heading {
+      margin: 1rem 0 0.34rem;
+      font-size: 1.08rem;
+      line-height: 1.35;
+    }
+
+    .opd-reading-intro {
+      margin: 0 0 0.42rem;
+    }
+
+    .opd-reading-list {
+      margin: 0.34rem 0 1.12rem;
+      padding-left: 1.22rem;
+    }
+
+    .opd-reading-list li {
+      margin: 0.34rem 0;
+      padding-left: 0.12rem;
+      line-height: 1.55;
+      color: #4f5d72;
+    }
+
+    .section6-primary-figure {
+      margin: 0.82rem 0 1.05rem;
+    }
+
+    .section6-primary-figure .blog-figcaption {
+      margin-top: 0.4rem;
+    }
+
+    .section6-process-group {
+      margin: 0.48rem 0 0.58rem;
+      padding: 0.42rem 0.48rem 0.48rem;
+    }
+
+    .section6-process-group-title {
+      margin: 0 0 0.36rem;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      font-weight: 700;
+      color: #3f4f66;
+      letter-spacing: 0.01em;
+      text-align: left;
+    }
+
+    .section6-process-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.44rem;
+      align-items: stretch;
+      grid-auto-rows: 1fr;
+    }
+
+    .section6-process-panel {
+      margin: 0;
+      border: 1px solid #e3e8f1;
+      border-radius: 9px;
+      background: #fbfcff;
+      padding: 0.18rem;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr) auto;
+      align-items: stretch;
+      height: 100%;
+    }
+
+    .section6-process-panel img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 781 / 572;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #eceff4;
+      background: #fff;
+      flex: 1 0 auto;
+    }
+
+    .section6-process-panel.left-view img {
+      object-position: left center;
+    }
+
+    .section6-process-panel.right-view img {
+      object-position: right center;
+    }
+
+    .section6-process-panel .panel-caption {
+      margin: 0.18rem 0 0;
+      font-size: 0.74rem;
+      line-height: 1.3;
+      text-align: center;
+      color: #5b6778;
+      min-height: 1.2em;
+    }
+
+    .section6-process-group .blog-figcaption {
+      margin: 0.36rem 0 0.02rem;
+      font-size: 0.77rem;
+      line-height: 1.36;
+      text-align: center;
+      color: #536175;
+      font-style: normal;
+    }
+
+    .blog-figure.section6-heatmap-figure {
+      width: min(78%, 760px);
+      margin: 0.84rem auto 1.1rem;
+      display: block;
+    }
+
+    .blog-figure.section6-heatmap-figure img {
+      display: block;
+      margin: 0 auto;
+    }
+
+    .blog-figure.section6-heatmap-figure .blog-figcaption {
+      text-align: center;
+      margin: 0.4rem auto 0;
+      max-width: 92%;
+    }
+
+    @media (max-width: 900px) {
+      .blog-figure.explainer-figure {
+        width: 100%;
+      }
+
+      .blog-figure.core-idea-figure {
+        width: 100%;
+      }
+
+      .principles-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .opd-tier-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section6-process-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section6-heatmap-figure {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 1280px) {
+      .opd-map-row {
+        grid-template-columns: minmax(200px, 0.95fr) minmax(0, 2.05fr);
+      }
+    }
+
+    @media (max-width: 980px) {
+      .opd-map-row {
+        grid-template-columns: 1fr;
+      }
+
+      .opd-row-metrics.metrics-two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .opd-row-metrics.metrics-two,
+      .opd-row-metrics.metrics-one {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .blog-section ul {
+      margin: 0.92rem 0 0.96rem 1.5rem;
+    }
+
+    .blog-section li {
+      margin-bottom: 0.44rem;
+    }
+
+    .blog-section .citation-block {
+      background: #f5f5f5;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      padding: 1rem 1.1rem;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      overflow-x: auto;
+    }
+
+    .blog-section .citation-block code {
+      background: none;
+      padding: 0;
+      color: #333;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .blog-figure {
+      margin: 1rem 0 1.2rem;
+    }
+
+    .blog-figure img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid #e3e8f1;
+    }
+
+    .robopulse-imgs img {
+      display: block;
+    }
+
+    .robopulse-imgs {
+      display: grid;
+      gap: 0.32rem;
+    }
+
+    /* RoboPulse section: text left, figure/chart right */
+    .robopulse-side-by-side {
+      display: block;
+      margin: 0.82rem 0 0.92rem;
+    }
+
+    .robopulse-side-by-side::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    .robopulse-side-by-side .robopulse-text-block {
+      min-width: 0;
+    }
+
+    .robopulse-side-by-side .robopulse-text-block > :first-child {
+      margin-top: 0;
+    }
+
+    .robopulse-side-by-side .robopulse-figure-right {
+      float: right;
+      width: min(46%, 468px);
+      margin: 0 0 0.52rem 0.92rem !important;
+      padding: 0.22rem;
+    }
+
+    .robopulse-side-by-side .robopulse-figure-right.robopulse-wordcloud-figure {
+      width: min(34%, 340px);
+    }
+
+    .robopulse-side-by-side .robopulse-figure-right .robopulse-imgs img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      border: 1px solid #edf2f8;
+      background: #fff;
+    }
+
+    .robopulse-side-by-side .robopulse-figure-right .blog-figcaption {
+      font-size: 0.77rem;
+      margin-top: 0.24rem;
+      line-height: 1.36;
+      font-style: normal;
+      text-align: left;
+    }
+
+    .robopulse-side-by-side .robopulse-chart-right {
+      float: right;
+      width: min(46%, 468px);
+      margin: 0 0 0.52rem 0.92rem;
+      padding: 0.24rem;
+    }
+
+    .robopulse-side-by-side .robopulse-chart-right .chart-caption {
+      font-size: 0.77rem;
+      margin-top: 0.24rem;
+      line-height: 1.35;
+      text-align: left;
+    }
+
+    .robopulse-side-by-side .robopulse-chart-right #robopulse-chart {
+      height: 228px !important;
+    }
+
+    @media (max-width: 768px) {
+      .robopulse-side-by-side {
+        margin-bottom: 0.8rem;
+      }
+      .robopulse-side-by-side .robopulse-figure-right,
+      .robopulse-side-by-side .robopulse-chart-right {
+        float: none;
+        width: 100%;
+        max-width: none;
+        margin: 0 0 0.48rem 0 !important;
+      }
+      .robopulse-side-by-side .robopulse-figure-right.robopulse-wordcloud-figure {
+        width: min(72%, 320px);
+        margin: 0 auto 0.48rem !important;
+      }
+    }
+
+    .blog-figcaption {
+      font-size: 0.78rem;
+      color: #5f6a7b;
+      margin-top: 0.4rem;
+      margin-bottom: 0;
+      font-style: normal;
+      line-height: 1.38;
+    }
+
+    .math-inline {
+      display: block;
+      text-align: center;
+      margin: 0.35rem 0;
+      overflow-x: auto;
+      padding: 0.5rem 0.75rem;
+      background: #f8f8f8;
+      border-radius: 4px;
+    }
+
+    .math-inline .katex {
+      font-size: 1.05em;
+    }
+
+    .formula-block {
+      margin: 0.35rem 0;
+    }
+
+    .formula-block .math-inline {
+      margin: 0;
+    }
+
+    .blog-section li .formula-block,
+    .blog-section li p {
+      margin-top: 0.35rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .chart-wrapper {
+      margin: 0.94rem 0 1.12rem;
+      padding: 0.42rem;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #dfe5ee;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.04);
+    }
+
+    .chart-wrapper .chart-title {
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0.5rem;
+      text-align: center;
+      font-family: "STIX Two Text", "Times New Roman", serif;
+    }
+
+    .chart-wrapper .chart-caption {
+      margin-top: 0.4rem;
+      font-size: 0.78rem;
+      color: #5f6a7b;
+      text-align: center;
+      line-height: 1.36;
+    }
+
+    .interactive-case {
+      margin: 2rem 0;
+      padding: 1.25rem;
+      background: #fafafa;
+      border-radius: 10px;
+      border: 1px solid #e8e8e8;
+    }
+
+    .interactive-case .video-selectors {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .interactive-case .selector-row {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      width: 100%;
+    }
+
+    .interactive-case .selector-row-label {
+      font-size: 0.8rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .interactive-case .selector-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .interactive-case .selector-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 2px solid var(--btn-color, #5C6BC0);
+      color: var(--btn-color, #5C6BC0);
+      background: transparent;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .interactive-case .selector-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .interactive-case .selector-btn.active {
+      border-width: 3px;
+    }
+
+    .interactive-case .selector-btn-filled,
+    .interactive-case .selector-btn-outline {
+      background: transparent;
+      color: var(--btn-color, #5C6BC0);
+      border: 2px solid var(--btn-color, #5C6BC0);
+    }
+
+    .interactive-case .selector-btn-filled.active,
+    .interactive-case .selector-btn-outline.active {
+      background: transparent;
+      color: var(--btn-color, #5C6BC0);
+      border-color: var(--btn-color, #5C6BC0);
+      border-width: 3px;
+    }
+
+    /* Keep task buttons visually stable: one unified color. */
+    .interactive-case #task-buttons .selector-btn {
+      --btn-color: #5f6f86 !important;
+    }
+
+    .interactive-case .opd-metrics-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      border: 1px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 0.75rem;
+      background: #fff;
+    }
+
+    .interactive-case .opd-metrics-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid #e8e8e8;
+      width: 100%;
+      text-align: center;
+    }
+
+    .interactive-case .opd-metrics-wrapper .case-metrics {
+      flex: 1;
+      width: 100%;
+    }
+
+    .interactive-case .opd-metrics-wrapper .metrics-group {
+      align-items: center;
+      text-align: center;
+    }
+
+    .interactive-case .opd-metrics-wrapper .metrics-group-title {
+      text-align: center;
+    }
+
+    .interactive-case .opd-metrics-wrapper .metric-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .interactive-case .opd-metrics-wrapper .metric-mc-row {
+      justify-content: center;
+    }
+
+    .interactive-case .video-metrics-row {
+      display: flex;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .interactive-case .video-col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .interactive-case .metrics-col {
+      flex-shrink: 0;
+      width: 250px;
+      display: flex;
+    }
+
+    .interactive-case .metrics-col .case-metrics {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0;
+      flex: 1;
+    }
+
+    .interactive-case .metrics-group {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 8px;
+      padding: 0.35rem 0.55rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .interactive-case .metrics-group.metrics-group-process {
+      flex: 0.5;
+    }
+
+    .interactive-case .metrics-group-title {
+      font-size: 0.7rem;
+      color: #888;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .interactive-case .metrics-group .metric-card {
+      margin-bottom: 0.25rem;
+      background: transparent;
+      border: none;
+      padding: 0.1rem 0;
+    }
+
+    .interactive-case .metrics-group .metric-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .interactive-case .metrics-group .metric-card .metric-name {
+      margin-bottom: 0.05rem;
+    }
+
+    .interactive-case .metric-mc-row {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-top: 0.1rem;
+    }
+
+    .interactive-case .mc-milestone {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      background: #f0f0f0;
+      color: #888;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .interactive-case .mc-milestone.reached {
+      background: rgba(129, 199, 132, 0.35);
+      color: #2e7d32;
+    }
+
+    @media (max-width: 768px) {
+      .interactive-case .video-metrics-row {
+        flex-direction: column;
+      }
+      .interactive-case .metrics-col {
+        width: 100%;
+      }
+    }
+
+    .interactive-case .video-chart-wrap {
+      position: relative;
+      width: 100%;
+      min-height: 320px;
+      margin: 0 auto;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 3px solid rgba(255,255,255,0.5);
+      transition: border-color 0.15s ease;
+    }
+
+    .interactive-case .case-video {
+      width: 100%;
+      display: block;
+      background: #000;
+      border-radius: 6px;
+    }
+
+    .interactive-case .video-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.75));
+      padding: 0.5rem 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .interactive-case .video-chart-wrap:hover .video-controls {
+      opacity: 1;
+    }
+
+    .interactive-case .video-controls .btn-icon {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    .interactive-case .video-controls .progress-wrap {
+      flex: 1;
+      height: 4px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .interactive-case .video-controls .progress-wrap .progress-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background: #5C6BC0;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.05s linear;
+    }
+
+    .interactive-case .video-controls .time-display {
+      font-size: 0.7rem;
+      color: rgba(255,255,255,0.9);
+      font-variant-numeric: tabular-nums;
+      min-width: 4rem;
+    }
+
+    .interactive-case .video-controls .vol-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+
+    .interactive-case .video-controls .vol-wrap .btn-icon {
+      width: 22px;
+      height: 22px;
+      font-size: 0.75rem;
+    }
+
+    .interactive-case .video-controls .vol-wrap input[type="range"] {
+      width: 48px;
+      height: 4px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+    }
+
+    .interactive-case .video-controls .vol-wrap input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .interactive-case .chart-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .interactive-case .case-chart {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
+    }
+
+    .interactive-case .case-slider-wrap {
+      margin-top: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .interactive-case .case-slider-wrap input[type="range"] {
+      flex: 1;
+      height: 6px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: #e0e0e0;
+      border-radius: 3px;
+    }
+
+    .interactive-case .case-slider-wrap input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #5C6BC0;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+
+    .interactive-case .case-slider-wrap .time-label {
+      font-size: 0.85rem;
+      color: #666;
+      min-width: 4rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .interactive-case .case-metrics {
+      margin-top: 0;
+    }
+
+    .interactive-case .metric-card {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      padding: 0.6rem 0.75rem;
+      text-align: center;
+    }
+
+    .interactive-case .metric-card .metric-name {
+      font-size: 0.75rem;
+      color: #666;
+      margin-bottom: 0.2rem;
+    }
+
+    .interactive-case .metric-card .metric-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1a1a1a;
+      font-family: "STIX Two Text", "Times New Roman", serif;
+    }
+
+    /* Productized explorer layout and controls */
+    .interactive-case {
+      margin: 1.44rem 0 1.5rem;
+      padding: 0.74rem;
+      background: linear-gradient(180deg, #f7fafd 0%, #fbfcff 100%);
+      border: 1px solid #d8e1ee;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(23, 35, 56, 0.06);
+    }
+
+    .interactive-case .video-selectors {
+      align-items: stretch;
+      gap: 0.56rem;
+      margin-bottom: 0.76rem;
+    }
+
+    .interactive-case .selector-row {
+      align-items: flex-start;
+      gap: 0.28rem;
+    }
+
+    .interactive-case .selector-row-label {
+      font-size: 0.73rem;
+      color: #687487;
+      letter-spacing: 0.02em;
+      font-weight: 700;
+    }
+
+    .interactive-case .selector-buttons {
+      width: 100%;
+      justify-content: flex-start;
+      gap: 0.3rem;
+    }
+
+    .interactive-case .selector-buttons-benchmark,
+    .interactive-case .selector-buttons-task {
+      padding: 0.22rem;
+      border-radius: 10px;
+      border: 1px solid #dfe5ee;
+      background: #fff;
+    }
+
+    .interactive-case .selector-btn {
+      padding: 0.36rem 0.64rem;
+      border: 1px solid transparent !important;
+      border-radius: 8px;
+      font-size: 0.79rem;
+      font-weight: 600;
+      color: #5e6878;
+      background: transparent;
+      transform: none !important;
+      box-shadow: none !important;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .interactive-case .selector-btn:hover {
+      background: #e8edf5;
+      color: #2d3b52;
+    }
+
+    .interactive-case .selector-buttons-benchmark .selector-btn.active {
+      background: #2f5fa7;
+      color: #fff;
+    }
+
+    .interactive-case .selector-buttons-task .selector-btn.active {
+      background: #dce6f6;
+      color: #1f3f72;
+    }
+
+    .interactive-case .video-metrics-row {
+      display: grid;
+      grid-template-columns: minmax(0, 64fr) minmax(300px, 36fr);
+      gap: 0.58rem;
+      align-items: stretch;
+    }
+
+    .interactive-case .explorer-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.46rem;
+    }
+
+    .interactive-case .explorer-side {
+      width: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.34rem;
+    }
+
+    .interactive-case .video-chart-wrap {
+      min-height: 252px;
+      max-height: 316px;
+      border-radius: 12px;
+      border: 1px solid #d6e0ec;
+      background: #000;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.05);
+    }
+
+    .interactive-case .case-video {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      max-height: 316px;
+      object-fit: contain;
+    }
+
+    .interactive-case .curve-panel {
+      padding: 0.46rem 0.54rem 0.44rem;
+      border-radius: 12px;
+      border: 1px solid #dfe5ee;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.05);
+    }
+
+    .interactive-case .curve-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.44rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .interactive-case .curve-title {
+      font-size: 0.82rem;
+      color: #2b3340;
+      font-weight: 700;
+    }
+
+    .interactive-case .curve-status-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.34rem;
+      min-height: 1.2rem;
+    }
+
+    .interactive-case .curve-state-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid #d7deea;
+      background: #f5f8fd;
+      padding: 0.09rem 0.42rem;
+      font-size: 0.69rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+      white-space: nowrap;
+      color: #5b6779;
+    }
+
+    .interactive-case .curve-state-chip.state-rise {
+      background: #eaf6ee;
+      border-color: #b9dfc3;
+      color: #2f7446;
+    }
+
+    .interactive-case .curve-state-chip.state-fall {
+      background: #fcebeb;
+      border-color: #efc3c3;
+      color: #a33e3e;
+    }
+
+    .interactive-case .curve-state-chip.state-stall {
+      background: #faf5e7;
+      border-color: #e8dcb8;
+      color: #866c2e;
+    }
+
+    .interactive-case .curve-status {
+      font-size: 0.74rem;
+      color: #5e6879;
+      font-weight: 600;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .interactive-case .curve-status.state-progress {
+      color: #2f7b48;
+    }
+
+    .interactive-case .curve-status.state-regress {
+      color: #b84343;
+    }
+
+    .interactive-case .curve-status.state-stall {
+      color: #7e6a33;
+    }
+
+    .interactive-case .case-chart {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      height: 236px;
+      min-height: 236px;
+    }
+
+    .interactive-case .curve-panel .case-slider-wrap {
+      margin-top: 0.14rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.16rem;
+      padding: 0.2rem 0 0;
+      border-top: 1px solid #e3e8f1;
+      background: transparent;
+      border-radius: 0;
+      box-shadow: none;
+      border-left: 0;
+      border-right: 0;
+      border-bottom: 0;
+    }
+
+    .interactive-case .curve-panel .case-slider-wrap input[type="range"] {
+      width: 100%;
+      display: block;
+      align-self: stretch;
+      height: 7px;
+      background: linear-gradient(90deg, #cad7ec, #dae4f5);
+      border-radius: 999px;
+      margin: 0;
+    }
+
+    .interactive-case .curve-panel .case-slider-wrap input[type="range"]::-webkit-slider-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #2f5fa7;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px rgba(47, 95, 167, 0.35);
+    }
+
+    .interactive-case .timeline-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.34rem;
+      line-height: 1;
+    }
+
+    .interactive-case .time-label {
+      min-width: auto;
+      font-size: 0.78rem;
+      color: #5e6878;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .interactive-case .timeline-sep {
+      font-size: 0.68rem;
+      color: #9aa5b7;
+      line-height: 1;
+    }
+
+    .interactive-case .timeline-percent {
+      font-size: 0.78rem;
+      color: #2f5fa7;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .interactive-case .curve-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem 0.6rem;
+      margin-top: 0.22rem;
+      font-size: 0.73rem;
+      color: #5f6878;
+    }
+
+    .interactive-case .curve-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .interactive-case .curve-line {
+      width: 14px;
+      height: 2px;
+      border-radius: 999px;
+      display: inline-block;
+    }
+
+    .interactive-case .curve-line-rise {
+      background: rgba(72, 152, 94, 0.95);
+    }
+
+    .interactive-case .curve-line-fall {
+      background: rgba(210, 79, 79, 0.95);
+    }
+
+    .interactive-case .curve-line-stall {
+      background: linear-gradient(90deg, #aa9b6a 0 45%, transparent 45% 55%, #aa9b6a 55% 100%);
+    }
+
+    .interactive-case .curve-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      background: #304a73;
+    }
+
+    .interactive-case .opd-metrics-wrapper,
+    .interactive-case .side-card {
+      border: 1px solid #dfe5ee;
+      border-radius: 11px;
+      padding: 0.42rem 0.5rem;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.05);
+    }
+
+    .interactive-case .opd-metrics-wrapper {
+      align-items: stretch;
+      text-align: left;
+      margin-top: 0;
+    }
+
+    .interactive-case .opd-metrics-title,
+    .interactive-case .side-card-title {
+      margin: 0 0 0.28rem;
+      padding: 0;
+      border: 0;
+      font-size: 0.78rem;
+      color: #3e4a5f;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      text-align: left;
+    }
+
+    .interactive-case .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.24rem;
+    }
+
+    .interactive-case .summary-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 7px;
+      background: #f7faff;
+      border: 1px solid #e3e8f1;
+      padding: 0.24rem 0.34rem;
+      font-size: 0.75rem;
+    }
+
+    .interactive-case .summary-item:first-child {
+      grid-column: span 2;
+      background: #eef4ff;
+      border-color: #d8e4f7;
+    }
+
+    .interactive-case .summary-key {
+      color: #637086;
+      font-weight: 600;
+    }
+
+    .interactive-case .summary-value {
+      color: #1f2f47;
+      font-weight: 700;
+      font-family: "STIX Two Text", "Times New Roman", serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .interactive-case .summary-note {
+      margin: 0.26rem 0 0;
+      font-size: 0.73rem;
+      line-height: 1.33;
+      color: #66758b;
+    }
+
+    .interactive-case .metric-mc-row {
+      gap: 0.25rem;
+      margin-top: 0;
+    }
+
+    .interactive-case .mc-milestone {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.34rem;
+      border-radius: 999px;
+      border: 1px solid #d7dde7;
+      background: #f6f8fb;
+      color: #7a8494;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .interactive-case .mc-milestone.reached {
+      border-color: #8fc2a1;
+      background: #eaf6ee;
+      color: #2f7446;
+    }
+
+    .interactive-case .state-line {
+      margin: 0.18rem 0 0;
+      font-size: 0.74rem;
+      line-height: 1.32;
+      color: #3e4a5f;
+      display: block;
+      overflow: visible;
+      overflow-wrap: anywhere;
+    }
+
+    .interactive-case .state-line.state-diagnosis {
+      color: #60708b;
+    }
+
+    .interactive-case .legend-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.24rem;
+    }
+
+    .interactive-case .milestone-legend-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.26rem;
+    }
+
+    .interactive-case .side-card-divider {
+      height: 1px;
+      border: 0;
+      margin: 0.02rem 0;
+      background: #e8edf5;
+    }
+
+    .interactive-case .legend-chip {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid #d9e1ec;
+      background: #f8fbff;
+      padding: 0.11rem 0.42rem;
+      font-size: 0.71rem;
+      line-height: 1.22;
+      color: #5b6778;
+      font-weight: 600;
+    }
+
+    .interactive-case .legend-chip-up {
+      background: #eef7f1;
+      border-color: #d4eadc;
+      color: #316f46;
+    }
+
+    .interactive-case .legend-chip-down {
+      background: #f8f2ec;
+      border-color: #e9dacb;
+      color: #835a3e;
+    }
+
+    @media (max-width: 980px) {
+      .interactive-case .video-metrics-row {
+        grid-template-columns: 1fr;
+      }
+
+      .interactive-case .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .interactive-case .summary-item:first-child {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .interactive-case {
+        padding: 0.68rem;
+      }
+
+      .interactive-case .case-chart {
+        height: 210px;
+        min-height: 210px;
+      }
+
+      .interactive-case .summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .interactive-case .summary-item:first-child {
+        grid-column: span 2;
+      }
+    }
+
+    .link-block {
+      margin-right: 1rem;
+      display: inline-block;
+    }
+
+    .button.is-outlined {
+      border-color: #333;
+      color: #333;
+    }
+
+    .button.is-outlined:hover {
+      background: #333;
+      color: #fff;
+    }
+  
+    .metric-suite-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.72rem; margin:.85rem 0 1.15rem; }
+    .metric-15-card { border:1px solid #dfe5ee; border-top:3px solid #5d78a6; border-radius:10px; background:#fff; padding:.8rem .85rem; box-shadow:0 1px 2px rgba(23,35,56,.04); text-align:left; display:flex; flex-direction:column; min-width:0; }
+    .metric-15-card:nth-child(2){border-top-color:#6d9b88}.metric-15-card:nth-child(3){border-top-color:#a37c59}
+    .metric-15-copy{min-width:0;display:flex;flex:1;flex-direction:column}.metric-15-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.38rem}.metric-15-short{font:700 1.22rem "Source Serif 4",Georgia,serif;color:#263a59}
+    .metric-15-card h3{font-size:1rem;margin:.42rem 0 .34rem}.metric-15-card p{font-size:.86rem;line-height:1.48;color:#566175;margin:.28rem 0}.metric-interpretation-text{margin:.46rem 0 0!important}.metric-15-card>.equation-card{margin:.54rem 0 0;width:100%;box-sizing:border-box;text-align:center;padding:.42rem .3rem;overflow-x:auto}.metric-15-card>.equation-card .math-inline{font-size:.76em;padding:.14rem .18rem}.metric-15-meta{display:flex;flex:1;flex-direction:column;align-items:flex-end;gap:.2rem;margin:0;padding:0}.metric-15-badge{display:inline-flex;align-items:center;border-radius:999px;border:1px solid #d9e1ec;background:#f8fbff;padding:.07rem .32rem;font-size:.63rem;color:#5b667a;line-height:1.3;text-align:right}
+    .findings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.65rem;margin:.8rem 0 1rem}.finding-card{border:1px solid #dfe5ee;border-radius:10px;background:#fff;padding:.7rem .78rem}.finding-card:first-child{grid-column:1/-1;background:#f7faff;border-color:#ccd9eb}.finding-no{font:700 .68rem "Source Sans 3",sans-serif;color:#2f5fa7;text-transform:uppercase;letter-spacing:.04em}.finding-card h3{font-size:1rem;margin:.28rem 0}.finding-card p{font-size:.84rem;line-height:1.47;color:#586579;margin:0}
+    .evaluation-intro {
+      margin: 0.72rem 0 1rem;
+      padding: 0.76rem 0.84rem;
+      border: 1px solid #dbe4f1;
+      border-left: 3px solid #7894bf;
+      border-radius: 10px;
+      background: #f8fbff;
+    }
+
+    .evaluation-intro h3 {
+      margin: 0 0 0.32rem;
+      font-size: 1rem;
+    }
+
+    .evaluation-intro p {
+      margin: 0.34rem 0 0;
+      font-size: 0.86rem;
+      line-height: 1.52;
+      color: #566175;
+    }
+
+    .finding-evidence-stack {
+      margin: 0.82rem 0 1rem;
+    }
+
+    .finding-evidence-card {
+      margin: 0 0 0.82rem;
+      padding: 0.82rem 0.88rem;
+      border: 1px solid #dfe5ee;
+      border-radius: 11px;
+      background: linear-gradient(180deg, #f8fbff 0%, #ffffff 36%);
+      box-shadow: 0 1px 2px rgba(23, 35, 56, 0.04);
+      overflow: hidden;
+    }
+
+
+    .finding-question {
+      margin: 0 0 0.28rem;
+      font-size: 0.9rem;
+      line-height: 1.35;
+      color: #33445c;
+    }
+
+    .finding-body-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 46%);
+      gap: 0.86rem;
+      align-items: center;
+      margin-top: 0.22rem;
+    }
+
+    .finding-copy {
+      min-width: 0;
+    }
+
+    .finding-copy h3 {
+      margin: 0.25rem 0 0.36rem;
+      font-size: 1.02rem;
+      line-height: 1.34;
+    }
+
+    .finding-copy p {
+      margin: 0.38rem 0 0;
+      font-size: 0.84rem;
+      line-height: 1.54;
+      color: #586579;
+    }
+
+    .finding-evidence-card .finding-figure-side,
+    .finding-evidence-card .finding-figure-bottom {
+      padding: 0.24rem;
+    }
+
+    .finding-evidence-card .finding-figure-side {
+      width: 100%;
+      margin: 0 !important;
+      align-self: center;
+    }
+
+    .finding-evidence-card .finding-figure-bottom {
+      width: 80%;
+      margin: 0.7rem auto 0 !important;
+    }
+
+    .finding-evidence-card .finding-figure-side img,
+    .finding-evidence-card .finding-figure-bottom img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .finding-evidence-card .finding-figure-side .blog-figcaption,
+    .finding-evidence-card .finding-figure-bottom .blog-figcaption {
+      margin: 0.28rem 0 0;
+      padding: 0 0.12rem 0.08rem;
+      font-size: 0.71rem;
+      line-height: 1.34;
+      text-align: left;
+      color: #657187;
+    }
+
+    .finding-five-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 46%);
+      grid-template-areas:
+        "copy heat"
+        "rank rank";
+      gap: 0.7rem 0.86rem;
+      align-items: center;
+      margin-top: 0.22rem;
+    }
+
+    .finding-five-grid .finding-copy {
+      grid-area: copy;
+    }
+
+    .finding-five-grid .finding-rank-shift {
+      grid-area: rank;
+      width: 80%;
+      justify-self: center;
+      margin-top: 0 !important;
+    }
+
+    .finding-five-grid .finding-heatmap {
+      grid-area: heat;
+      align-self: center;
+    }
+
+    .finding-points {
+      margin: 0.46rem 0 0 1.08rem !important;
+      padding: 0;
+    }
+
+    .finding-points li {
+      margin-bottom: 0.3rem;
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: #586579;
+    }
+
+    .blog-section .report-figure{width:100%;margin:.62rem 0 1.2rem;padding:.42rem}.blog-section .report-figure-compact{width:min(100%,760px);margin-left:auto;margin-right:auto}.report-figure .blog-figcaption{padding:0 .12rem .08rem}.report-figure .blog-figcaption strong{color:#33445c;font-style:normal}
+
+    @media (max-width: 768px) {
+      .finding-body-row,
+      .finding-five-grid {
+        display: block;
+      }
+
+      .finding-evidence-card .finding-figure-side {
+        width: 100%;
+        max-width: none;
+        margin: 0.62rem 0 0 !important;
+      }
+
+      .finding-evidence-card .finding-figure-bottom,
+      .finding-five-grid .finding-rank-shift {
+        width: 80%;
+        margin: 0.62rem auto 0 !important;
+      }
+    }
+    .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:.5rem;width:94%;margin:.7rem auto}.stat-box{border:1px solid #dfe5ee;border-radius:9px;background:#fff;text-align:center;padding:.55rem}.stat-box strong,.stat-box span{display:block}.stat-box strong{font:700 1.3rem "Source Serif 4",serif;color:#2d4f7d}.stat-box span{font-size:.7rem;color:#738095}.robopulse-results-wide{width:94%;margin:.58rem auto .72rem;padding:.42rem .65rem}
+    .result-bars{margin:.55rem 0}.result-bar{display:grid;grid-template-columns:10rem 1fr 2.5rem;gap:.5rem;align-items:center;margin:.42rem 0;font-size:.77rem}.result-track{height:.72rem;background:#e8edf4;border-radius:99px;overflow:hidden}.result-fill{height:100%;background:#7894bf;border-radius:99px}.result-bar:first-child .result-fill{background:#3f6fae}.result-bar strong{font-size:.76rem}
+    .case-tabs-15{display:flex;flex-wrap:wrap;gap:.4rem;margin:.35rem 0 .58rem}.case-tabs-15 .selector-btn{flex:1 1 9rem;line-height:1.25;min-height:2.35rem}
+    .case-picker-row{display:flex;align-items:flex-end;justify-content:space-between;gap:.65rem;margin:0 0 .58rem}
+    .case-picker-label{display:flex;align-items:center;gap:.5rem;min-width:0;flex:1}
+    .case-picker-label-text{font:700 .72rem "Source Sans 3",sans-serif;color:#50607a;text-transform:uppercase;letter-spacing:.035em;white-space:nowrap}
+    .case-select{width:100%;min-width:0;padding:.42rem 2rem .42rem .55rem;border:1px solid #d7e0ec;border-radius:8px;background:#fff;color:#33445c;font:600 .78rem "Source Sans 3",sans-serif}
+    .case-select:focus{outline:2px solid rgba(47,105,196,.2);border-color:#7894bf}
+    .case-count{font-size:.72rem;color:#728096;white-space:nowrap;padding-bottom:.42rem}
+    .metric-scope-banner{margin:.45rem 0 .7rem;padding:.5rem .62rem;border-radius:8px;background:#f5f8fc;border:1px solid #dbe4f1;color:#53637b;font-size:.78rem;line-height:1.45}
+    .summary-grid.summary-grid-15{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-item.metric-new-item{background:#f5f8fd;border-color:#cfdbec}.summary-key .new-dot{font-size:.58rem;color:#2f5fa7;margin-left:.22rem}
+    .eligibility-pill{display:inline-flex;padding:.12rem .4rem;border-radius:999px;background:#eef4ff;color:#315d9d;font-size:.67rem;font-family:"Source Sans 3",sans-serif;margin-left:.3rem}
+    .case-video{background:#111;aspect-ratio:16/9;object-fit:contain}.explorer-status-row{display:flex;justify-content:space-between;gap:.5rem;align-items:center;margin-bottom:.45rem;font-size:.76rem;color:#637087}.outcome-badge{max-width:58%;border-radius:999px;padding:.16rem .48rem;background:#eef4ff;color:#2f5fa7;font-size:.65rem;line-height:1.25;text-align:right;font-weight:700}
+    .limitations-note{font-size:.78rem;color:#68758a;background:#fbfcfe;border:1px solid #e2e7ef;border-radius:8px;padding:.48rem .58rem}
+    @media(max-width:700px){.findings-grid{grid-template-columns:1fr}.finding-card:first-child{grid-column:auto}.stats-row{grid-template-columns:repeat(2,1fr);width:100%}.robopulse-results-wide{width:100%}.result-bar{grid-template-columns:7.5rem 1fr 2rem}.case-picker-row{display:block}.case-picker-label{display:block}.case-picker-label-text{display:block;margin-bottom:.25rem}.case-count{display:block;padding:.32rem 0 0}}
+
+  </style>
+</head>
+
+<body>
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <a href="blog.html" class="active">Blog</a>
+    <a href="leaderboard.html">Leaderboard</a>
+    <a href="doc.html">Usage</a>
+  </nav>
+
+  <article class="blog-container">
+    <div class="blog-layout">
+      <aside class="blog-toc" aria-label="Section navigation">
+        <p class="toc-title">PRM-as-a-Judge 1.5</p>
+        <nav class="toc-nav" id="toc-nav"></nav>
+      </aside>
+
+      <div class="blog-main">
+        <header class="blog-hero">
+          <p class="hero-eyebrow">PRM-as-a-Judge 1.5</p>
+          <h1 class="hero-title hero-title-with-logo">
+            <img src="assets/images/prm-as-a-judge-1.5/judge.png" alt="PRM-as-a-Judge" class="hero-title-logo">
+            <span>PRM-as-a-Judge 1.5: A Toolkit for Robot Process Assessment</span>
+          </h1>
+          <p class="hero-subtitle">From dense progress curves to doctor-style model assessment: failure proximity, recovery, success quality, and a stronger benchmark for the Judge itself.</p>
+
+          <div class="metadata-chips" aria-label="Publication metadata">
+            <span class="meta-chip"><span class="chip-key">Published</span><span class="chip-value">August 14, 2026</span></span>
+            <a class="meta-chip chip-link" href="" target="_blank"><span class="chip-key">Report</span><span class="chip-value">PRM-as-a-Judge 1.5</span></a>
+            <a class="meta-chip chip-link" href="https://github.com/Yuheng2000/PRM-as-a-Judge" target="_blank" rel="noopener noreferrer"><span class="chip-key">Repository</span><span class="chip-value">PRM-as-a-Judge</span></a>
+            <span class="meta-chip"><span class="chip-key">Benchmark</span><span class="chip-value">RoboPulse++</span></span>
+            <span class="meta-chip"><span class="chip-key">By</span><span class="chip-value">PRM-as-a-Judge Team</span></span>
+          </div>
+
+          <div class="hero-cta-links" aria-label="Primary actions">
+            <a class="hero-cta hero-cta-primary" href="" target="_blank">Read report</a>
+            <a class="hero-cta hero-cta-secondary" href="#interactive-trajectory-explorer">Jump to explorer</a>
+            <a class="hero-cta hero-cta-secondary" href="https://github.com/Yuheng2000/PRM-as-a-Judge" target="_blank" rel="noopener noreferrer">View toolkit</a>
+          </div>
+
+          <div class="tldr-card">
+            <span class="tldr-label">TL;DR</span>
+            <p><strong>PRM-as-a-Judge 1.5 is a toolkit for robot process assessment</strong> that turns rollout videos into dense progress curves and derives fine-grained metrics. Building on the 1.0 OPD suite, it adds FNS, DRR, and SQS for failure proximity, recovery, and success quality; evaluates mainstream embodied models; introduces RoboPulse++ to audit progress judges; and releases metric and visualization tools for reproducible process evaluation.</p>
+          </div>
+        </header>
+
+        <div class="blog-section content">
+          <h2>1. From Process Scores to Model Assessment</h2>
+          <p>Robotic evaluation has already started moving beyond binary success rates. A dense progress curve can tell us where a rollout advanced, stalled, or regressed. But a single, unconditional set of trajectory scores is still not enough to answer the questions practitioners actually ask.</p>
+          <p>Failed rollouts can terminate at radically different levels of capability. Successful rollouts can reach the same goal through radically different execution paths. And when a policy loses progress, the setback matters differently depending on whether it recovers.</p>
+          <figure class="figure-card report-figure">
+            <img src="assets/images/prm-as-a-judge-1.5/figure-1-teaser.png" alt="Evolution from binary robot evaluation to PRM-as-a-Judge 1.0 process metrics and the 1.5 assessment report" decoding="async">
+            <figcaption class="blog-figcaption"><strong>Figure 1.</strong> The evolution of robotic metrics: evaluation progresses from binary outcomes to process curves and OPD metrics, then to the PRM-as-a-Judge 1.5 model assessment report.</figcaption>
+          </figure>
+          <div class="key-takeaway"><strong>The 1.5 shift:</strong> turn progress curves into conditioned diagnoses. Failed rollouts are assessed for proximity to success, trajectories with setbacks are assessed for recovery, and successful rollouts are assessed for execution quality.</div>
+
+          <h2>2. An End-to-End Assessment Pipeline</h2>
+          <p>PRM-as-a-Judge 1.5 keeps the central interface of version 1.0: a task instruction and rollout video are converted by a Process Reward Model into a normalized progress curve Φ(t). The upgrade happens after that shared representation is constructed.</p>
+          <figure class="figure-card report-figure report-figure-pipeline">
+            <img src="assets/images/prm-as-a-judge-1.5/figure-2-pipeline.png" alt="PRM-as-a-Judge 1.5 pipeline from rollout inputs through the PRM and metrics to the assessment report" loading="lazy" decoding="async">
+            <figcaption class="blog-figcaption"><strong>Figure 2.</strong> Overall pipeline of PRM-as-a-Judge 1.5. Rollout inputs are converted into a progress curve, evaluated with the expanded metric suite, and summarized as fine-grained model assessment evidence.</figcaption>
+          </figure>
+          <ul class="pipeline-breakdown">
+            <li><strong>Inputs.</strong> Each rollout is organized with a unique Case ID, task instruction, rollout video, and optional additional views.</li>
+            <li><strong>PRM.</strong> A process reward model estimates task completion at each frame or timestamp, producing a dense progress curve from paired or sequential observations.</li>
+            <li><strong>Metrics.</strong> The progress curve is translated into the expanded OPD suite, including FNS, DRR, and SQS, to assess effectiveness, failure behavior, and recovery.</li>
+            <li><strong>Report.</strong> The final report combines failure location, rollback analysis, and trajectory exploration, synchronizing the rollout video with its progress curve for detailed inspection.</li>
+          </ul>
+          <p>The resulting report links model-level comparisons to trajectory-level evidence. Users can move from a leaderboard row to a failure profile, then inspect the exact frame where progress was lost or recovered.</p>
+
+          <h2>3. Three New Conditioned Metrics</h2>
+          <p>The 1.0 OPD suite remains the foundation: MC and MP describe reachability, PPL describes path efficiency, and CRA and STR describe regression and stagnation. Version 1.5 adds three diagnosis-level summaries with explicit eligibility conditions.</p>
+
+          <div class="metric-suite-grid">
+            <article class="metric-15-card">
+              <div class="metric-15-copy">
+                <div class="metric-15-head"><span class="metric-15-short">FNS</span><div class="metric-15-meta"><span class="metric-15-badge">Failed rollouts only</span><span class="metric-15-badge">Higher is better ↑</span></div></div>
+                <h3>Failure Near-Success</h3>
+                <p class="metric-definition-text">A composite of MP, MC@50, and MC@75 for failed rollouts.</p>
+              </div>
+              <div class="equation-card"><span class="math-inline math-latex" data-latex="FNS=0.5MP+0.3MC@75+0.2MC@50"></span></div>
+              <p class="metric-interpretation-text">How close a failed rollout came to completion.</p>
+            </article>
+            <article class="metric-15-card">
+              <div class="metric-15-copy">
+                <div class="metric-15-head"><span class="metric-15-short">DRR</span><div class="metric-15-meta"><span class="metric-15-badge">Rollouts with drawdown only</span><span class="metric-15-badge">Higher is better ↑</span></div></div>
+                <h3>Drawdown Recovery Ratio</h3>
+                <p class="metric-definition-text">The largest subsequent recovery divided by the maximum drawdown for rollouts that experience a drawdown.</p>
+              </div>
+              <div class="equation-card"><span class="math-inline math-latex" data-latex="DRR=\min(1,\frac{\mathrm{best\ recovery}}{\mathrm{maximum\ drawdown}})"></span></div>
+              <p class="metric-interpretation-text">How much of the largest setback is recovered.</p>
+            </article>
+            <article class="metric-15-card">
+              <div class="metric-15-copy">
+                <div class="metric-15-head"><span class="metric-15-short">SQS</span><div class="metric-15-meta"><span class="metric-15-badge">Successful rollouts only</span><span class="metric-15-badge">Higher is better ↑</span></div></div>
+                <h3>Success Quality Score</h3>
+                <p class="metric-definition-text">A composite of PPL, CRA, and STR for successful rollouts.</p>
+              </div>
+              <div class="equation-card"><span class="math-inline math-latex" data-latex="SQS=0.5PPL+0.3(1-CRA)+0.2(1-STR)"></span></div>
+              <p class="metric-interpretation-text">The efficiency and stability of successful execution.</p>
+            </article>
+          </div>
+
+          <h3 class="opd-reading-heading">How to Read the Expanded OPD Suite</h3>
+          <p class="opd-reading-intro">The expanded suite organizes trajectory assessment into three complementary levels. Each level answers a different question about model behavior:</p>
+          <ul class="opd-reading-list">
+            <li><strong>Outcome:</strong> MC and MP describe task reachability, showing which milestones a model reaches and the furthest progress it achieves.</li>
+            <li><strong>Process:</strong> PPL measures how directly and efficiently the trajectory reaches its best state.</li>
+            <li><strong>Diagnosis:</strong> CRA and STR expose regression and stagnation, while FNS, DRR, and SQS turn these process signals into outcome-conditioned assessments of failure proximity, recovery, and successful execution quality.</li>
+          </ul>
+
+          <h2>4. What the Large-Scale Assessment Reveals</h2>
+          <div class="evaluation-intro">
+            <h3>Evaluation Setup</h3>
+            <p>PRM-as-a-Judge 1.5 evaluates released rollout videos on <strong>RoboDojo-RealWorld</strong> and <strong>RoboDojo-Sim</strong>, without fine-tuning or modifying the evaluated models. RealWorld focuses on challenging deployment conditions, while Sim covers generalization, memory, long-horizon behavior, and instruction following.</p>
+            <p>The evaluation reports reachability, failure-side progress, recovery behavior, success-side quality, and failure fingerprints. DRR is computed only for rollouts with an eligible drawdown; FNS summarizes failed trajectories before termination; and SQS assesses the efficiency, stability, and smoothness of successful trajectories.</p>
+          </div>
+
+          <div class="finding-evidence-stack">
+            <h3 class="finding-question">4.1. Which is stronger, VLAs or WAMs?</h3>
+            <section class="finding-evidence-card">
+              <span class="finding-no">Finding 1</span>
+              <div class="finding-body-row">
+                <div class="finding-copy">
+                  <h3>VLAs generally outperform WAMs under different metrics.</h3>
+                  <p>Using the overall rankings across the 11 evaluation metrics, we compare how VLAs and WAMs are represented among the highest-ranked methods rather than relying on a single score.</p>
+                  <p>VLAs occupy a substantially larger share of the Top-3, Top-5, and Top-10 positions. This rank-based view therefore shows stronger overall VLA competitiveness across multiple dimensions of process assessment.</p>
+                </div>
+                <figure class="finding-figure-side figure-card figure-card-tight">
+                  <img src="assets/images/prm-as-a-judge-1.5/figure-3-vla-wam.png" alt="Proportion of VLAs and WAMs ranked in the Top 3, Top 5, and Top 10 on RoboDojo-Sim" loading="lazy" decoding="async">
+                  <figcaption class="blog-figcaption"><strong>Figure 3.</strong> VLA and WAM representation in the Top-3, Top-5, and Top-10 on RoboDojo-Sim, normalized within each paradigm.</figcaption>
+                </figure>
+              </div>
+            </section>
+
+            <h3 class="finding-question">4.2. Does a larger model always result in better performance?</h3>
+
+            <section class="finding-evidence-card finding-evidence-bottom">
+              <span class="finding-no">Finding 2</span>
+              <div class="finding-copy">
+                <h3>Larger model size does not guarantee stronger performance.</h3>
+                <p>We compare parameter count with average rank across all 11 evaluation metrics. The dashed median lines separate model size and aggregate performance, while the shaded regions highlight models that fall on opposite sides of those medians.</p>
+                <p>No clear positive size-performance relationship emerges: several relatively small models outperform substantially larger counterparts, while some larger models remain in weaker ranking regions.</p>
+              </div>
+              <figure class="finding-figure-bottom figure-card figure-card-tight">
+                <img src="assets/images/prm-as-a-judge-1.5/figure-4-model-size.png" alt="Bubble chart comparing model size with aggregate performance rank on RoboDojo-Sim" loading="lazy" decoding="async">
+                <figcaption class="blog-figcaption"><strong>Figure 4.</strong> Model size versus average rank across 11 metrics on RoboDojo-Sim; dashed medians define the four regions.</figcaption>
+              </figure>
+            </section>
+
+            <h3 class="finding-question">4.3. Which model is generally the strongest?</h3>
+
+            <section class="finding-evidence-card">
+              <span class="finding-no">Finding 3</span>
+              <div class="finding-body-row">
+                <div class="finding-copy">
+                  <h3>&pi;<sub>0.5</sub> is generally the strongest model across metrics.</h3>
+                    <p>Using the radar comparison, we find that &pi;<sub>0.5</sub> remains broadly strong across reachability, progress depth, efficiency, recovery, failure proximity, and stability, rather than leading through only one isolated metric.</p>
+                    <p>The two panels compare RoboDojo-RealWorld and RoboDojo-Sim. SQS is not compared in the real-world panel because most models have success rates too low for a reliable estimate, so those values are shown at a common radius.</p>
+                </div>
+                <figure class="finding-figure-side figure-card figure-card-tight">
+                  <img src="assets/images/prm-as-a-judge-1.5/figure-5-rank-radar.png" alt="Radar charts comparing embodied models across process metrics on RoboDojo-RealWorld and RoboDojo-Sim" loading="lazy" decoding="async">
+                  <figcaption class="blog-figcaption"><strong>Figure 5.</strong> Multi-metric performance on RoboDojo-RealWorld and RoboDojo-Sim; farther from the center is better.</figcaption>
+                </figure>
+              </div>
+            </section>
+
+            <h3 class="finding-question">4.4. What tasks are existing embodied models relatively better at?</h3>
+
+            <section class="finding-evidence-card finding-evidence-bottom">
+              <span class="finding-no">Finding 4</span>
+              <div class="finding-copy">
+                <h3>Existing embodied models are relatively better at Precision tasks.</h3>
+                <p>Across MC@25, MP, and FNS, Precision is the strongest category. Long-Horizon and Generalization form the next tier: models often make meaningful early progress, but reach less depth and show weaker near-success behavior.</p>
+                <p>Open-Vocabulary is the most difficult category, with tightly clustered low scores. Long-Horizon also has the largest variance across models, making it particularly useful for distinguishing relative embodied capability.</p>
+              </div>
+              <figure class="finding-figure-bottom figure-card figure-card-tight">
+                <img src="assets/images/prm-as-a-judge-1.5/figure-6-task-profiles.png" alt="Task-category boxplots for MC at 25 percent, maximum progress, and failure near-success" loading="lazy" decoding="async">
+                <figcaption class="blog-figcaption"><strong>Figure 6.</strong> MC@25, MP, and FNS profiles for 24 Generalization and 8 conditions in each remaining task category.</figcaption>
+              </figure>
+            </section>
+
+            <h3 class="finding-question">4.5. Does simulation performance correlate with real-world performance?</h3>
+
+            <section class="finding-evidence-card finding-evidence-card-double">
+              <span class="finding-no">Finding 5</span>
+              <div class="finding-five-grid">
+                <div class="finding-copy">
+                  <h3>Simulation and real-world performance show only a weak positive correlation.</h3>
+                  <p>We align nine models shared by the Sim and Real leaderboards, then compare six tasks with matching objectives. Rank correlations are only low to moderate, with Spearman &rho; ranging from 0.18 to 0.58.</p>
+                  <ol class="finding-points">
+                    <li><strong>Simulation is not a substitute for real evaluation.</strong> Rankings shift substantially, and every model has a negative average Sim-to-Real gap in the heatmap.</li>
+                    <li><strong>Simpler interactions transfer better.</strong> Fill pen holder has a positive average gap, while Stack bowls and Sweep blocks degrade less for some models.</li>
+                    <li><strong>Precise contact exposes the largest gap.</strong> Classify objects, Hang mugs, and Insert tubes degrade strongly for most models under real deployment.</li>
+                  </ol>
+                </div>
+                <figure class="finding-figure-bottom finding-rank-shift figure-card figure-card-tight">
+                  <img src="assets/images/prm-as-a-judge-1.5/figure-7-rank-shift.png" alt="Simulation-to-real ranking shifts for success rate, maximum progress, and failure near-success" loading="lazy" decoding="async">
+                  <figcaption class="blog-figcaption"><strong>Figure 7.</strong> Sim-to-Real rank changes for SR, MP, and FNS across nine shared models.</figcaption>
+                </figure>
+                <figure class="finding-figure-side finding-heatmap figure-card figure-card-tight">
+                  <img src="assets/images/prm-as-a-judge-1.5/figure-8-maxp-heatmap.png" alt="Heatmap of real-minus-simulation maximum progress gaps across models and six shared tasks" loading="lazy" decoding="async">
+                  <figcaption class="blog-figcaption"><strong>Figure 8.</strong> Real-minus-Sim MP gaps across six shared tasks; orange is lower in Real and blue is higher.</figcaption>
+                </figure>
+              </div>
+            </section>
+          </div>          <div class="key-takeaway"><strong>Assessment, not just ranking:</strong> process-aware metrics explain why two models with similar success rates can occupy different capability regimes—and why strong simulation rankings can collapse under real contact dynamics.</div>
+
+          <h2>5. RoboPulse++: Interval-Level Verification of Progress Judges</h2>
+          <div class="robopulse-side-by-side">
+            <figure class="blog-figure robopulse-figure-right robopulse-wordcloud-figure figure-card figure-card-tight">
+              <div class="robopulse-imgs">
+                <img src="assets/images/prm-as-a-judge-1.5/figure-9-robopulse-task-wordcloud.png" alt="Word cloud showing the task-semantic coverage of RoboPulse++" loading="lazy" decoding="async">
+              </div>
+              <figcaption class="blog-figcaption"><strong>Figure 9.</strong> Task-semantic coverage of RoboPulse++.</figcaption>
+            </figure>
+            <div class="robopulse-text-block">
+              <p>RoboPulse++ extends pairwise state comparison to temporally contiguous intervals across complete robot executions. Each interval is labeled <strong>Rising</strong> or <strong>Falling</strong>, avoiding the need for a universal absolute completion percentage across diverse robots and tasks.</p>
+              <ul>
+                <li><strong>Data coverage:</strong> 439 real-world trajectories (62.7%) and 261 simulation trajectories (37.3%).</li>
+                <li><strong>Task coverage:</strong> atomic, compositional, and long-horizon manipulation, including grasping, placing, articulated objects, sorting, stacking, tool use, and multi-stage tasks.</li>
+                <li><strong>Annotation:</strong> annotators use the task instruction and full trajectory context to mark meaningful progress or regression intervals.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="stats-row">
+            <div class="stat-box"><strong>700</strong><span>trajectories</span></div>
+            <div class="stat-box"><strong>275</strong><span>task entries</span></div>
+            <div class="stat-box"><strong>17,052</strong><span>frames</span></div>
+            <div class="stat-box"><strong>2,244</strong><span>annotated intervals</span></div>
+          </div>
+
+          <div class="figure-card figure-card-tight robopulse-results-wide">
+            <div class="result-bars">
+              <div class="result-bar"><span>Robo-Dopamine (Forward)</span><div class="result-track"><div class="result-fill" style="width:84%"></div></div><strong>.84</strong></div>
+              <div class="result-bar"><span>RoboMeter</span><div class="result-track"><div class="result-fill" style="width:80%"></div></div><strong>.80</strong></div>
+              <div class="result-bar"><span>Gemini 3.1 Pro (Pair)</span><div class="result-track"><div class="result-fill" style="width:63%"></div></div><strong>.63</strong></div>
+              <div class="result-bar"><span>Qwen 3.6 Plus (Pair)</span><div class="result-track"><div class="result-fill" style="width:59%"></div></div><strong>.59</strong></div>
+              <div class="result-bar"><span>Qwen 3.6 Plus (Sequence)</span><div class="result-track"><div class="result-fill" style="width:52%"></div></div><strong>.52</strong></div>
+              <div class="result-bar"><span>GPT-5.4 (Sequence)</span><div class="result-track"><div class="result-fill" style="width:50%"></div></div><strong>.50</strong></div>
+            </div>
+              <p class="chart-caption">Selected progress-direction Accuracy results on RoboPulse++. Specialized PRMs provide the strongest overall judgments.</p>
+          </div>
+
+          <p><strong>Evaluation protocol.</strong> Pair Style judges adjacent observations, while Sequence Style uses ordered observations. Videos are sampled at 1 FPS with task instructions; continuous PRM changes receive a five-frame causal moving average, and interval-boundary predictions are filtered before Macro-F1, Accuracy, and class-wise metrics are computed.</p>
+          <p><strong>Experimental Results:</strong> Two main patterns emerge from the RoboPulse++ evaluation.</p>
+          <ul>
+            <li><strong>Specialized PRMs provide the strongest and most balanced progress judgments.</strong> Robo-Dopamine (Forward) reaches Macro-F1 0.77 and Accuracy 0.84, versus 0.58 and 0.63 for Gemini 3.1 Pro in Pair Style, the most competitive general-purpose VLM setting.</li>
+            <li><strong>Falling progress remains materially harder to recognize than Rising progress.</strong> The best Falling F1 is 0.63, compared with 0.92 for Rising, with the gap driven primarily by lower Falling recall.</li>
+          </ul>
+          <p><strong>Falling error analysis.</strong> Among 155 sampled Falling intervals, 78.1% are interaction-relation failures and 21.9% are task-order failures.</p>
+          <p><strong>History helps recognize regression.</strong> On context-dependent cases, RoboMeter reaches 0.901 Falling accuracy and 0.940 overall accuracy, compared with 0.408 and 0.746 for Robo-Dopamine (Forward).</p>
+
+          <h2 id="interactive-trajectory-explorer">6. Interactive Trajectory Explorer</h2>
+          <p>Experience the demo firsthand below. Choose RoboDojo-Sim or RoboDojo-RealWorld, select a rollout by model and task, and drag the timeline to align video playback with the progress curve. The expanded OPD metrics, including FNS, DRR, and SQS when applicable, update concurrently.</p>
+          <p>This module provides a temporal audit of an individual execution. Compare rising, regressing, and stagnating curve segments with the robot's physical actions, then inspect failure proximity, recovery, and successful-execution quality at the trajectory level.</p>
+
+          <div class="interactive-case">
+            <div class="case-tabs-15" id="case-tabs" aria-label="RoboDojo evaluation environment"></div>
+            <div class="case-picker-row">
+              <label class="case-picker-label" for="case-select">
+                <span class="case-picker-label-text">Model + Task</span>
+                <select class="case-select" id="case-select" aria-label="Select a model and task trajectory"></select>
+              </label>
+
+            </div>
+            <div class="metric-scope-banner" id="case-description">Loading RoboDojo trajectory data...</div>
+            <div class="video-metrics-row">
+              <div class="video-col explorer-main">
+                <div class="video-chart-wrap figure-card figure-card-tight" id="video-wrap">
+                  <video class="case-video" id="case-video" preload="metadata"></video>
+                  <div class="video-controls">
+                    <button class="btn-icon" id="play-btn" aria-label="Play">▶</button>
+                    <div class="progress-wrap" id="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+                    <span class="time-display" id="ctrl-time">0:00 / 0:00</span>
+                    <div class="vol-wrap"><button class="btn-icon" id="mute-btn" aria-label="Mute">🔊</button><input type="range" id="vol-slider" min="0" max="100" value="100"></div>
+                  </div>
+                </div>
+
+                <div class="curve-panel figure-card figure-card-tight">
+                  <div class="curve-header">
+                    <div class="curve-title">Progress Curve Φ(x<sub>t</sub>)</div>
+                    <div class="curve-status-wrap"><span class="curve-state-chip state-stall" id="progress-state-chip">Stagnating</span><div class="curve-status" id="progress-state">Waiting for playback</div></div>
+                  </div>
+                  <div id="case-chart" class="case-chart"></div>
+                  <div class="case-slider-wrap">
+                    <input type="range" id="case-slider" min="0" max="100" value="0" step="0.1" aria-label="Trajectory timeline">
+                    <div class="timeline-meta"><span class="time-label" id="case-time">0:00 / 0:00</span><span class="timeline-sep">•</span><span class="timeline-percent" id="timeline-percent">0%</span></div>
+                  </div>
+                  <div class="curve-legend">
+                    <span class="curve-legend-item"><span class="curve-line curve-line-rise"></span>Progressing</span>
+                    <span class="curve-legend-item"><span class="curve-line curve-line-fall"></span>Regressing</span>
+                    <span class="curve-legend-item"><span class="curve-line curve-line-stall"></span>Stagnating</span>
+                    <span class="curve-legend-item"><span class="curve-dot"></span>Current frame</span>
+                  </div>
+                </div>
+              </div>
+
+              <aside class="metrics-col explorer-side">
+
+                <div class="opd-metrics-wrapper figure-card figure-card-tight">
+                  <div class="opd-metrics-title">OPD + 1.5 Summary</div>
+                  <div class="summary-grid summary-grid-15">
+                    <div class="summary-item"><span class="summary-key">Φ(t)</span><span class="summary-value" id="m-progress">—</span></div>
+                    <div class="summary-item"><span class="summary-key">MP</span><span class="summary-value" id="m-mp">—</span></div>
+                    <div class="summary-item"><span class="summary-key">PPL</span><span class="summary-value" id="m-ppl">—</span></div>
+                    <div class="summary-item"><span class="summary-key">CRA</span><span class="summary-value" id="m-cra">—</span></div>
+                    <div class="summary-item"><span class="summary-key">STR</span><span class="summary-value" id="m-str">—</span></div>
+                    <div class="summary-item metric-new-item"><span class="summary-key">FNS <i class="new-dot">1.5</i></span><span class="summary-value" id="m-fns">—</span></div>
+                    <div class="summary-item metric-new-item"><span class="summary-key">DRR <i class="new-dot">1.5</i></span><span class="summary-value" id="m-drr">—</span></div>
+                    <div class="summary-item metric-new-item"><span class="summary-key">SQS <i class="new-dot">1.5</i></span><span class="summary-value" id="m-sqs">—</span></div>
+                  </div>
+                  <p class="summary-note" id="summary-note">Live prefix metrics update at every frame.</p>
+                </div>
+
+                <div class="side-card figure-card figure-card-tight">
+                  <div class="side-card-title">Current Frame Interpretation</div>
+                  <p class="state-line" id="frame-interpretation">Move the timeline to inspect frame-level behavior.</p>
+                  <p class="state-line state-diagnosis" id="diagnosis-hint">Diagnosis hints update from the current trajectory prefix.</p>
+                </div>
+
+                <div class="side-card figure-card figure-card-tight">
+                  <div class="side-card-title">Milestones and Metric Scope</div>
+                  <div class="milestone-legend-wrap">
+                    <div class="metric-mc-row" id="m-mc"><span class="mc-milestone" data-pct="25">25%</span><span class="mc-milestone" data-pct="50">50%</span><span class="mc-milestone" data-pct="75">75%</span><span class="mc-milestone" data-pct="100">100%</span></div>
+                    <hr class="side-card-divider">
+                    <div class="legend-chip-row"><span class="legend-chip legend-chip-up">↑ FNS: failures</span><span class="legend-chip legend-chip-up">↑ DRR: recovery</span><span class="legend-chip legend-chip-up">↑ SQS: successes</span></div>
+                  </div>
+                </div>
+              </aside>
+            </div>
+          </div>
+
+          <h2 class="closing-section-heading conclusion-heading">7. Conclusion</h2>
+          <p>PRM-as-a-Judge 1.5 is a toolkit for moving robotic evaluation beyond binary success rates and rule-based scores. Its expanded OPD suite adds three conditioned metrics, while the large-scale assessment shows that process evaluation can expose behavioral signatures that outcome-only evaluation misses.</p>
+          <p>The technical report highlights three directions for extending this foundation:</p>
+
+          <ul class="conclusion-directions">
+            <li class="better-prm-direction"><strong>Better PRMs.</strong> Our results suggest several directions for improving the progress judge itself.
+              <div class="better-prm-grid">
+                <article class="better-prm-card">
+                  <h4>Temporal Context</h4>
+                  <p>Use sequence-style modeling and broader temporal context to judge progress and regression more consistently.</p>
+                </article>
+                <article class="better-prm-card">
+                  <h4>Negative-progress Supervision</h4>
+                  <p>Train with more real failed and regressive trajectories to improve recognition of Falling progress.</p>
+                </article>
+                <article class="better-prm-card">
+                  <h4>Low-cost Adaptation</h4>
+                  <p>Support new tasks, viewpoints, embodiments, and corner cases without requiring full retraining.</p>
+                </article>
+                <article class="better-prm-card">
+                  <h4>Richer Supervision</h4>
+                  <p>Add future-state, video-prediction, and other temporal objectives beyond scalar progress targets.</p>
+                </article>
+              </div>
+            </li>
+            <li><strong>Add richer evidence for process diagnosis.</strong> Progress curves can be combined with visual, state, contact, and semantic signals to make assessment reports more interpretable.</li>
+            <li><strong>Close the evaluation-data-training loop.</strong> Diagnosed failure patterns can guide targeted data collection, data reweighting, and objective design so that evaluation directly informs model improvement.</li>
+          </ul>
+          <p class="concluding-note"><strong>Final takeaway:</strong> The released metric implementation and visualization tools provide a practical foundation for a more open and reproducible evaluation ecosystem.</p>
+          <p class="collab-contact-note">We warmly welcome researchers and benchmark teams to apply PRM-as-a-Judge to their own embodied task evaluations. We are happy to provide hands-on guidance on rollout preparation, metric interpretation, and evaluation integration. Please contact us by email at <a href="mailto:liuyuyang2025@ia.ac.cn">liuyuyang2025@ia.ac.cn</a>.</p>
+          <h2 class="closing-section-heading">Author List</h2>
+          <div class="team-card author-list-card" aria-label="Author list from the technical report">
+            <p class="author-inline-list">Yuyang Liu<sup>∗</sup>、Yanqing Shen<sup>∗</sup>、Ruike Chen、Jifan Zhao、Yuxuan Tian、Yichi Zhang、Tianfeng Long、Zixuan Yin、Yipu Wang、Ziheng Qin、Wenxing Tan、Yang Shi、Mingyu Cao、Runze Xiao、Ziqi Wang、Zhixin Yin、Shiwei Chu、Yi-Fan Zhang、Yao Mu、Yuheng Ji<sup>†</sup>、Yihao Wang、Jun Yan、Zhongyuan Wang、Pengwei Wang<sup>✉</sup>、Xiaolong Zheng<sup>✉</sup></p>
+            <div class="author-role-notes">
+              <span><sup>∗</sup> Equal Contribution.</span>
+              <span class="project-lead-note"><sup>†</sup> Project Lead: Yuheng Ji.</span>
+              <span><sup>✉</sup> Corresponding Authors: pwwang@baai.ac.cn, xiaolong.zheng@ia.ac.cn.</span>
+            </div>
+          </div>
+
+          <h2 class="closing-section-heading">Citation</h2>
+          <p>If this report or toolkit helps your work, please cite:</p>
+          <div class="citation-card">
+            <div class="citation-head"><span class="citation-kind">BibTeX</span><button type="button" class="citation-copy-btn" id="copy-citation-btn">Copy citation</button></div>
+            <pre class="citation-block"><code id="citation-text">@article{liu2026prmjudge15,
+  title   = {PRM-as-a-Judge 1.5: A Toolkit for Robot Process Assessment},
+  author  = {Liu, Yuyang and Ji, Yuheng and Shen, Yanqing and Wang, Yihao and others},
+  journal = {Technical Report},
+  year    = {2026}
+}</code></pre>
+            <p class="citation-status" id="citation-status">Copy this BibTeX entry into your bibliography.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script>
+  (function(){
+    document.querySelectorAll('.math-latex').forEach(function(node){var latex=node.getAttribute('data-latex');if(latex&&window.katex)katex.render(latex,node,{throwOnError:false,displayMode:true});});
+    var nav=document.getElementById('toc-nav');var headings=[].slice.call(document.querySelectorAll('.blog-section h2,.blog-section h3'));
+    headings.forEach(function(h,i){if(!h.id)h.id='section-'+i;var a=document.createElement('a');a.className='toc-link '+(h.tagName==='H3'?'toc-link-h3':'');a.href='#'+h.id;a.textContent=h.textContent;nav.appendChild(a);});
+    var links=[].slice.call(nav.querySelectorAll('a'));if(window.IntersectionObserver){var observer=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id);});}});},{rootMargin:'-10% 0px -75% 0px'});headings.forEach(function(h){observer.observe(h);});}
+  })();
+  </script>
+  <script src="assets/videos/demos/PRM-as-a-Judge-1.5/trajectories/manifest.js"></script>
+  <script src="assets/videos/demos/PRM-as-a-Judge-1.5/trajectory-explorer.js"></script>
+  <script>
+  (function(){var btn=document.getElementById('copy-citation-btn'),text=document.getElementById('citation-text'),status=document.getElementById('citation-status');btn.addEventListener('click',function(){navigator.clipboard.writeText(text.textContent).then(function(){btn.textContent='Copied';btn.classList.add('copied');status.textContent='Citation copied to clipboard.';setTimeout(function(){btn.textContent='Copy citation';btn.classList.remove('copied');},1600);});});})();
+  </script>
+</body>
+</html>
