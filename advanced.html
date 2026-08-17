@@ -485,21 +485,6 @@
             </figure>
 
             <figure class="report-shot">
-              <a href="assets/images/report-metric-results.webp" target="_blank" rel="noopener">
-                <img
-                  src="assets/images/report-metric-results.webp"
-                  alt="Metric Results dashboard showing Milestone Reachability and OAS Contribution charts"
-                  loading="lazy"
-                  width="2286"
-                  height="1162">
-              </a>
-              <figcaption>
-                <strong>Metric results.</strong> An example completed-run report comparing milestone
-                reachability and the weighted contributions to OAS across evaluated models.
-              </figcaption>
-            </figure>
-
-            <figure class="report-shot">
               <a href="assets/images/report-conditional-profile.webp" target="_blank" rel="noopener">
                 <img
                   src="assets/images/report-conditional-profile.webp"
@@ -519,15 +504,15 @@
               <a href="assets/images/report-failure-localization.webp" target="_blank" rel="noopener">
                 <img
                   src="assets/images/report-failure-localization.webp"
-                  alt="Failure Localization and Drawdown chart with a MaxP-at-failure distribution and significant-drawdown rate"
+                  alt="Failure Progress and Recovery chart showing failed-trajectory MP distribution and regression-conditioned DRR"
                   loading="lazy"
-                  width="2296"
-                  height="832">
+                  width="2272"
+                  height="808">
               </a>
               <figcaption>
-                <strong>Failure localization and drawdown.</strong> Filter by model and task to inspect
-                where failed trajectories stopped, their average MaxP-F, and the significant-drawdown
-                rate at the selected MDD threshold.
+                <strong>Failure progress and recovery.</strong> Filter by model and task to inspect the
+                MP distribution and mean MP of failed trajectories, together with DRR computed over
+                failed trajectories that contain a real regression.
               </figcaption>
             </figure>
 
@@ -537,8 +522,8 @@
                   src="assets/images/report-trajectory-explorer.webp"
                   alt="Interactive trajectory explorer showing a rollout video, progress curve, and case metrics"
                   loading="lazy"
-                  width="1600"
-                  height="955">
+                  width="2042"
+                  height="1464">
               </a>
               <figcaption>
                 <strong>Interactive trajectory explorer.</strong> Inspect the rollout video together with
@@ -1366,20 +1351,6 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
             </figure>
 
             <figure class="report-shot">
-              <a href="assets/images/report-metric-results.webp" target="_blank" rel="noopener">
-                <img
-                  src="assets/images/report-metric-results.webp"
-                  alt="同时展示里程碑达成情况和 OAS 指标贡献的 Metric Results 报告"
-                  loading="lazy"
-                  width="2286"
-                  height="1162">
-              </a>
-              <figcaption>
-                <strong>指标结果。</strong>一次完整评测运行的示例报告，用于比较不同模型的里程碑达成情况以及各项指标对 OAS 的加权贡献。
-              </figcaption>
-            </figure>
-
-            <figure class="report-shot">
               <a href="assets/images/report-conditional-profile.webp" target="_blank" rel="noopener">
                 <img
                   src="assets/images/report-conditional-profile.webp"
@@ -1397,13 +1368,13 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
               <a href="assets/images/report-failure-localization.webp" target="_blank" rel="noopener">
                 <img
                   src="assets/images/report-failure-localization.webp"
-                  alt="展示失败位置分布和显著回撤率的 Failure Localization and Drawdown 报告"
+                  alt="展示失败轨迹 MP 分布、平均 MP 和回退后恢复程度的 Failure Progress and Recovery 报告"
                   loading="lazy"
-                  width="2296"
-                  height="832">
+                  width="2272"
+                  height="808">
               </a>
               <figcaption>
-                <strong>失败定位与回撤。</strong>按模型和任务筛选，查看失败轨迹停止的位置、平均 MaxP-F，以及所选 MDD 阈值下的显著回撤率。
+                <strong>失败轨迹的进度与恢复。</strong>按模型和任务筛选，查看失败轨迹的 MP 分布与平均 MP，以及仅在发生真实回退的失败轨迹上计算的 DRR。
               </figcaption>
             </figure>
 
@@ -1413,8 +1384,8 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
                   src="assets/images/report-trajectory-explorer.webp"
                   alt="同时展示执行视频、进度曲线和单案例指标的交互式轨迹查看器"
                   loading="lazy"
-                  width="1600"
-                  height="955">
+                  width="2042"
+                  height="1464">
               </a>
               <figcaption>
                 <strong>交互式轨迹查看器。</strong>同步查看执行视频、进度曲线、实时帧数值、单案例指标和里程碑。
