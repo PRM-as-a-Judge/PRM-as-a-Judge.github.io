@@ -408,7 +408,7 @@
                 </tr>
                 <tr>
                   <td><code>summary.csv</code></td>
-                  <td>Metrics aggregated by benchmark, policy model, and task, including case counts and metrics such as MaxP, SR, and PPL, for comparing task and model performance.</td>
+                  <td>Metrics aggregated by benchmark, policy model, and task, including case counts and metrics such as MP, SR, and PPL, for comparing task and model performance.</td>
                 </tr>
                 <tr>
                   <td><code>leaderboard.csv</code></td>
@@ -424,7 +424,7 @@
                 </tr>
                 <tr>
                   <td><code>visualizations/curve_metrics.csv</code></td>
-                  <td>Per-case curve metric details. Each row includes case and task information, PRM evaluation method, policy model, curve length, and progress metrics such as MaxP, SR, and PPL for filtering and downstream analysis.</td>
+                  <td>Per-case curve metric details. Each row includes case and task information, PRM evaluation method, policy model, curve length, and progress metrics such as MP, SR, and PPL for filtering and downstream analysis.</td>
                 </tr>
                 <tr>
                   <td><code>visualizations/report.html</code></td>
@@ -564,7 +564,7 @@
                 <tr>
                   <td>Success threshold</td>
                   <td><code>--success-threshold 0.99</code></td>
-                  <td>Without a reliable <code>label</code>, success is determined by whether <code>MaxP</code> reaches the default threshold of <code>0.99</code>. Because the <code>MaxP</code> distribution may vary across tasks, adjust the threshold when necessary.</td>
+                  <td>Without a reliable <code>label</code>, success is determined by whether <code>MP</code> reaches the default threshold of <code>0.99</code>. Because the <code>MP</code> distribution may vary across tasks, adjust the threshold when necessary.</td>
                 </tr>
                 <tr>
                   <td>Frame sampling interval</td>
@@ -902,8 +902,10 @@ bash eval/run_eval.sh</code></pre>
           <p><code>↑</code> means higher is better; <code>↓</code> means lower is better.</p>
           <p>
             In the formulas below, <code>p_0 = 0, p_1, ..., p_T</code> is the processed normalized
-            progress curve, <code>θ</code> is the success threshold, <code>δ = 0.005</code> is the
-            default stagnation threshold, and <code>1[·]</code> is the indicator function.
+            progress curve, <code>θ</code> is the success threshold, <code>ε = 0.005</code> is the
+            default stagnation threshold, and <code>1[·]</code> is the indicator function. The OPD
+            names and equations follow the <a href="https://arxiv.org/abs/2608.14284" target="_blank" rel="noopener noreferrer">technical report</a>;
+            Binary Success Rate (SR) is reported alongside the formal OPD metrics.
           </p>
 
           <div class="table-wrap">
@@ -924,28 +926,28 @@ bash eval/run_eval.sh</code></pre>
               </thead>
               <tbody>
                 <tr>
-                  <td><code>MaxP ↑</code></td>
+                  <td><code>MP ↑</code></td>
                   <td class="metric-scope">All rollouts</td>
-                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{MaxP}=\max_{1\le t\le T}p_t"></span></div></td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{MP}=\max_{0\le t\le T}p_t"></span></div></td>
                   <td>Highest progress reached. A higher value means the rollout came closer to completing the task.</td>
                 </tr>
                 <tr>
-                  <td><code>M25 ↑</code>, <code>M50 ↑</code>, <code>M75 ↑</code></td>
+                  <td><code>MC@q ↑</code></td>
                   <td class="metric-scope">All rollouts</td>
-                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="M_q=\mathbf{1}[\mathrm{MaxP}\ge q],\quad q\in\{0.25,0.50,0.75\}"></span></div></td>
-                  <td>Whether a rollout reached the 25%, 50%, and 75% progress milestones; aggregates report the proportion of rollouts reaching each milestone.</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{MC@}q=\mathbf{1}[\mathrm{MP}\ge q/100],\quad q\in\{25,50,75,100\}"></span></div></td>
+                  <td>Milestone Coverage at 25%, 50%, 75%, or 100%; aggregates report the proportion of rollouts reaching each milestone.</td>
                 </tr>
                 <tr>
                   <td><code>SR ↑</code></td>
                   <td class="metric-scope">All rollouts</td>
                   <td class="metric-formula-cell">
                     <div class="metric-formula-scroll">
-                      <span class="metric-formula-line"><span class="math-latex" data-latex="s_i=\mathbf{1}[\mathrm{MaxP}_i\ge\theta]"></span><span class="metric-formula-note">default</span></span>
+                      <span class="metric-formula-line"><span class="math-latex" data-latex="s_i=\mathbf{1}[\mathrm{MP}_i\ge\theta]"></span><span class="metric-formula-note">toolkit default</span></span>
                       <span class="metric-formula-line"><span class="math-latex" data-latex="s_i=\mathbf{1}[\mathrm{label}_i=\mathrm{success}]"></span><span class="metric-formula-note">label source</span></span>
                       <span class="metric-formula-line math-latex" data-latex="\mathrm{SR}=\frac{1}{N}\sum_{i=1}^{N}s_i"></span>
                     </div>
                   </td>
-                  <td>Whether a rollout reached the success threshold, which defaults to <code>0.99</code>; aggregates report the success rate.</td>
+                  <td>Binary Success Rate. The report defines PRM-derived success at <code>MP = 1</code>; the toolkit allows a configurable threshold, which defaults to <code>0.99</code>, or benchmark labels.</td>
                 </tr>
                 <tr>
                   <td><code>PPL ↑</code></td>
@@ -953,7 +955,7 @@ bash eval/run_eval.sh</code></pre>
                   <td class="metric-formula-cell">
                     <div class="metric-formula-scroll">
                       <span class="metric-formula-line math-latex" data-latex="L=\sum_{t=1}^{T}|p_t-p_{t-1}|"></span>
-                      <span class="metric-formula-line math-latex" data-latex="\mathrm{PPL}=\begin{cases}\mathrm{MaxP}^{2}/L,&amp;L&gt;0\\0,&amp;L=0\end{cases}"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{PPL}=\begin{cases}\mathrm{MP}^{2}/L,&amp;L&gt;0\\0,&amp;L=0\end{cases}"></span>
                     </div>
                   </td>
                   <td>Measures path efficiency while making progress. Higher values indicate that useful progress is more concentrated.</td>
@@ -961,34 +963,33 @@ bash eval/run_eval.sh</code></pre>
                 <tr>
                   <td><code>CRA ↓</code></td>
                   <td class="metric-scope">All rollouts</td>
-                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{CRA}=\frac{1}{T}\sum_{t=1}^{T}\max\!\left(0,\max_{k\le t}p_k-p_t\right)"></span></div></td>
-                  <td>Measures cumulative loss caused by regressions. Lower is better; compare rollouts that reached similar progress.</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{CRA}=\frac{1}{(T+1)\,\mathrm{MP}}\sum_{t=0}^{T}\left(\max_{0\le i\le t}p_i-p_t\right)"></span></div></td>
+                  <td>Measures regression magnitude and duration, normalized by the rollout's maximum progress. Lower values indicate less cumulative regression.</td>
                 </tr>
                 <tr>
-                  <td><code>Stag ↓</code></td>
+                  <td><code>STR ↓</code></td>
                   <td class="metric-scope">All rollouts</td>
-                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{Stag}=\frac{1}{T}\sum_{t=1}^{T}\mathbf{1}[|p_t-p_{t-1}|\lt\delta]"></span></div></td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{STR}=\frac{1}{T}\sum_{t=1}^{T}\mathbf{1}[|p_t-p_{t-1}|\lt\epsilon]"></span></div></td>
                   <td>Fraction of steps with almost no progress change. Lower values indicate less stagnation.</td>
                 </tr>
                 <tr>
-                  <td><code>RBS ↑</code></td>
-                  <td class="metric-scope">All rollouts</td>
+                  <td><code>DRR ↑</code></td>
+                  <td class="metric-scope">Rollouts with drawdown</td>
                   <td class="metric-formula-cell">
                     <div class="metric-formula-scroll">
-                      <span class="metric-formula-line math-latex" data-latex="d_t=\max_{k\le t}p_k-p_t,\quad t^*=\arg\max_t d_t"></span>
-                      <span class="metric-formula-line math-latex" data-latex="\mathrm{MDD}=d_{t^*},\quad \mathrm{Rec}=\max_{t\ge t^*}p_t-p_{t^*}"></span>
-                      <span class="metric-formula-line math-latex" data-latex="\mathrm{RBS}=\begin{cases}1,&amp;\mathrm{MDD}\le\varepsilon\\\min\!\left(1,\frac{\mathrm{Rec}+\varepsilon}{\mathrm{MDD}+\varepsilon}\right),&amp;\mathrm{otherwise}\end{cases}"></span>
+                      <span class="metric-formula-line math-latex" data-latex="d_t=\max_{0\le i\le t}p_i-p_t"></span>
+                      <span class="metric-formula-line math-latex" data-latex="t^*\in\arg\max_t d_t"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{DRR}=\min\!\left(1,\frac{\max_{t^*\le t\le T}p_t-p_{t^*}}{d_{t^*}}\right),\quad d_{t^*}&gt;0"></span>
                     </div>
                   </td>
-                  <td>Measures recovery after the largest progress regression. Higher values indicate more complete recovery.</td>
+                  <td>Measures how much of the largest drawdown is subsequently recovered. Higher values indicate more complete recovery; rollouts without drawdown are excluded.</td>
                 </tr>
                 <tr>
                   <td><code>FNS ↑</code></td>
                   <td class="metric-scope">Failed rollouts</td>
                   <td class="metric-formula-cell">
                     <div class="metric-formula-scroll">
-                      <span class="metric-formula-line math-latex" data-latex="I_f=1-s"></span>
-                      <span class="metric-formula-line math-latex" data-latex="\mathrm{FNS}=I_f(0.5\,\mathrm{MaxP}+0.3\,M75+0.2\,M50)"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{FNS}=0.5\,\mathrm{MP}+0.3\,\mathrm{MC@75}+0.2\,\mathrm{MC@50}"></span>
                     </div>
                   </td>
                   <td>Measures how close a failed rollout came to success by combining its highest progress and milestone completion.</td>
@@ -998,8 +999,7 @@ bash eval/run_eval.sh</code></pre>
                   <td class="metric-scope">Successful rollouts</td>
                   <td class="metric-formula-cell">
                     <div class="metric-formula-scroll">
-                      <span class="metric-formula-line math-latex" data-latex="I_s=s"></span>
-                      <span class="metric-formula-line math-latex" data-latex="\mathrm{SQS}=I_s[0.5\,\mathrm{PPL}+0.3(1-\mathrm{CRA})+0.2(1-\mathrm{Stag})]"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{SQS}=0.5\,\mathrm{PPL}+0.3(1-\mathrm{CRA})+0.2(1-\mathrm{STR})"></span>
                     </div>
                   </td>
                   <td>Measures execution quality among successful rollouts, rewarding efficient, low-regret, and low-stagnation behavior.</td>
@@ -1010,10 +1010,10 @@ bash eval/run_eval.sh</code></pre>
 
 
           <div class="callout">
-            Some diagnostics are conditional. For example, <code>CRA</code> is most
-            informative when comparing rollouts that both achieved similar progress.
-            A completely stagnant curve may have low regret but still be a poor rollout.
-            <strong>By default, success grouping uses <code>MaxP >= --success-threshold</code>.</strong>
+            Some diagnostics are conditional: <code>FNS</code> is aggregated over failed
+            rollouts, <code>DRR</code> over rollouts with a real drawdown, and <code>SQS</code>
+            over successful rollouts.
+            <strong>By default, success grouping uses <code>MP >= --success-threshold</code>.</strong>
             Use <code>--success-source label</code> only when benchmark labels should
             define success and failure.
           </div>
@@ -1281,7 +1281,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
                 </tr>
                 <tr>
                   <td><code>summary.csv</code></td>
-                  <td>按 Benchmark、策略模型和任务分组的指标汇总表，包含案例数以及 MaxP、SR、PPL 等聚合指标，用于比较不同任务和模型的表现。</td>
+                  <td>按 Benchmark、策略模型和任务分组的指标汇总表，包含案例数以及 MP、SR、PPL 等聚合指标，用于比较不同任务和模型的表现。</td>
                 </tr>
                 <tr>
                   <td><code>leaderboard.csv</code></td>
@@ -1297,7 +1297,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
                 </tr>
                 <tr>
                   <td><code>visualizations/curve_metrics.csv</code></td>
-                  <td>单案例曲线指标明细表。每行包含案例与任务信息、PRM 评测方式、策略模型、曲线点数，以及 MaxP、SR、PPL 等进度曲线指标，便于筛选和二次分析。</td>
+                  <td>单案例曲线指标明细表。每行包含案例与任务信息、PRM 评测方式、策略模型、曲线点数，以及 MP、SR、PPL 等进度曲线指标，便于筛选和二次分析。</td>
                 </tr>
                 <tr>
                   <td><code>visualizations/report.html</code></td>
@@ -1423,7 +1423,7 @@ prm-judge eval --manifest cases.jsonl --visualize</code></pre>
                 <tr>
                   <td>成功阈值</td>
                   <td><code>--success-threshold 0.99</code></td>
-                  <td>没有可靠的 <code>label</code> 时，程序根据 <code>MaxP</code> 是否达到默认阈值 <code>0.99</code> 判断成功。不同任务的 <code>MaxP</code> 分布可能不同，可根据实际情况调整该阈值。</td>
+                  <td>没有可靠的 <code>label</code> 时，程序根据 <code>MP</code> 是否达到默认阈值 <code>0.99</code> 判断成功。不同任务的 <code>MP</code> 分布可能不同，可根据实际情况调整该阈值。</td>
                 </tr>
                 <tr>
                   <td>帧采样间隔</td>
@@ -1727,8 +1727,10 @@ bash eval/run_eval.sh</code></pre>
           <p><code>↑</code> 表示数值越高越好，<code>↓</code> 表示数值越低越好。</p>
           <p>
             以下公式中，<code>p_0 = 0, p_1, ..., p_T</code> 表示处理后的归一化进度曲线，
-            <code>θ</code> 表示成功阈值，<code>δ = 0.005</code> 表示默认停滞阈值，
-            <code>1[·]</code> 表示指示函数。
+            <code>θ</code> 表示成功阈值，<code>ε = 0.005</code> 表示默认停滞阈值，
+            <code>1[·]</code> 表示指示函数。OPD 的名称和公式以
+            <a href="https://arxiv.org/abs/2608.14284" target="_blank" rel="noopener noreferrer">技术报告</a>为准；
+            二元成功率（SR）作为补充结果指标与正式 OPD 指标一同报告。
           </p>
 
           <div class="table-wrap">
@@ -1749,28 +1751,28 @@ bash eval/run_eval.sh</code></pre>
               </thead>
               <tbody>
                 <tr>
-                  <td><code>MaxP ↑</code></td>
+                  <td><code>MP ↑</code></td>
                   <td class="metric-scope">全部轨迹</td>
-                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{MaxP}=\max_{1\le t\le T}p_t"></span></div></td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{MP}=\max_{0\le t\le T}p_t"></span></div></td>
                   <td>轨迹达到的最高进度。数值越高，表示执行过程越接近完成任务。</td>
                 </tr>
                 <tr>
-                  <td><code>M25 ↑</code>、<code>M50 ↑</code>、<code>M75 ↑</code></td>
+                  <td><code>MC@q ↑</code></td>
                   <td class="metric-scope">全部轨迹</td>
-                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="M_q=\mathbf{1}[\mathrm{MaxP}\ge q],\quad q\in\{0.25,0.50,0.75\}"></span></div></td>
-                  <td>是否达到 25%、50% 和 75% 的进度里程碑；汇总时表示达到相应里程碑的轨迹比例。</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{MC@}q=\mathbf{1}[\mathrm{MP}\ge q/100],\quad q\in\{25,50,75,100\}"></span></div></td>
+                  <td>25%、50%、75% 或 100% 里程碑覆盖率；汇总时表示达到相应里程碑的轨迹比例。</td>
                 </tr>
                 <tr>
                   <td><code>SR ↑</code></td>
                   <td class="metric-scope">全部轨迹</td>
                   <td class="metric-formula-cell">
                     <div class="metric-formula-scroll">
-                      <span class="metric-formula-line"><span class="math-latex" data-latex="s_i=\mathbf{1}[\mathrm{MaxP}_i\ge\theta]"></span><span class="metric-formula-note">默认</span></span>
+                      <span class="metric-formula-line"><span class="math-latex" data-latex="s_i=\mathbf{1}[\mathrm{MP}_i\ge\theta]"></span><span class="metric-formula-note">工具包默认</span></span>
                       <span class="metric-formula-line"><span class="math-latex" data-latex="s_i=\mathbf{1}[\mathrm{label}_i=\mathrm{success}]"></span><span class="metric-formula-note">使用标签</span></span>
                       <span class="metric-formula-line math-latex" data-latex="\mathrm{SR}=\frac{1}{N}\sum_{i=1}^{N}s_i"></span>
                     </div>
                   </td>
-                  <td>是否达到成功阈值，默认阈值为 <code>0.99</code>；汇总时表示成功率。</td>
+                  <td>二元成功率。技术报告以 <code>MP = 1</code> 定义 PRM 推导的成功；工具包允许配置成功阈值（默认为 <code>0.99</code>）或使用 Benchmark 标签。</td>
                 </tr>
                 <tr>
                   <td><code>PPL ↑</code></td>
@@ -1778,7 +1780,7 @@ bash eval/run_eval.sh</code></pre>
                   <td class="metric-formula-cell">
                     <div class="metric-formula-scroll">
                       <span class="metric-formula-line math-latex" data-latex="L=\sum_{t=1}^{T}|p_t-p_{t-1}|"></span>
-                      <span class="metric-formula-line math-latex" data-latex="\mathrm{PPL}=\begin{cases}\mathrm{MaxP}^{2}/L,&amp;L&gt;0\\0,&amp;L=0\end{cases}"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{PPL}=\begin{cases}\mathrm{MP}^{2}/L,&amp;L&gt;0\\0,&amp;L=0\end{cases}"></span>
                     </div>
                   </td>
                   <td>衡量轨迹在取得进展时的路径效率，数值越高表示有效进展越集中。</td>
@@ -1786,34 +1788,33 @@ bash eval/run_eval.sh</code></pre>
                 <tr>
                   <td><code>CRA ↓</code></td>
                   <td class="metric-scope">全部轨迹</td>
-                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{CRA}=\frac{1}{T}\sum_{t=1}^{T}\max\!\left(0,\max_{k\le t}p_k-p_t\right)"></span></div></td>
-                  <td>衡量进度回退带来的累计损失，数值越低越好；应在达到相近进度的轨迹之间比较。</td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{CRA}=\frac{1}{(T+1)\,\mathrm{MP}}\sum_{t=0}^{T}\left(\max_{0\le i\le t}p_i-p_t\right)"></span></div></td>
+                  <td>衡量经最大进度归一化后的回退幅度和持续时间。数值越低，表示累计回退越少。</td>
                 </tr>
                 <tr>
-                  <td><code>Stag ↓</code></td>
+                  <td><code>STR ↓</code></td>
                   <td class="metric-scope">全部轨迹</td>
-                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{Stag}=\frac{1}{T}\sum_{t=1}^{T}\mathbf{1}[|p_t-p_{t-1}|\lt\delta]"></span></div></td>
+                  <td class="metric-formula-cell"><div class="metric-formula-scroll"><span class="metric-formula-line math-latex" data-latex="\mathrm{STR}=\frac{1}{T}\sum_{t=1}^{T}\mathbf{1}[|p_t-p_{t-1}|\lt\epsilon]"></span></div></td>
                   <td>近乎没有进度变化的步骤比例，数值越低表示停滞越少。</td>
                 </tr>
                 <tr>
-                  <td><code>RBS ↑</code></td>
-                  <td class="metric-scope">全部轨迹</td>
+                  <td><code>DRR ↑</code></td>
+                  <td class="metric-scope">发生回撤的轨迹</td>
                   <td class="metric-formula-cell">
                     <div class="metric-formula-scroll">
-                      <span class="metric-formula-line math-latex" data-latex="d_t=\max_{k\le t}p_k-p_t,\quad t^*=\arg\max_t d_t"></span>
-                      <span class="metric-formula-line math-latex" data-latex="\mathrm{MDD}=d_{t^*},\quad \mathrm{Rec}=\max_{t\ge t^*}p_t-p_{t^*}"></span>
-                      <span class="metric-formula-line math-latex" data-latex="\mathrm{RBS}=\begin{cases}1,&amp;\mathrm{MDD}\le\varepsilon\\\min\!\left(1,\frac{\mathrm{Rec}+\varepsilon}{\mathrm{MDD}+\varepsilon}\right),&amp;\mathrm{otherwise}\end{cases}"></span>
+                      <span class="metric-formula-line math-latex" data-latex="d_t=\max_{0\le i\le t}p_i-p_t"></span>
+                      <span class="metric-formula-line math-latex" data-latex="t^*\in\arg\max_t d_t"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{DRR}=\min\!\left(1,\frac{\max_{t^*\le t\le T}p_t-p_{t^*}}{d_{t^*}}\right),\quad d_{t^*}&gt;0"></span>
                     </div>
                   </td>
-                  <td>衡量轨迹在最大进度回退后的恢复程度，数值越高表示恢复越充分。</td>
+                  <td>衡量轨迹在最大回撤之后恢复了多少。数值越高表示恢复越充分；没有发生回撤的轨迹不计入该指标。</td>
                 </tr>
                 <tr>
                   <td><code>FNS ↑</code></td>
                   <td class="metric-scope">失败轨迹</td>
                   <td class="metric-formula-cell">
                     <div class="metric-formula-scroll">
-                      <span class="metric-formula-line math-latex" data-latex="I_f=1-s"></span>
-                      <span class="metric-formula-line math-latex" data-latex="\mathrm{FNS}=I_f(0.5\,\mathrm{MaxP}+0.3\,M75+0.2\,M50)"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{FNS}=0.5\,\mathrm{MP}+0.3\,\mathrm{MC@75}+0.2\,\mathrm{MC@50}"></span>
                     </div>
                   </td>
                   <td>衡量失败轨迹距离成功有多近，综合最高进度和里程碑完成情况。</td>
@@ -1823,8 +1824,7 @@ bash eval/run_eval.sh</code></pre>
                   <td class="metric-scope">成功轨迹</td>
                   <td class="metric-formula-cell">
                     <div class="metric-formula-scroll">
-                      <span class="metric-formula-line math-latex" data-latex="I_s=s"></span>
-                      <span class="metric-formula-line math-latex" data-latex="\mathrm{SQS}=I_s[0.5\,\mathrm{PPL}+0.3(1-\mathrm{CRA})+0.2(1-\mathrm{Stag})]"></span>
+                      <span class="metric-formula-line math-latex" data-latex="\mathrm{SQS}=0.5\,\mathrm{PPL}+0.3(1-\mathrm{CRA})+0.2(1-\mathrm{STR})"></span>
                     </div>
                   </td>
                   <td>衡量成功轨迹的执行质量，奖励高效、低回退和低停滞的过程。</td>
@@ -1834,8 +1834,9 @@ bash eval/run_eval.sh</code></pre>
           </div>
 
           <div class="callout">
-            有些诊断是有条件的。例如，<code>CRA</code> 在比较达成相似进度的执行案例时最有信息量。完全停滞的曲线可能 regret 很低，但仍然是差的执行过程。
-            <strong>默认情况下，成功分组使用 <code>MaxP >= --success-threshold</code>。</strong>
+            有些诊断只在特定轨迹子集上汇总：<code>FNS</code> 用于失败轨迹，
+            <code>DRR</code> 用于确实发生回撤的轨迹，<code>SQS</code> 用于成功轨迹。
+            <strong>默认情况下，成功分组使用 <code>MP >= --success-threshold</code>。</strong>
             只有当基准标签应定义 success 和 failure 时，才使用
             <code>--success-source label</code>。
           </div>
