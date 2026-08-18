@@ -2847,7 +2847,7 @@
         <p class="concluding-note"><strong>Final takeaway:</strong> Dense trajectory auditing turns robot evaluation from a binary scoreboard into an actionable analysis workflow for diagnosis, comparison, and iteration.</p>
         <p class="collab-contact-note">
           We welcome collaboration and feedback from the robotics community. If you have questions or would like to work with us on dense trajectory evaluation, please reach out at
-          <a href="mailto:jiyuheng2023@ia.ac.cn">jiyuheng2023@ia.ac.cn</a>.
+          <a href="mailto:liuyuyang2025@ia.ac.cn">liuyuyang2025@ia.ac.cn</a>.
         </p>
 
         <h2 class="closing-section-heading">Author Team</h2>
@@ -2872,19 +2872,28 @@
         </div>
 
         <h2 class="closing-section-heading">Citation</h2>
-        <p>If this blog or evaluation pipeline helps your work, please cite us:</p>
+        <p>If this blog or evaluation pipeline helps your work, please cite both PRM-as-a-Judge papers:</p>
         <div class="citation-card">
           <div class="citation-head">
             <span class="citation-kind">BibTeX</span>
-            <button type="button" class="citation-copy-btn" id="copy-citation-btn">Copy citation</button>
+            <button type="button" class="citation-copy-btn" id="copy-citation-btn">Copy citations</button>
           </div>
           <pre class="citation-block" id="citation-block"><code id="citation-text">@article{ji2026prmjudge,
   title   = {PRM-as-a-Judge: A Dense Evaluation Paradigm for Fine-Grained Robotic Auditing},
-  author  = {Ji, Yuheng and Liu, Yuyang and Tan, Huajie and Huang, Xuchuan and Huang, Fanding and Xu, Yijie and Chi, Cheng and Zhao, Yuting and Lyu, Huaihai and Co, Peterson and others},
+  author  = {Ji, Yuheng and Liu, Yuyang and Tan, Huajie and Huang, Xuchuan and Huang, Fanding and Xu, Yijie and Chi, Cheng and Zhao, Yuting and Lyu, Huaihai and Co, Peterson and Cao, Mingyu and Zhang, Qiongyu and Li, Zhe and Zhou, Enshen and Wang, Pengwei and Wang, Zhongyuan and Zhang, Shanghang and Zheng, Xiaolong},
   journal = {arXiv preprint arXiv:2603.21669},
-  year    = {2026}
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2603.21669}
+}
+
+@article{liu2026prmjudge15,
+  title   = {PRM-as-a-Judge 1.5: A Toolkit for Robot Process Assessment},
+  author  = {Liu, Yuyang and Shen, Yanqing and Chen, Ruike and Zhao, Jifan and Tian, Yuxuan and Zhang, Yichi and Long, Tianfeng and Yin, Zixuan and Wang, Yipu and Qin, Ziheng and Tan, Wenxing and Shi, Yang and Cao, Mingyu and Xiao, Runze and Wang, Ziqi and Yin, Zhixin and Chu, Shiwei and Zhang, Yi-Fan and Mu, Yao and Ji, Yuheng and Wang, Yihao and Yan, Jun and Wang, Zhongyuan and Wang, Pengwei and Zheng, Xiaolong},
+  journal = {arXiv preprint arXiv:2608.14284},
+  year    = {2026},
+  url     = {https://arxiv.org/abs/2608.14284}
 }</code></pre>
-          <p class="citation-status" id="citation-status">Copy this BibTeX entry into your bibliography.</p>
+          <p class="citation-status" id="citation-status">Copy both BibTeX entries into your bibliography.</p>
         </div>
       </div>
     </div>
@@ -3676,7 +3685,7 @@
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(text).then(function() {
-            setStatus('Citation copied to clipboard.', true);
+            setStatus('Citations copied to clipboard.', true);
           }).catch(function() {
             setStatus('Copy failed. Please copy manually.', false);
           });
@@ -3690,7 +3699,7 @@
           temp.select();
           try {
             document.execCommand('copy');
-            setStatus('Citation copied to clipboard.', true);
+            setStatus('Citations copied to clipboard.', true);
           } catch (e) {
             setStatus('Copy failed. Please copy manually.', false);
           }
