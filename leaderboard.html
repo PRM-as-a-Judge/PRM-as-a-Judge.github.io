@@ -418,23 +418,22 @@
   <main class="page-container">
     <h1>Leaderboard</h1>
     <div class="leaderboard-switch" role="tablist" aria-label="Select benchmark">
-      <button class="switch-button active" type="button" role="tab" aria-selected="true" data-benchmark="robochallenge">RoboChallenge Table30</button>
-      <button class="switch-button" type="button" role="tab" aria-selected="false" data-benchmark="robodojo">RoboDojo</button>
+      <button class="switch-button active" type="button" role="tab" aria-selected="true" data-benchmark="robodojo">RoboDojo</button>
+      <button class="switch-button" type="button" role="tab" aria-selected="false" data-benchmark="robochallenge">RoboChallenge Table30</button>
     </div>
-    <p class="subtitle" id="page-subtitle">OPD metrics on RoboChallenge Table30. Each model runs 10 rollouts per task.</p>
+    <p class="subtitle" id="page-subtitle">PRM-as-a-Judge metrics on 42 simulation tasks and 18 real-world tasks, covering 6,076 published rollouts.</p>
     <div class="meta-strip" aria-label="Leaderboard metadata">
-      <span class="meta-chip"><span class="meta-key">Benchmark</span><span class="meta-value" id="meta-benchmark">RoboChallenge Table30</span></span>
-      <span class="meta-chip"><span class="meta-key">Last Updated</span><span class="meta-value" id="meta-last-updated">March 20, 2026</span></span>
+      <span class="meta-chip"><span class="meta-key">Benchmark</span><span class="meta-value" id="meta-benchmark">RoboDojo — Simulation</span></span>
+      <span class="meta-chip"><span class="meta-key">Last Updated</span><span class="meta-value" id="meta-last-updated">August 18, 2026</span></span>
       <span class="meta-chip"><span class="meta-key">Evaluator</span><span class="meta-value" id="meta-evaluator">Robo-Dopamine (GRM-2.0-8B-Preview)</span></span>
-      <span class="meta-chip" id="meta-tasks-chip" hidden><span class="meta-key">Tasks</span><span class="meta-value" id="meta-tasks"></span></span>
-      <span class="meta-chip" id="meta-models-chip" hidden><span class="meta-key">Models</span><span class="meta-value" id="meta-models"></span></span>
-      <span class="meta-chip" id="meta-rollouts-chip" hidden><span class="meta-key">Published Rollouts</span><span class="meta-value" id="meta-rollouts">6,076</span></span>
+      <span class="meta-chip" id="meta-tasks-chip"><span class="meta-key">Tasks</span><span class="meta-value" id="meta-tasks">42</span></span>
+      <span class="meta-chip" id="meta-models-chip"><span class="meta-key">Models</span><span class="meta-value" id="meta-models">16</span></span>
+      <span class="meta-chip" id="meta-rollouts-chip"><span class="meta-key">Published Rollouts</span><span class="meta-value" id="meta-rollouts">6,076</span></span>
     </div>
     <p class="info-note" id="evaluator-note">
-      Evaluator note: The leaderboard scores on this page are produced with
+      The <a href="https://robodojo-benchmark.com/" target="_blank" rel="noopener noreferrer">RoboDojo</a> ranking is computed from process metrics produced by
       <a href="https://huggingface.co/tanhuajie2001/Robo-Dopamine-GRM-2.0-8B-Preview" target="_blank" rel="noopener noreferrer">Robo-Dopamine (GRM-2.0-8B-Preview)</a>.
-      Our current RoboChallenge results are reproduced by auditing publicly available execution videos from the official benchmark release.
-      We warmly welcome stronger PRM evaluators from the community to improve robustness, coverage, and fairness of dense trajectory auditing.
+      For the complete evaluation setup, model coverage, and detailed analysis, see our <a href="https://arxiv.org/abs/2608.14284" target="_blank" rel="noopener noreferrer">technical report</a>.
     </p>
     <p class="info-note" style="margin-top:-1.1rem;">
       Methodology and metric definitions are described in our <a href="blog.html">technical blog</a>, and we will keep this leaderboard synchronized as new benchmark collaborations go live.
@@ -456,7 +455,7 @@
     </section>
 
     <div id="live-leaderboard-block">
-      <div id="robochallenge-panel">
+      <div id="robochallenge-panel" hidden>
         <section class="leaderboard-section" id="robochallenge-overall">
           <h2 id="overall-title">RoboChallenge Table30 — Overall Performance</h2>
           <p class="subtitle" id="overall-subtitle" style="margin-bottom: 1rem;">Average OPD metrics across all 30 tasks. Sorted by Avg MC@100 (task completion rate).</p>
@@ -478,7 +477,7 @@
         </section>
       </div>
 
-      <div id="robodojo-panel" hidden>
+      <div id="robodojo-panel">
         <section class="leaderboard-section" id="robodojo-overall">
           <div class="track-switch" role="tablist" aria-label="Select RoboDojo environment">
             <button class="switch-button active" type="button" role="tab" aria-selected="true" data-track="RoboDojo-Sim">Simulation</button>
@@ -1647,7 +1646,7 @@ RoboDojo-Sim,sweep_blocks,Xiaomi-Robotics-0,12,0.6666666666666666,0.416666666666
         var roboDojoTaskTitleEl = document.getElementById('robodojo-task-title');
         var roboDojoTaskSelectEl = document.getElementById('robodojo-task-select');
         var extraMetaChipIds = ['meta-tasks-chip', 'meta-models-chip', 'meta-rollouts-chip'];
-        var activeBenchmark = 'robochallenge';
+        var activeBenchmark = 'robodojo';
         var activeTrack = 'RoboDojo-Sim';
         var roboDojoRows = [];
         var roboDojoTaskRows = [];
@@ -1805,7 +1804,7 @@ RoboDojo-Sim,sweep_blocks,Xiaomi-Robotics-0,12,0.6666666666666666,0.416666666666
                 url.searchParams.delete('task');
               }
             } else {
-              url.searchParams.delete('benchmark');
+              url.searchParams.set('benchmark', 'robochallenge');
               url.searchParams.delete('track');
               url.searchParams.delete('task');
             }
@@ -1945,7 +1944,7 @@ RoboDojo-Sim,sweep_blocks,Xiaomi-Robotics-0,12,0.6666666666666666,0.416666666666
         var params = new URLSearchParams(window.location.search);
         if (params.get('track') === 'realworld') activeTrack = 'RoboDojo-RealWorld';
         if (params.get('task')) activeRoboDojoTasks[activeTrack] = params.get('task');
-        var initialBenchmark = params.get('benchmark') === 'robodojo' ? 'robodojo' : 'robochallenge';
+        var initialBenchmark = params.get('benchmark') === 'robochallenge' ? 'robochallenge' : 'robodojo';
         setBenchmark(initialBenchmark, false);
         Promise.all([loadRoboDojoRows('robodojo-csv'), loadRoboDojoRows('robodojo-task-csv')]).then(function(results) {
           roboDojoRows = results[0];

@@ -115,37 +115,12 @@
       color: inherit;
     }
 
-    .post-card.featured {
-      border: 2px solid #ef9f42;
-      background: linear-gradient(180deg, #fffaf2 0%, #fff 54%);
-    }
-
     .post-topline {
       display: flex;
       flex-wrap: wrap;
       gap: 0.42rem;
       align-items: center;
       margin-bottom: 0.45rem;
-    }
-
-    .post-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      border-radius: 999px;
-      border: 1px solid #dbe3ee;
-      background: #f7fbff;
-      color: #526176;
-      padding: 0.14rem 0.48rem;
-      font-size: 0.76rem;
-      line-height: 1.2;
-      font-weight: 700;
-    }
-
-    .post-card.featured .post-badge {
-      border-color: #f0c887;
-      background: #fff2db;
-      color: #89510c;
     }
 
     .post-date {
@@ -161,10 +136,6 @@
       line-height: 1.25;
       color: #202634;
       font-weight: 700;
-    }
-
-    .post-card.featured .post-title {
-      font-size: 1.48rem;
     }
 
     .post-summary {
@@ -195,7 +166,6 @@
         padding: 0.86rem 0.9rem;
       }
 
-      .post-card.featured .post-title,
       .post-title {
         font-size: 1.22rem;
       }
@@ -219,10 +189,9 @@
     </header>
 
     <section class="post-list" aria-label="Blog posts">
-      <a class="post-card featured"
+      <a class="post-card"
          href="blog-introducing-prm-as-a-judge-1.5.html">
         <div class="post-topline">
-          <span class="post-badge">🔥 Featured</span>
           <span class="post-date">Published August 16, 2026</span>
         </div>
       
@@ -241,19 +210,8 @@
       
         <p class="post-footer">Read the main article</p>
       </a>
-      <a class="post-card" href="blog-prm-as-a-judge-15-coming.html">
+      <a class="post-card" href="blog-introducing-prm-as-a-judge.html">
         <div class="post-topline">
-          <span class="post-badge">Mid-July 2026</span>
-          <span class="post-date">June 30, 2026</span>
-        </div>
-        <h2 class="post-title">PRM-as-a-Judge 1.5 Is Coming</h2>
-        <p class="post-summary">A short preview of the 1.5 toolkit planned for mid-July 2026: a PPL correction found through close collaboration with the Orca team, higher-level trajectory diagnostics, and a call for broader benchmark and model collaborations.</p>
-        <p class="post-footer">Read the short update</p>
-      </a>
-
-      <a class="post-card featured" href="blog-introducing-prm-as-a-judge.html">
-        <div class="post-topline">
-          <span class="post-badge">🔥 Featured</span>
           <span class="post-date">Published March 23, 2026 · Updated March 30, 2026</span>
         </div>
         <h2 class="post-title">Introducing PRM-as-a-Judge</h2>

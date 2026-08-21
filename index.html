@@ -61,7 +61,7 @@
 
     .home-hero {
       text-align: center;
-      padding: 0 10%;
+      padding: 0 4%;
     }
 
     .home-hero h1 {
@@ -93,17 +93,28 @@
 
     .home-links {
       margin-top: 2rem;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.65rem;
     }
 
     .home-links a {
       display: inline-block;
-      margin: 0 0.5rem;
-      color: #666;
+      padding: 0.55rem 0.9rem;
+      border: 1px solid #d9dee8;
+      border-radius: 8px;
+      color: #4d596d;
+      background: #fff;
       text-decoration: none;
+      font-weight: 500;
+      transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
     }
 
     .home-links a:hover {
-      color: #1a1a1a;
+      color: #245fb7;
+      border-color: #9db8e5;
+      background: #f5f8ff;
     }
 
     .home-section {
@@ -231,8 +242,11 @@
         Moving beyond the "Pass/Fail" mirage in robotics.
       </p>
       <div class="home-links">
-        <a href="blog.html">→ Read the blog</a>
-        <a href="leaderboard.html">→ View leaderboard</a>
+        <a href="https://arxiv.org/abs/2608.14284" target="_blank" rel="noopener noreferrer">Paper 1.5</a>
+        <a href="https://arxiv.org/abs/2603.21669" target="_blank" rel="noopener noreferrer">Paper 1.0</a>
+        <a href="https://github.com/YuyangLiu2003/PRM-as-a-Judge" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="doc.html">Quick Start</a>
+        <a href="leaderboard.html">Leaderboard</a>
       </div>
     </div>
 
@@ -246,10 +260,6 @@
         <li>
           <span class="news-date">July 20, 2026</span>
           <a href="doc.html">PRM-as-a-Judge user guide is now available — Follow a streamlined Quick Start and a detailed Advanced Guide from manifest input to progress curves, metrics, and interactive reports.</a>
-        </li>
-        <li>
-          <span class="news-date">June 30, 2026</span>
-          <a href="blog-prm-as-a-judge-15-coming.html">PRM-as-a-Judge 1.5 is coming — PPL correction, higher-level trajectory diagnostics, and Orca collaboration</a>
         </li>
         <li>
           <span class="news-date">March 30, 2026</span>

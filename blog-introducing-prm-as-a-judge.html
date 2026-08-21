@@ -1130,6 +1130,70 @@
       text-align: left;
     }
 
+    .ppl-correction-note {
+      margin-top: 0.72rem;
+      padding: 0.72rem 0.78rem 0.76rem;
+      border: 1px solid #cfe2d6;
+      border-left: 4px solid #4d9c7a;
+      border-radius: 10px;
+      background: #f7fbf9;
+      text-align: left;
+    }
+
+    .ppl-correction-title {
+      margin: 0 0 0.5rem;
+      color: #2f5f4c;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .ppl-correction-formulas {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.42rem;
+      margin-bottom: 0.56rem;
+    }
+
+    .ppl-correction-formula {
+      min-width: 0;
+      padding: 0.44rem 0.48rem;
+      border: 1px solid #dce7e1;
+      border-radius: 8px;
+      background: #fff;
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    .ppl-correction-formula.current {
+      border-color: #9bc8ab;
+      background: #f2faf5;
+    }
+
+    .ppl-correction-label {
+      display: block;
+      margin-bottom: 0.26rem;
+      color: #69768a;
+      font-size: 0.67rem;
+      font-weight: 700;
+      letter-spacing: 0.035em;
+      text-transform: uppercase;
+    }
+
+    .ppl-correction-formula .math-inline {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      font-size: 0.73em;
+      white-space: nowrap;
+    }
+
+    .ppl-correction-copy {
+      margin: 0;
+      color: #516075;
+      font-size: 0.78rem;
+      line-height: 1.46;
+    }
+
     .opd-pref-note {
       margin: 0.02rem 0 0.8rem;
       font-size: 0.8rem;
@@ -1304,6 +1368,10 @@
     @media (max-width: 640px) {
       .opd-row-metrics.metrics-two,
       .opd-row-metrics.metrics-one {
+        grid-template-columns: 1fr;
+      }
+
+      .ppl-correction-formulas {
         grid-template-columns: 1fr;
       }
     }
@@ -2563,7 +2631,24 @@
                 <p class="formula-block"><span class="math-inline math-latex" data-latex="PPL(\tau)=\frac{MP(\tau)^2}{\sum_{t=1}^T|\Phi(x_t)-\Phi(x_{t-1})|+\varepsilon}"></span></p>
               </div>
               <p class="opd-metric-plain">Measures whether the best progress state was reached through an efficient, non-redundant path.</p>
-              <p class="opd-metric-plain"><strong>Update note:</strong> <a href="blog-prm-as-a-judge-15-coming.html">PRM-as-a-Judge 1.5</a> uses this MaxP-based PPL. In Orca collaboration practice, we found the earlier terminal-progress PPL could be overly sensitive to the final few frames.</p>
+              <div class="ppl-correction-note">
+                <p class="ppl-correction-title">Why PPL Uses Maximum Progress</p>
+                <div class="ppl-correction-formulas" aria-label="PPL formula correction">
+                  <div class="ppl-correction-formula">
+                    <span class="ppl-correction-label">Path length</span>
+                    <span class="math-inline math-latex" data-latex="L(\tau)=\sum_{t=1}^{T}|\Phi(x_t)-\Phi(x_{t-1})|"></span>
+                  </div>
+                  <div class="ppl-correction-formula">
+                    <span class="ppl-correction-label">Earlier definition</span>
+                    <span class="math-inline math-latex" data-latex="\mathrm{PPL}_{\mathrm{old}}=\frac{\mathrm{FinalP}(\tau)^2}{L(\tau)+\varepsilon}"></span>
+                  </div>
+                  <div class="ppl-correction-formula current">
+                    <span class="ppl-correction-label">Current definition</span>
+                    <span class="math-inline math-latex" data-latex="\mathrm{PPL}(\tau)=\frac{MP(\tau)^2}{L(\tau)+\varepsilon}"></span>
+                  </div>
+                </div>
+                <p class="ppl-correction-copy">During evaluation practice, we found that terminal-progress PPL could be overly sensitive to the final few frames. A rollout may reach a meaningful high-progress state and then drop slightly because of release motion, object contact, camera jitter, or a short unstable correction. Using maximum progress prevents these brief terminal changes from dominating the score, while the path-length denominator continues to penalize repeated or inefficient motion.</p>
+              </div>
             </article>
           </div>
         </div>
